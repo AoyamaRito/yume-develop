@@ -1,0 +1,10 @@
+{
+  "name": "yume-develop",
+  "version": "1.0.0",
+  "description": "ai-desk level-up to yume-files format",
+  "type": "module",
+  "scripts": {
+    "test": "node --test"
+  },
+  "private": true
+}

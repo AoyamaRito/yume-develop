@@ -1,0 +1,156 @@
+// @yume-format: 1
+
+export const __block = {
+  "id": "headless-demo",
+  "type": "fn",
+  "schemaVersion": 1,
+  "runtime": {
+    "name": "yume",
+    "version": "002"
+  },
+  "api": [
+    "commit",
+    "history",
+    "heavy",
+    "heavyApply",
+    "show",
+    "diff",
+    "rollback",
+    "validate",
+    "refs",
+    "tags",
+    "impact",
+    "refsCheck",
+    "noteAdd",
+    "noteList",
+    "notesSearch",
+    "applyList",
+    "applyShow",
+    "applyIndex",
+    "applySearch"
+  ],
+  "versions": [
+    {
+      "hash": "8aca13bc22d782f6577384e103b6ddc8e0f3136bb34169d88be37f5423b2b917",
+      "prevHash": null,
+      "content": "// ============================================================\n// example-headless-demo.js — AI-Eyes 動作確認用の最小 demo\n// ============================================================\n//\n// 観測可能性の最小要件(initialState / dispatch / render)を満たすだけの\n// 「点を 1 個動かして、止まったら線で原点と結ぶ」だけの demo。\n//\n// node v2/eyes/ai-eyes.js v2/eyes/example-headless-demo.js -o /tmp/eyes-test.json\n// で graph.json を出力できる。\n// ============================================================\n\nexport function initialState() {\n  return {\n    point: { x: 100, y: 100 },\n    trail: [],\n    drawLine: false,\n  };\n}\n\nexport function dispatch(state, evt) {\n  switch (evt.type) {\n    case 'move':\n      return {\n        ...state,\n        point: { x: evt.x, y: evt.y },\n        trail: [...state.trail, { x: evt.x, y: evt.y }].slice(-20),\n      };\n    case 'connect':\n      return { ...state, drawLine: true };\n    case 'reset':\n      return initialState();\n    default:\n      return state;\n  }\n}\n\nexport function render(ctx, state, dims) {\n  // background\n  ctx.fillStyle = '#fafbfc';\n  ctx.fillRect(0, 0, dims.w, dims.h);\n\n  // grid (every 40px, faint)\n  ctx.strokeStyle = '#e5e7eb';\n  ctx.lineWidth = 0.5;\n  for (let x = 0; x < dims.w; x += 40) {\n    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, dims.h); ctx.stroke();\n  }\n  for (let y = 0; y < dims.h; y += 40) {\n    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(dims.w, y); ctx.stroke();\n  }\n\n  // optional line origin → point\n  if (state.drawLine) {\n    ctx.strokeStyle = '#2563eb';\n    ctx.lineWidth = 2;\n    ctx.beginPath();\n    ctx.moveTo(0, 0);\n    ctx.lineTo(state.point.x, state.point.y);\n    ctx.stroke();\n  }\n\n  // trail\n  if (state.trail.length > 1) {\n    ctx.strokeStyle = 'rgba(37,99,235,0.4)';\n    ctx.lineWidth = 1;\n    ctx.beginPath();\n    ctx.moveTo(state.trail[0].x, state.trail[0].y);\n    for (let i = 1; i < state.trail.length; i++) ctx.lineTo(state.trail[i].x, state.trail[i].y);\n    ctx.stroke();\n  }\n\n  // point\n  ctx.fillStyle = '#dc2626';\n  ctx.beginPath();\n  ctx.arc(state.point.x, state.point.y, 6, 0, Math.PI * 2);\n  ctx.fill();\n\n  // label\n  ctx.fillStyle = '#1a1d24';\n  ctx.font = '12px sans-serif';\n  ctx.textAlign = 'left';\n  ctx.textBaseline = 'top';\n  ctx.fillText(`(${Math.round(state.point.x)}, ${Math.round(state.point.y)})`, 8, 8);\n  ctx.fillText(`trail: ${state.trail.length} · drawLine: ${state.drawLine}`, 8, 24);\n}\n\nexport const events = [\n  { label: 'move-right',    evt: { type: 'move', x: 200, y: 100 } },\n  { label: 'move-down',     evt: { type: 'move', x: 200, y: 200 } },\n  { label: 'move-diagonal', evt: { type: 'move', x: 320, y: 280 } },\n  { label: 'connect-line',  evt: { type: 'connect' } },\n  { label: 'move-far',      evt: { type: 'move', x: 600, y: 400 } },\n  { label: 'reset',         evt: { type: 'reset' } },\n];\n\nexport default { initialState, dispatch, render, events };\n",
+      "ts": 1778788882058,
+      "refs": [
+        {
+          "kind": "calls",
+          "target": "initialState"
+        }
+      ],
+      "tags": [],
+      "applyId": null
+    }
+  ]
+};
+
+// === HEAD ===
+// ============================================================
+// example-headless-demo.js — AI-Eyes 動作確認用の最小 demo
+// ============================================================
+//
+// 観測可能性の最小要件(initialState / dispatch / render)を満たすだけの
+// 「点を 1 個動かして、止まったら線で原点と結ぶ」だけの demo。
+//
+// node v2/eyes/ai-eyes.js v2/eyes/example-headless-demo.js -o /tmp/eyes-test.json
+// で graph.json を出力できる。
+// ============================================================
+
+export function initialState() {
+  return {
+    point: { x: 100, y: 100 },
+    trail: [],
+    drawLine: false,
+  };
+}
+
+export function dispatch(state, evt) {
+  switch (evt.type) {
+    case 'move':
+      return {
+        ...state,
+        point: { x: evt.x, y: evt.y },
+        trail: [...state.trail, { x: evt.x, y: evt.y }].slice(-20),
+      };
+    case 'connect':
+      return { ...state, drawLine: true };
+    case 'reset':
+      return initialState();
+    default:
+      return state;
+  }
+}
+
+export function render(ctx, state, dims) {
+  // background
+  ctx.fillStyle = '#fafbfc';
+  ctx.fillRect(0, 0, dims.w, dims.h);
+
+  // grid (every 40px, faint)
+  ctx.strokeStyle = '#e5e7eb';
+  ctx.lineWidth = 0.5;
+  for (let x = 0; x < dims.w; x += 40) {
+    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, dims.h); ctx.stroke();
+  }
+  for (let y = 0; y < dims.h; y += 40) {
+    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(dims.w, y); ctx.stroke();
+  }
+
+  // optional line origin → point
+  if (state.drawLine) {
+    ctx.strokeStyle = '#2563eb';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.lineTo(state.point.x, state.point.y);
+    ctx.stroke();
+  }
+
+  // trail
+  if (state.trail.length > 1) {
+    ctx.strokeStyle = 'rgba(37,99,235,0.4)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(state.trail[0].x, state.trail[0].y);
+    for (let i = 1; i < state.trail.length; i++) ctx.lineTo(state.trail[i].x, state.trail[i].y);
+    ctx.stroke();
+  }
+
+  // point
+  ctx.fillStyle = '#dc2626';
+  ctx.beginPath();
+  ctx.arc(state.point.x, state.point.y, 6, 0, Math.PI * 2);
+  ctx.fill();
+
+  // label
+  ctx.fillStyle = '#1a1d24';
+  ctx.font = '12px sans-serif';
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'top';
+  ctx.fillText(`(${Math.round(state.point.x)}, ${Math.round(state.point.y)})`, 8, 8);
+  ctx.fillText(`trail: ${state.trail.length} · drawLine: ${state.drawLine}`, 8, 24);
+}
+
+export const events = [
+  { label: 'move-right',    evt: { type: 'move', x: 200, y: 100 } },
+  { label: 'move-down',     evt: { type: 'move', x: 200, y: 200 } },
+  { label: 'move-diagonal', evt: { type: 'move', x: 320, y: 280 } },
+  { label: 'connect-line',  evt: { type: 'connect' } },
+  { label: 'move-far',      evt: { type: 'move', x: 600, y: 400 } },
+  { label: 'reset',         evt: { type: 'reset' } },
+];
+
+export default { initialState, dispatch, render, events };
+
+// === /HEAD ===
+
+// === BOOT ===
+if (import.meta.url === `file://${process.argv[1]}`) {
+  const path = __block.runtime.path ?? `./runtimes/ver${__block.runtime.version}.handle.yume.js`;
+  const rt = await import(path);
+  await rt.cli(import.meta.url, __block, process.argv);
+}
+// === /BOOT ===
