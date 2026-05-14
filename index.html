@@ -56,6 +56,27 @@
     .lang-toggle button + button { border-left: 1px solid var(--line); }
     .lang-toggle button.active { background: var(--ink); color: var(--white); }
 
+    .artifact-field {
+      position: absolute; inset: 0; pointer-events: none; opacity: 0.6;
+      mask-image: radial-gradient(ellipse 58% 56% at 50% 50%, transparent 0%, transparent 28%, rgba(0, 0, 0, 0.55) 58%, black 82%);
+      -webkit-mask-image: radial-gradient(ellipse 58% 56% at 50% 50%, transparent 0%, transparent 28%, rgba(0, 0, 0, 0.55) 58%, black 82%);
+    }
+    .artifact-field pre, .artifact-field .node {
+      position: absolute; margin: 0; border: 1px solid rgba(23, 21, 17, 0.1);
+      background: rgba(255, 253, 248, 0.72); box-shadow: var(--shadow); color: rgba(23, 21, 17, 0.78);
+    }
+    .artifact-field pre {
+      width: 470px; min-height: 250px; padding: 22px; border-radius: 8px; font-size: 0.8rem; line-height: 1.55; white-space: pre-wrap;
+    }
+    .artifact-field .code-a { right: 3%; top: 6%; transform: rotate(2deg); }
+    .artifact-field .code-b { left: 3%; bottom: 6%; transform: rotate(-2deg); }
+    .artifact-field .node {
+      display: grid; place-items: center; width: 168px; height: 58px; border-radius: 8px; font-weight: 800;
+    }
+    .artifact-field .node-1 { right: 36%; top: 14%; color: var(--teal); }
+    .artifact-field .node-2 { left: 36%; bottom: 16%; color: var(--rust); }
+    .artifact-field .node-3 { left: 6%; top: 18%; color: var(--blue); }
+
     .hero {
       position: relative; min-height: 70vh; display: grid; align-items: center;
       padding: 76px 32px 84px; background: var(--paper); border-bottom: 1px solid var(--line);
@@ -154,6 +175,35 @@
 
   <main>
     <section class="hero">
+      <div class="artifact-field" aria-hidden="true">
+        <pre class="code-a">// @yume-format: 1
+export const __block = {
+  "id": "coverage",
+  "type": "verify",
+  "versions": [
+    { "content": "...", "refs": [], "tags": [] }
+  ]
+};
+
+// === HEAD ===
+export async function runWithCoverage() { ... };
+// === /HEAD ===</pre>
+        <pre class="code-b">// @yume-format: 1
+export const __block = {
+  "id": "janken",
+  "type": "fn",
+  "versions": [
+    { "content": "...", "refs": [], "tags": [] }
+  ]
+};
+
+// === HEAD ===
+export function janken(constraints = {}) { ... }
+// === /HEAD ===</pre>
+        <div class="node node-1">coverage.verify</div>
+        <div class="node node-2">rules.constraint</div>
+        <div class="node node-3">cpu3d.verify</div>
+      </div>
       <div class="hero-copy">
         <p class="eyebrow" data-i18n="hero.eyebrow">The Evolving Substrate</p>
         <h1 data-i18n="hero.title">Crystallizing ai-desk into self-contained Blocks.</h1>
