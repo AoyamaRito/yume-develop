@@ -23,6 +23,10 @@
       font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
+    [data-lang="jp"] {
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Hiragino Kaku Gothic ProN", "Yu Gothic", "Segoe UI", sans-serif;
+    }
+
     * { box-sizing: border-box; }
     html { scroll-behavior: smooth; }
     body { margin: 0; background: var(--paper); color: var(--ink); line-height: 1.65; letter-spacing: 0; }
@@ -34,11 +38,23 @@
       min-height: 64px; padding: 0 32px; border-bottom: 1px solid rgba(215, 204, 186, 0.9);
       background: rgba(248, 245, 237, 0.94); backdrop-filter: blur(14px);
     }
+    .topbar-right { display: flex; align-items: center; gap: 18px; }
     .brand { display: inline-flex; align-items: center; gap: 10px; font-weight: 800; text-decoration: none; }
     .brand-mark {
       display: inline-grid; place-items: center; width: 30px; height: 30px;
       border: 2px solid var(--ink); border-radius: 8px; color: var(--rust); font-weight: 900; line-height: 1;
     }
+
+    .lang-toggle {
+      display: inline-flex; align-items: center; border: 1px solid var(--line);
+      border-radius: 8px; overflow: hidden; background: var(--white);
+    }
+    .lang-toggle button {
+      padding: 6px 12px; border: 0; background: transparent; color: var(--muted);
+      font-weight: 800; font-size: 0.78rem; letter-spacing: 0.05em; cursor: pointer;
+    }
+    .lang-toggle button + button { border-left: 1px solid var(--line); }
+    .lang-toggle button.active { background: var(--ink); color: var(--white); }
 
     .hero {
       position: relative; min-height: 70vh; display: grid; align-items: center;
@@ -49,6 +65,8 @@
     }
     .eyebrow { margin: 0 0 18px; color: var(--rust); font-weight: 800; text-transform: uppercase; font-size: 0.88rem; }
     h1 { max-width: 860px; margin: 0; font-size: 4.5rem; line-height: 0.98; letter-spacing: -0.02em; }
+    [data-lang="jp"] h1 { font-size: 3.2rem; line-height: 1.2; }
+    
     .yume-meaning {
       margin: 26px 0 0; padding: 14px 18px; border-left: 3px solid var(--teal);
       background: rgba(18, 107, 100, 0.07); color: var(--ink); font-size: 1.02rem; line-height: 1.55;
@@ -71,6 +89,7 @@
     .wrap { width: min(1120px, 100%); margin: 0 auto; }
     .narrow { width: min(820px, 100%); margin: 0 auto; }
     h2 { margin: 0; font-size: 2.65rem; line-height: 1.08; letter-spacing: -0.01em; }
+    [data-lang="jp"] h2 { font-size: 2rem; line-height: 1.3; }
     h3 { margin: 0 0 12px; font-size: 1.22rem; line-height: 1.25; }
     .section-lead { max-width: 760px; margin: 18px 0 0; color: var(--muted); font-size: 1.08rem; }
     .dark .section-lead { color: #bcc5c1; }
@@ -106,8 +125,9 @@
     .footer .wrap { display: flex; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
 
     @media (max-width: 900px) {
-      h1 { font-size: 3.25rem; }
-      h2 { font-size: 2rem; }
+      h1 { font-size: 2.8rem; }
+      [data-lang="jp"] h1 { font-size: 2.2rem; }
+      h2 { font-size: 1.8rem; }
       .feature-grid { grid-template-columns: 1fr; }
       .step { grid-template-columns: 1fr; gap: 12px; }
       .step::before { width: 40px; height: 40px; font-size: 0.9rem; }
@@ -120,58 +140,64 @@
       <span class="brand-mark">D</span>
       <span>yume-develop</span>
     </a>
-    <nav style="display:flex; gap: 16px; font-size: 0.9rem; color: var(--muted);">
-      <a href="https://aoyamarito.github.io/yume-files/" style="text-decoration:none;">yume-files</a>
-      <a href="https://github.com/AoyamaRito/yume-develop" style="text-decoration:none;">GitHub</a>
-    </nav>
+    <div class="topbar-right">
+      <nav style="display:flex; gap: 16px; font-size: 0.9rem; color: var(--muted);">
+        <a href="https://aoyamarito.github.io/yume-files/" style="text-decoration:none;">yume-files</a>
+        <a href="https://github.com/AoyamaRito/yume-develop" style="text-decoration:none;">GitHub</a>
+      </nav>
+      <div class="lang-toggle">
+        <button type="button" data-lang-btn="en" class="active">EN</button>
+        <button type="button" data-lang-btn="jp">JP</button>
+      </div>
+    </div>
   </header>
 
   <main>
     <section class="hero">
       <div class="hero-copy">
-        <p class="eyebrow">The Evolving Substrate</p>
-        <h1>Crystallizing ai-desk into self-contained Blocks.</h1>
-        <p class="yume-meaning"><strong>yume-develop</strong> is the next-generation workspace for AI-Native development, serving as the bridge where the core logic of <code>ai-desk</code> evolves onto the <code>.yume.js</code> foundation.</p>
-        <p class="lead">
+        <p class="eyebrow" data-i18n="hero.eyebrow">The Evolving Substrate</p>
+        <h1 data-i18n="hero.title">Crystallizing ai-desk into self-contained Blocks.</h1>
+        <p class="yume-meaning" data-i18n-html="hero.yume"><strong>yume-develop</strong> is the next-generation workspace for AI-Native development, serving as the bridge where the core logic of <code>ai-desk</code> evolves onto the <code>.yume.js</code> foundation.</p>
+        <p class="lead" data-i18n="hero.lead">
           Here, code is history. Every file is an executable, append-only micro-repository that carries its own runtime, dependencies, and metadata. We are proving that human-era readability can be discarded in favor of AI-centric structural integrity.
         </p>
         <div class="hero-actions">
-          <a class="button" href="https://github.com/AoyamaRito/yume-develop">View Source</a>
-          <a class="button secondary" href="#axiom-a14">Read Axiom A14</a>
+          <a class="button" href="https://github.com/AoyamaRito/yume-develop" data-i18n="hero.cta1">View Source</a>
+          <a class="button secondary" href="#axiom-a14" data-i18n="hero.cta2">Read Axiom A14</a>
         </div>
       </div>
     </section>
 
     <section id="axiom-a14" class="section band">
       <div class="narrow">
-        <p class="eyebrow">Testing Philosophy</p>
-        <h2>Axiom A14: Top-Down Verification.</h2>
-        <p class="section-lead">
+        <p class="eyebrow" data-i18n="a14.eyebrow">Testing Philosophy</p>
+        <h2 data-i18n="a14.title">Axiom A14: Top-Down Verification.</h2>
+        <p class="section-lead" data-i18n="a14.lead">
           AI-era testing must proceed from the whole to the part. Establish the gravitational field of context with End-to-End tests first, then let the AI autonomously fill the execution coverage gaps with unit tests.
         </p>
         <div class="steps">
           <div class="step">
             <div>
-              <h3>1. Declare intent via E2E</h3>
-              <p>Write an End-to-End scenario first. This gives the AI the complete picture of "what success looks like," preventing hallucination caused by bottom-up guesswork.</p>
+              <h3 data-i18n="a14.s1.title">1. Declare intent via E2E</h3>
+              <p data-i18n="a14.s1.body">Write an End-to-End scenario first. This gives the AI the complete picture of "what success looks like," preventing hallucination caused by bottom-up guesswork.</p>
             </div>
           </div>
           <div class="step">
             <div>
-              <h3>2. Implement to pass</h3>
-              <p>The AI writes the necessary implementation to make the E2E scenario pass, establishing the primary logic paths.</p>
+              <h3 data-i18n="a14.s2.title">2. Implement to pass</h3>
+              <p data-i18n="a14.s2.body">The AI writes the necessary implementation to make the E2E scenario pass, establishing the primary logic paths.</p>
             </div>
           </div>
           <div class="step">
             <div>
-              <h3>3. Measure structural gaps</h3>
-              <p>Execute the E2E test while collecting precise V8 coverage data (using <code>coverage.verify.yume.js</code>) to identify exactly which Blocks and branches were missed.</p>
+              <h3 data-i18n="a14.s3.title">3. Measure structural gaps</h3>
+              <p data-i18n-html="a14.s3.body">Execute the E2E test while collecting precise V8 coverage data (using <code>coverage.verify.yume.js</code>) to identify exactly which Blocks and branches were missed.</p>
             </div>
           </div>
           <div class="step">
             <div>
-              <h3>4. Autonomous Gap Filling</h3>
-              <p>The AI reads the coverage report—not as an abstract metric, but as direct prompts indicating which specific code snippets require targeted unit tests to achieve 100% verification.</p>
+              <h3><span data-i18n="a14.s4.title">4. Autonomous Gap Filling</span></h3>
+              <p data-i18n="a14.s4.body">The AI reads the coverage report—not as an abstract metric, but as direct prompts indicating which specific code snippets require targeted unit tests to achieve 100% verification.</p>
             </div>
           </div>
         </div>
@@ -180,26 +206,26 @@
 
     <section class="section dark">
       <div class="wrap">
-        <p class="eyebrow">Core Assets</p>
-        <h2>The Crystallized Core</h2>
-        <p class="section-lead">All foundational logic from ai-desk v2 has been successfully migrated into the .yume.js format, complete with isolated histories and pinned runtimes.</p>
+        <p class="eyebrow" data-i18n="core.eyebrow">Core Assets</p>
+        <h2 data-i18n="core.title">The Crystallized Core</h2>
+        <p class="section-lead" data-i18n="core.lead">All foundational logic from ai-desk v2 has been successfully migrated into the .yume.js format, complete with isolated histories and pinned runtimes.</p>
         
         <div class="feature-grid">
           <article class="card">
             <h3>core.module.yume.js</h3>
-            <p>The pure logic for Block and Graph management. Zero external dependencies.</p>
+            <p data-i18n="core.c1.body">The pure logic for Block and Graph management. Zero external dependencies.</p>
           </article>
           <article class="card">
             <h3>rules.constraint.yume.js</h3>
-            <p>The Constraint Folding engine. Eliminating nested if/else statements by evaluating all possible worlds against declarative filters.</p>
+            <p data-i18n="core.c2.body">The Constraint Folding engine. Eliminating nested if/else statements by evaluating all possible worlds against declarative filters.</p>
           </article>
           <article class="card">
             <h3>coverage.verify.yume.js</h3>
-            <p>A native wrapper around <code>node:inspector</code> that executes functions and returns precise V8 coverage data, feeding the Gap Filler loop.</p>
+            <p data-i18n-html="core.c3.body">A native wrapper around <code>node:inspector</code> that executes functions and returns precise V8 coverage data, feeding the Gap Filler loop.</p>
           </article>
           <article class="card">
             <h3>cpu3d.verify.yume.js</h3>
-            <p>The Double-Entry Math implementation. A CPU Twin running alongside WebGL to definitively prove whether a 3D bug is logical or visual.</p>
+            <p data-i18n="core.c4.body">The Double-Entry Math implementation. A CPU Twin running alongside WebGL to definitively prove whether a 3D bug is logical or visual.</p>
           </article>
         </div>
       </div>
@@ -207,12 +233,12 @@
 
     <section class="section">
       <div class="narrow">
-        <p class="eyebrow">Getting Started</p>
-        <h2>Instructing your Agent</h2>
-        <p class="section-lead">If you are an AI assistant opening this repository, your first step is to internalize the rules.</p>
+        <p class="eyebrow" data-i18n="start.eyebrow">Getting Started</p>
+        <h2 data-i18n="start.title">Instructing your Agent</h2>
+        <p class="section-lead" data-i18n="start.lead">If you are an AI assistant opening this repository, your first step is to internalize the rules.</p>
         <div class="code-panel">
-          <div class="code-title">Initial Prompt</div>
-          <pre><code><span class="accent">Read onboarding.aiDoc.yume.js first</span>, then follow its A14 Top-Down testing rules for my next instructions.</code></pre>
+          <div class="code-title" data-i18n="start.label">Initial Prompt</div>
+          <pre><code><span class="accent" data-i18n="start.code1">Read onboarding.aiDoc.yume.js first</span>, <span data-i18n="start.code2">then follow its A14 Top-Down testing rules for my next instructions.</span></code></pre>
         </div>
       </div>
     </section>
@@ -221,9 +247,104 @@
 
   <footer class="footer">
     <div class="wrap">
-      <span>MIT License · yume-develop</span>
+      <span data-i18n="footer.left">MIT License · yume-develop</span>
       <span>AOYAMA Rito (OKINOI Hiroyuki)</span>
     </div>
   </footer>
+
+  <script>
+    const i18n = {
+      en: {
+        "hero.eyebrow": "The Evolving Substrate",
+        "hero.title": "Crystallizing ai-desk into self-contained Blocks.",
+        "hero.yume": "<strong>yume-develop</strong> is the next-generation workspace for AI-Native development, serving as the bridge where the core logic of <code>ai-desk</code> evolves onto the <code>.yume.js</code> foundation.",
+        "hero.lead": "Here, code is history. Every file is an executable, append-only micro-repository that carries its own runtime, dependencies, and metadata. We are proving that human-era readability can be discarded in favor of AI-centric structural integrity.",
+        "hero.cta1": "View Source",
+        "hero.cta2": "Read Axiom A14",
+        "a14.eyebrow": "Testing Philosophy",
+        "a14.title": "Axiom A14: Top-Down Verification.",
+        "a14.lead": "AI-era testing must proceed from the whole to the part. Establish the gravitational field of context with End-to-End tests first, then let the AI autonomously fill the execution coverage gaps with unit tests.",
+        "a14.s1.title": "1. Declare intent via E2E",
+        "a14.s1.body": "Write an End-to-End scenario first. This gives the AI the complete picture of \"what success looks like,\" preventing hallucination caused by bottom-up guesswork.",
+        "a14.s2.title": "2. Implement to pass",
+        "a14.s2.body": "The AI writes the necessary implementation to make the E2E scenario pass, establishing the primary logic paths.",
+        "a14.s3.title": "3. Measure structural gaps",
+        "a14.s3.body": "Execute the E2E test while collecting precise V8 coverage data (using <code>coverage.verify.yume.js</code>) to identify exactly which Blocks and branches were missed.",
+        "a14.s4.title": "4. Autonomous Gap Filling",
+        "a14.s4.body": "The AI reads the coverage report—not as an abstract metric, but as direct prompts indicating which specific code snippets require targeted unit tests to achieve 100% verification.",
+        "core.eyebrow": "Core Assets",
+        "core.title": "The Crystallized Core",
+        "core.lead": "All foundational logic from ai-desk v2 has been successfully migrated into the .yume.js format, complete with isolated histories and pinned runtimes.",
+        "core.c1.body": "The pure logic for Block and Graph management. Zero external dependencies.",
+        "core.c2.body": "The Constraint Folding engine. Eliminating nested if/else statements by evaluating all possible worlds against declarative filters.",
+        "core.c3.body": "A native wrapper around <code>node:inspector</code> that executes functions and returns precise V8 coverage data, feeding the Gap Filler loop.",
+        "core.c4.body": "The Double-Entry Math implementation. A CPU Twin running alongside WebGL to definitively prove whether a 3D bug is logical or visual.",
+        "start.eyebrow": "Getting Started",
+        "start.title": "Instructing your Agent",
+        "start.lead": "If you are an AI assistant opening this repository, your first step is to internalize the rules.",
+        "start.label": "Initial Prompt",
+        "start.code1": "Read onboarding.aiDoc.yume.js first",
+        "start.code2": "then follow its A14 Top-Down testing rules for my next instructions.",
+        "footer.left": "MIT License · yume-develop"
+      },
+      jp: {
+        "hero.eyebrow": "進化する基盤",
+        "hero.title": "ai-desk を自己完結した Block へ結晶化させる。",
+        "hero.yume": "<strong>yume-develop</strong> は、AI-Native 開発のための次世代ワークスペースです。<code>ai-desk</code> のコアロジックを <code>.yume.js</code> 基盤へと進化させる架け橋として機能します。",
+        "hero.lead": "ここでは、コードは歴史です。すべてのファイルは、独自のランタイム、依存関係、メタデータを内包する、実行可能で追記専用のマイクロリポジトリです。人間時代の「読みやすさ」を捨て、AI中心の「構造的整合性」を優先できることを証明します。",
+        "hero.cta1": "ソースを見る",
+        "hero.cta2": "公理 A14 を読む",
+        "a14.eyebrow": "テスト哲学",
+        "a14.title": "公理 A14: トップダウン検証。",
+        "a14.lead": "AI時代のテストは、必ず全体から部分へと進めるべきです。まず End-to-End テストで文脈の重力場を形成し、その実行カバレッジの隙間を AI に自律的にユニットテストで埋めさせます。",
+        "a14.s1.title": "1. E2E による意図の宣言",
+        "a14.s1.body": "最初に End-to-End シナリオを書きます。これにより AI に「何が成功か」の完全な全体像を与え、ボトムアップの推測によるハルシネーションを防ぎます。",
+        "a14.s2.title": "2. パスさせるための実装",
+        "a14.s2.body": "AI は E2E シナリオをパスさせるために必要な実装を行い、主要なロジックパスを確立します。",
+        "a14.s3.title": "3. 構造的な隙間の測定",
+        "a14.s3.body": "E2E テストを実行しながら（<code>coverage.verify.yume.js</code> を使用して）精密な V8 カバレッジデータを収集し、どの Block や分岐が漏れているかを特定します。",
+        "a14.s4.title": "4. 自律的な隙間埋め",
+        "a14.s4.body": "AI はカバレッジレポートを、単なる指標としてではなく「どのコードスニペットにターゲットを絞ったユニットテストが必要か」という直接的なプロンプトとして読み取り、100% の検証を達成します。",
+        "core.eyebrow": "コア資産",
+        "core.title": "結晶化された核",
+        "core.lead": "ai-desk v2 のすべての基礎ロジックは、独立した履歴と固定されたランタイムを持つ .yume.js 形式へと正常に移行されました。",
+        "core.c1.body": "Block と Graph 管理のための純粋なロジック。外部依存ゼロ。",
+        "core.c2.body": "制約畳み込みエンジン。宣言的なフィルタに対して全可能世界を評価することで、ネストされた if/else 文を排除します。",
+        "core.c3.body": "<code>node:inspector</code> のネイティブなラッパー。関数を実行して精密な V8 カバレッジを返し、Gap Filler ループに供給します。",
+        "core.c4.body": "複式数学の実装。WebGL と並走する CPU Twin により、3D のバグが論理的なものか視覚的なものかを決定的に証明します。",
+        "start.eyebrow": "はじめかた",
+        "start.title": "エージェントへの指示",
+        "start.lead": "あなたがこのリポジトリを開いた AI アシスタントなら、最初のステップはルールを内面化することです。",
+        "start.label": "最初のプロンプト",
+        "start.code1": "最初に onboarding.aiDoc.yume.js を読み",
+        "start.code2": "その A14 トップダウンテスト規則に従って今後の指示をこなしてください。",
+        "footer.left": "MIT ライセンス · yume-develop"
+      }
+    };
+
+    function setLang(lang) {
+      document.documentElement.setAttribute('data-lang', lang);
+      document.querySelectorAll('[data-lang-btn]').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-lang-btn') === lang);
+      });
+      const data = i18n[lang];
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (data[key]) el.textContent = data[key];
+      });
+      document.querySelectorAll('[data-i18n-html]').forEach(el => {
+        const key = el.getAttribute('data-i18n-html');
+        if (data[key]) el.innerHTML = data[key];
+      });
+      localStorage.setItem('yume-dev-lang', lang);
+    }
+
+    document.querySelectorAll('[data-lang-btn]').forEach(btn => {
+      btn.onclick = () => setLang(btn.getAttribute('data-lang-btn'));
+    });
+
+    const savedLang = localStorage.getItem('yume-dev-lang') || (navigator.language.startsWith('ja') ? 'jp' : 'en');
+    setLang(savedLang === 'jp' || savedLang === 'ja' ? 'jp' : 'en');
+  </script>
 </body>
 </html>
