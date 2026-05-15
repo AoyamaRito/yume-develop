@@ -121,6 +121,16 @@
     .dark .section-lead { color: #bcc5c1; }
 
     .feature-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; margin-top: 38px; }
+    .axiom-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; margin-top: 32px; }
+    .axiom-card {
+      padding: 20px; border: 1px solid var(--line); border-radius: 12px; background: var(--white);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .axiom-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+    .axiom-id { display: inline-block; padding: 2px 8px; background: var(--ink); color: var(--white); border-radius: 4px; font-size: 0.75rem; font-weight: 900; margin-bottom: 8px; }
+    .axiom-card h3 { font-size: 1.05rem; margin-bottom: 6px; }
+    .axiom-card p { font-size: 0.88rem; color: var(--muted); line-height: 1.5; margin: 0; }
+    
     .card { padding: 24px; border: 1px solid var(--line); border-radius: 8px; background: var(--white); }
     .dark .card { border-color: rgba(255, 253, 248, 0.18); background: var(--dark-2); }
     .card p { margin: 0; color: var(--muted); }
@@ -290,7 +300,7 @@ export function janken(constraints = {}) { ... }
       </div>
     </section>
 
-    <section class="section band">
+    <section id="visual-verification" class="section band">
       <div class="narrow">
         <p class="eyebrow" data-i18n="visual.eyebrow">Visual Verification</p>
         <h2 data-i18n="visual.title">Eyes over Server.</h2>
@@ -299,6 +309,32 @@ export function janken(constraints = {}) { ... }
         </p>
         <div class="hero-actions">
           <a class="button" href="examples/replay-sample.html" target="_blank" data-i18n="visual.cta">View Replay Demo</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="the-axioms" class="section">
+      <div class="wrap">
+        <p class="eyebrow" data-i18n="axioms.eyebrow">The Core Philosophy</p>
+        <h2 data-i18n="axioms.title">15 Axioms of AI-Native Development.</h2>
+        <p class="section-lead" data-i18n="axioms.lead">The foundational principles that guide every Block and Graph in yume-develop. Designed for AI cognitive physics.</p>
+
+        <div class="axiom-grid">
+          <div class="axiom-card"><span class="axiom-id">A0</span><h3 data-i18n="ax.a0.n"></h3><p data-i18n="ax.a0.s"></p></div>
+          <div class="axiom-card"><span class="axiom-id">A1</span><h3 data-i18n="ax.a1.n"></h3><p data-i18n="ax.a1.s"></p></div>
+          <div class="axiom-card"><span class="axiom-id">A2</span><h3 data-i18n="ax.a2.n"></h3><p data-i18n="ax.a2.s"></p></div>
+          <div class="axiom-card"><span class="axiom-id">A3</span><h3 data-i18n="ax.a3.n"></h3><p data-i18n="ax.a3.s"></p></div>
+          <div class="axiom-card"><span class="axiom-id">A4</span><h3 data-i18n="ax.a4.n"></h3><p data-i18n="ax.a4.s"></p></div>
+          <div class="axiom-card"><span class="axiom-id">A5</span><h3 data-i18n="ax.a5.n"></h3><p data-i18n="ax.a5.s"></p></div>
+          <div class="axiom-card"><span class="axiom-id">A6</span><h3 data-i18n="ax.a6.n"></h3><p data-i18n="ax.a6.s"></p></div>
+          <div class="axiom-card"><span class="axiom-id">A7</span><h3 data-i18n="ax.a7.n"></h3><p data-i18n="ax.a7.s"></p></div>
+          <div class="axiom-card"><span class="axiom-id">A8</span><h3 data-i18n="ax.a8.n"></h3><p data-i18n="ax.a8.s"></p></div>
+          <div class="axiom-card"><span class="axiom-id">A9</span><h3 data-i18n="ax.a9.n"></h3><p data-i18n="ax.a9.s"></p></div>
+          <div class="axiom-card"><span class="axiom-id">A10</span><h3 data-i18n="ax.a10.n"></h3><p data-i18n="ax.a10.s"></p></div>
+          <div class="axiom-card"><span class="axiom-id">A11</span><h3 data-i18n="ax.a11.n"></h3><p data-i18n="ax.a11.s"></p></div>
+          <div class="axiom-card"><span class="axiom-id">A12</span><h3 data-i18n="ax.a12.n"></h3><p data-i18n="ax.a12.s"></p></div>
+          <div class="axiom-card"><span class="axiom-id">A13</span><h3 data-i18n="ax.a13.n"></h3><p data-i18n="ax.a13.s"></p></div>
+          <div class="axiom-card"><span class="axiom-id">A14</span><h3 data-i18n="ax.a14.n"></h3><p data-i18n="ax.a14.s"></p></div>
         </div>
       </div>
     </section>
@@ -356,6 +392,24 @@ export function janken(constraints = {}) { ... }
         "visual.title": "Eyes over Server.",
         "visual.lead": "In yume-develop, we discard the bottleneck of manual browser inspection. AI agents use <code>ai-eyes</code> to verify rendering integrity through structured draw operation logs.",
         "visual.cta": "View Replay Demo",
+        "axioms.eyebrow": "The Core Philosophy",
+        "axioms.title": "15 Axioms of AI-Native Development.",
+        "axioms.lead": "The foundational principles that guide every Block and Graph in yume-develop. Designed for AI cognitive physics.",
+        "ax.a0.n": "Cognitive Asymmetry", "ax.a0.s": "Abandon human readability for AI-centric structural integrity.",
+        "ax.a1.n": "Maximum Locality", "ax.a1.s": "Consolidate all information into a single scope. Shared helpers are physical concealment.",
+        "ax.a2.n": "Constraint Folding", "ax.a2.s": "Abandon if/else trees for 'all possible worlds' + declarative filters.",
+        "ax.a3.n": "REAL / SHADOW", "ax.a3.s": "Single source of truth (REAL), all else is derived (SHADOW).",
+        "ax.a4.n": "Event Sourcing", "ax.a4.s": "Append history with sequential hash chains. No overwriting truth.",
+        "ax.a5.n": "All-as-Block", "ax.a5.s": "Code, docs, and tests must follow the same Block interface.",
+        "ax.a6.n": "Versions-as-Body", "ax.a6.s": "The only true state of a Block is its append-only versions array.",
+        "ax.a7.n": "LLM-First Density", "ax.a7.s": "Maximize information density for AI attention, not human skimming.",
+        "ax.a8.n": "Spec-First Versioning", "ax.a8.s": "Always inject logic (SPEC) versions before implementation versions.",
+        "ax.a9.n": "Crystallization", "ax.a9.s": "Code must be statically transpilable to native logic (Go/C).",
+        "ax.a10.n": "Single Coord Domain", "ax.a10.s": "Use world coordinates for all inter-Block communication.",
+        "ax.a11.n": "Domain-Tagged Values", "ax.a11.s": "Embed type/unit info directly into values (e.g., 'world:x,y,z').",
+        "ax.a12.n": "Universal Literalism", "ax.a12.s": "Persist all state as meaningful string literals for AI validation.",
+        "ax.a13.n": "Shadow Projection", "ax.a13.s": "Lift REAL to SHADOW for math, then settle back to REAL immediately.",
+        "ax.a14.n": "Top-Down Verification", "ax.a14.s": "Verify from the whole (E2E) to the part (Unit).",
         "start.eyebrow": "Getting Started",
         "start.title": "Instructing your Agent",
         "start.lead": "If you are an AI assistant opening this repository, your first step is to internalize the rules.",
@@ -394,6 +448,24 @@ export function janken(constraints = {}) { ... }
         "visual.title": "Eyes over Server.",
         "visual.lead": "yume-develop では、手動によるブラウザ確認のボトルネックを排除します。AI エージェントは <code>ai-eyes</code> を使用し、構造化された描画命令ログを通じて描画の整合性を検証します。",
         "visual.cta": "リプレイデモを見る",
+        "axioms.eyebrow": "核となる思想",
+        "axioms.title": "AI-Native 開発の 15 公理。",
+        "axioms.lead": "yume-develop のすべての Block と Graph を導く基本原則。AI の認知物理学に基づいて設計されています。",
+        "ax.a0.n": "認知非対称性", "ax.a0.s": "人間向けの「読みやすさ」を捨て、AI 向けの「構造的整合性」を追求せよ。",
+        "ax.a1.n": "ローカリティ極大化", "ax.a1.s": "必要な情報を 1 つのスコープに集約せよ。共有ヘルパーは物理的な隠匿である。",
+        "ax.a2.n": "Constraint Folding", "ax.a2.s": "if/else 分岐を捨て、全可能世界と宣言的フィルタに畳み込め。",
+        "ax.a3.n": "REAL / SHADOW", "ax.a3.s": "唯一の真実を REAL とし、それ以外を派生値 SHADOW とせよ。",
+        "ax.a4.n": "Event Sourcing", "ax.a4.s": "ハッシュチェーンによる履歴追記を行え。真実の上書きを禁止する。",
+        "ax.a5.n": "All-as-Block", "ax.a5.s": "コード、ドキュメント、テストのすべてを同一の Block インターフェースに従わせよ。",
+        "ax.a6.n": "Versions-as-Body", "ax.a6.s": "Block の唯一の実体は、追記専用の履歴配列（versions）である。",
+        "ax.a7.n": "LLM-First Density", "ax.a7.s": "人間向けの「見やすさ」ではなく、AI の Attention にとっての情報密度を最大化せよ。",
+        "ax.a8.n": "Spec-First Versioning", "ax.a8.s": "実装の前に必ず論理（SPEC）バージョンを注入せよ。",
+        "ax.a9.n": "Crystallization", "ax.a9.s": "コードはネイティブ（Go/C）に静的変換可能な純粋性を保たねばならない。",
+        "ax.a10.n": "Single Coord Domain", "ax.a10.s": "Block 間通信はすべて世界座標（world coord）で統一せよ。",
+        "ax.a11.n": "Domain-Tagged Values", "ax.a11.s": "値そのものに型/単位タグ（例: 'world:x,y,z'）を埋め込み、推論ミスを構造的に防げ。",
+        "ax.a12.n": "Universal Literalism", "ax.a12.s": "すべての状態を、AI が検証・修正可能な意味のある文字列リテラルとして永続化せよ。",
+        "ax.a13.n": "Shadow Projection", "ax.a13.s": "演算時のみ数値を使い、直後に文字（REAL）へと還元せよ。",
+        "ax.a14.n": "Top-Down Verification", "ax.a14.s": "検証は必ず全体（E2E）から部分（Unit）へとトップダウンで進めよ。",
         "start.eyebrow": "はじめかた",
         "start.title": "エージェントへの指示",
         "start.lead": "あなたがこのリポジトリを開いた AI アシスタントなら、最初のステップはルールを内面化することです。",
