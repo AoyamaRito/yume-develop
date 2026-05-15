@@ -110,8 +110,20 @@ export const StartHere = {
     };
 
     // ============================================================
-    // §1 絶対に守る禁忌(これを破ったらコミットしない)
-//   各禁忌は { rule, why, axiom_ref } の構造化データ
+    // §0.6 サーバーなき検証 (Eyes over Server)
+    // ============================================================
+    export const EyesOverServer = {
+    rule: \"UI や 3D ロジックの修正時、人間による目視確認(サーバー起動)を待たず、ai-eyes で自律検証せよ。\",
+    why: \"人間がブラウザを開くコストは AI にとってのボトルネックである。描画命令(draw_ops)を構造的に比較することで、ハルシネーションを物理的に排除できる。\",
+    workflow: [
+    \"1. 修正後に `node eyes.observation.yume.js <target>` を実行。\",
+    \"2. 出力された draw_ops を前回の正常値(snapshot Block)と diff。\",
+    \"3. 座標や色が意図通りであれば、目視なしでパスと判断する。\",
+    ],
+    };
+
+    // ============================================================
+    // §1 絶対に守る禁忌(これを破ったらコミットしない)//   各禁忌は { rule, why, axiom_ref } の構造化データ
 // ============================================================
 export const Forbidden = [
   { id: 1, rule: "TypeScript を導入しない",                            why: "型情報による隠匿排除",     axiom_ref: 'A0' },
@@ -393,6 +405,13 @@ export function exportMarkdown() {
   for (const m of SniperReading.methods) {
     out.push(`- **${m.name}**: \`${m.command}\`  _(${m.benefit})_`);
   }
+  out.push('');
+
+  out.push(`## §0.6 サーバーなき検証 (Eyes over Server)`);
+  out.push(EyesOverServer.rule);
+  out.push(`\nwhy: ${EyesOverServer.why}`);
+  out.push(`\n### Workflow`);
+  for (const s of EyesOverServer.workflow) out.push(`- ${s}`);
   out.push('');
 
   out.push(`## §1 Forbidden(これを破ったらコミットしない)`);
