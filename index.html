@@ -277,6 +277,23 @@ export function janken(constraints = {}) { ... }
             <h3>cpu3d.verify.yume.js</h3>
             <p data-i18n="core.c4.body">The Double-Entry Math implementation. A CPU Twin running alongside WebGL to definitively prove whether a 3D bug is logical or visual.</p>
           </article>
+          <article class="card">
+            <h3>eyes.debugger.yume.js</h3>
+            <p data-i18n="core.c5.body">The Coma-Okuri Debugger. Generates frame-by-frame HTML replay logs from draw operation streams, enabling visual verification without a browser.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section band">
+      <div class="narrow">
+        <p class="eyebrow" data-i18n="visual.eyebrow">Visual Verification</p>
+        <h2 data-i18n="visual.title">Eyes over Server.</h2>
+        <p class="section-lead" data-i18n="visual.lead">
+          In yume-develop, we discard the bottleneck of manual browser inspection. AI agents use <code>ai-eyes</code> to verify rendering integrity through structured draw operation logs.
+        </p>
+        <div class="hero-actions">
+          <a class="button" href="examples/replay-sample.html" target="_blank" data-i18n="visual.cta">View Replay Demo</a>
         </div>
       </div>
     </section>
@@ -329,6 +346,11 @@ export function janken(constraints = {}) { ... }
         "core.c2.body": "The Constraint Folding engine. Eliminating nested if/else statements by evaluating all possible worlds against declarative filters.",
         "core.c3.body": "A native wrapper around <code>node:inspector</code> that executes functions and returns precise V8 coverage data, feeding the Gap Filler loop.",
         "core.c4.body": "The Double-Entry Math implementation. A CPU Twin running alongside WebGL to definitively prove whether a 3D bug is logical or visual.",
+        "core.c5.body": "The Coma-Okuri Debugger. Generates frame-by-frame HTML replay logs from draw operation streams, enabling visual verification without a browser.",
+        "visual.eyebrow": "Visual Verification",
+        "visual.title": "Eyes over Server.",
+        "visual.lead": "In yume-develop, we discard the bottleneck of manual browser inspection. AI agents use <code>ai-eyes</code> to verify rendering integrity through structured draw operation logs.",
+        "visual.cta": "View Replay Demo",
         "start.eyebrow": "Getting Started",
         "start.title": "Instructing your Agent",
         "start.lead": "If you are an AI assistant opening this repository, your first step is to internalize the rules.",
@@ -362,6 +384,11 @@ export function janken(constraints = {}) { ... }
         "core.c2.body": "制約畳み込みエンジン。宣言的なフィルタに対して全可能世界を評価することで、ネストされた if/else 文を排除します。",
         "core.c3.body": "<code>node:inspector</code> のネイティブなラッパー。関数を実行して精密な V8 カバレッジを返し、Gap Filler ループに供給します。",
         "core.c4.body": "複式数学の実装。WebGL と並走する CPU Twin により、3D のバグが論理的なものか視覚的なものかを決定的に証明します。",
+        "core.c5.body": "コマ送りデバッガ。描画命令ストリームからフレーム単位の HTML リプレイログを生成し、ブラウザなしでの視覚的検証を可能にします。",
+        "visual.eyebrow": "視覚的検証",
+        "visual.title": "Eyes over Server.",
+        "visual.lead": "yume-develop では、手動によるブラウザ確認のボトルネックを排除します。AI エージェントは <code>ai-eyes</code> を使用し、構造化された描画命令ログを通じて描画の整合性を検証します。",
+        "visual.cta": "リプレイデモを見る",
         "start.eyebrow": "はじめかた",
         "start.title": "エージェントへの指示",
         "start.lead": "あなたがこのリポジトリを開いた AI アシスタントなら、最初のステップはルールを内面化することです。",

@@ -86,25 +86,25 @@ export const StartHere = {
     "ai-desk.js は CLI 実行時、コードの状態を観察して **stderr に 1 度だけ hint** を流す" +
     "(例: WebGL/Matrix4 検出 → `3dplus/` への routing)。" +
     "状態は cwd の `.ai-desk-state.json` に記録、二度目以降は静か。" +
-    \"hint が出たら指示先のドキュメントを実際に読む。\",
-    };
+    "hint が出たら指示先のドキュメントを実際に読む。",
+};
 
     // ============================================================
     // §0.5 スナイパー・リーディング (Sniper Reading)
     // ============================================================
     export const SniperReading = {
-    rule: \".yume.js ファイルを探索する際、初手でファイル全体を read_file してはならない。\",
-    why: \"履歴ブロック(__block.versions)の巨大なノイズにより、AI の Spotlight(300行)が枯渇し、現在の実装(HEAD)を見失うため。\",
+    rule: ".yume.js ファイルを探索する際、初手でファイル全体を read_file してはならない。",
+    why: "履歴ブロック(__block.versions)の巨大なノイズにより、AI の Spotlight(300行)が枯渇し、現在の実装(HEAD)を見失うため。",
     methods: [
     {
-      name: \"CLI show head --raw\",
-      command: \"node <file>.yume.js show head --raw\",
-      benefit: \"メタデータを含まないピュアな HEAD ソースコードのみを取得できる。最も推奨される方法。\",
+      name: "CLI show head --raw",
+      command: "node <file>.yume.js show head --raw",
+      benefit: "メタデータを含まないピュアな HEAD ソースコードのみを取得できる。最も推奨される方法。",
     },
     {
-      name: \"Grep HEAD line\",
-      command: \"grep -n '=== HEAD ===' <file>.yume.js\",
-      benefit: \"HEAD 領域の開始行を特定し、read_file(start_line: N) で履歴をスキップして読み取れる。\",
+      name: "Grep HEAD line",
+      command: "grep -n '=== HEAD ===' <file>.yume.js",
+      benefit: "HEAD 領域の開始行を特定し、read_file(start_line: N) で履歴をスキップして読み取れる。",
     },
     ],
     };
@@ -113,13 +113,13 @@ export const StartHere = {
     // §0.6 サーバーなき検証 (Eyes over Server)
     // ============================================================
     export const EyesOverServer = {
-    rule: \"UI や 3D ロジックの修正時、人間による目視確認(サーバー起動)を待たず、ai-eyes で自律検証せよ。\",
-    why: \"人間がブラウザを開くコストは AI にとってのボトルネックである。描画命令(draw_ops)を構造的に比較することで、ハルシネーションを物理的に排除できる。\",
+    rule: "UI や 3D ロジックの修正時、人間による目視確認(サーバー起動)を待たず、ai-eyes で自律検証せよ。",
+    why: "人間がブラウザを開くコストは AI にとってのボトルネックである。描画命令(draw_ops)を構造的に比較することで、ハルシネーションを物理的に排除できる。",
     workflow: [
-      \"1. 修正後に `node eyes.observation.yume.js <target>` を実行。\",
-      \"2. 出力された draw_ops を前回の正常値(snapshot Block)と diff。\",
-      \"3. 座標や色が意図通りであれば、目視なしでパスと判断する。\",
-      \"4. 複雑な挙動(アニメーション等)は `node eyes.debugger.yume.js <demo> <scenario>` で HTML 動画ログを生成し、コマ送りで最終確認する。\",
+      "1. 修正後に `node eyes.observation.yume.js <target>` を実行。",
+      "2. 出力された draw_ops を前回の正常値(snapshot Block)と diff。",
+      "3. 座標や色が意図通りであれば、目視なしでパスと判断する。",
+      "4. 複雑な挙動(アニメーション等)は `node eyes.debugger.yume.js <demo> <scenario>` で HTML 動画ログを生成し、コマ送りで最終確認する。",
     ],
     };
     // ============================================================
