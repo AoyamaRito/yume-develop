@@ -1078,6 +1078,89 @@ export const cases = [
       await r1(); await r2();
       return true;
     }) },
+
+  // ---- trimVersions --------------------------------------------------
+  { tag: 'trimVersions/nothing-to-trim',
+    fn: 'trimVersions',
+    run: (rt) => withFreshHello(async (f) => {
+      const r = await rt.trimVersions(f, { keep: 5 });
+      return r.trimmed === 0 && r.kept === 1;
+    }) },
+  { tag: 'trimVersions/reduces-version-count',
+    fn: 'trimVersions',
+    run: (rt) => withFreshHello(async (f) => {
+      rewriteHead(f, 'export function hello(){return "v2";}');
+      await rt.commitManual(f);
+      rewriteHead(f, 'export function hello(){return "v3";}');
+      await rt.commitManual(f);
+      await rt.trimVersions(f, { keep: 2 });
+      return rt.parseBlock(readFileSync(f, 'utf8')).block.versions.length === 2;
+    }) },
+  { tag: 'trimVersions/creates-archive-file',
+    fn: 'trimVersions',
+    run: (rt) => withFreshHello(async (f) => {
+      rewriteHead(f, 'export function hello(){return "v2";}');
+      await rt.commitManual(f);
+      rewriteHead(f, 'export function hello(){return "v3";}');
+      await rt.commitManual(f);
+      const r = await rt.trimVersions(f, { keep: 1 });
+      return r.trimmed === 2 && readFileSync(r.archivePath, 'utf8').includes('__archive');
+    }) },
+  { tag: 'trimVersions/archive-contains-old-versions',
+    fn: 'trimVersions',
+    run: (rt) => withFreshHello(async (f) => {
+      rewriteHead(f, 'export function hello(){return "v2";}');
+      await rt.commitManual(f);
+      rewriteHead(f, 'export function hello(){return "v3";}');
+      await rt.commitManual(f);
+      const r = await rt.trimVersions(f, { keep: 1 });
+      const src = readFileSync(r.archivePath, 'utf8');
+      const archive = JSON.parse(src.slice(src.indexOf('export const __archive = ') + 'export const __archive = '.length).replace(/;\s*$/, ''));
+      return archive.versions.length === 2;
+    }) },
+  { tag: 'trimVersions/validates-after-trim',
+    fn: 'trimVersions',
+    run: (rt) => withFreshHello(async (f) => {
+      rewriteHead(f, 'export function hello(){return "v2";}');
+      await rt.commitManual(f);
+      rewriteHead(f, 'export function hello(){return "v3";}');
+      await rt.commitManual(f);
+      await rt.trimVersions(f, { keep: 1 });
+      return rt.validateBlock(rt.parseBlock(readFileSync(f, 'utf8')).block).ok;
+    }) },
+  { tag: 'trimVersions/trimmedAt-records-count',
+    fn: 'trimVersions',
+    run: (rt) => withFreshHello(async (f) => {
+      rewriteHead(f, 'export function hello(){return "v2";}');
+      await rt.commitManual(f);
+      rewriteHead(f, 'export function hello(){return "v3";}');
+      await rt.commitManual(f);
+      await rt.trimVersions(f, { keep: 1 });
+      const b = rt.parseBlock(readFileSync(f, 'utf8')).block;
+      return b.trimmedAt?.count === 2;
+    }) },
+  { tag: 'trimVersions/appends-to-existing-archive',
+    fn: 'trimVersions',
+    run: (rt) => withFreshHello(async (f) => {
+      for (let i = 2; i <= 5; i++) {
+        rewriteHead(f, `export function hello(){return "v${i}";}`);
+        await rt.commitManual(f);
+      }
+      await rt.trimVersions(f, { keep: 3 });
+      await rt.trimVersions(f, { keep: 1 });
+      const src = readFileSync(f.replace(/\.yume\.js$/, '.archive.yume.js'), 'utf8');
+      const archive = JSON.parse(src.slice(src.indexOf('export const __archive = ') + 'export const __archive = '.length).replace(/;\s*$/, ''));
+      return archive.versions.length === 4;
+    }) },
+  { tag: 'trimVersions/idempotent-at-keep-boundary',
+    fn: 'trimVersions',
+    run: (rt) => withFreshHello(async (f) => {
+      rewriteHead(f, 'export function hello(){return "v2";}');
+      await rt.commitManual(f);
+      await rt.trimVersions(f, { keep: 2 });
+      const r = await rt.trimVersions(f, { keep: 2 });
+      return r.trimmed === 0;
+    }) },
 ];
 
 // === /HEAD ===

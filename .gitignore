@@ -2,3 +2,8 @@ node_modules/
 .DS_Store
 *.local.json
 .ai-desk-state.json
+.yume-work/
+*.archive.yume.js
+*.lock
+*.tmp.*
+npm-debug.log*

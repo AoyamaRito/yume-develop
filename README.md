@@ -55,6 +55,9 @@ node core.module.yume.js history
 # Check the integrity of the reference graph
 node examples/hello.fn.yume.js refs-check .
 
+# Move old versions into a sibling plaintext archive
+node examples/hello.fn.yume.js trim --keep 5
+
 # Validate canonical yume docs
 node runAndReadMe.aiDoc.yume.js validate
 node BLOCKFILE.aiDoc.yume.js validate
@@ -65,4 +68,5 @@ node BLOCKFILE.aiDoc.yume.js validate
 - Runtime and repository behavior changes pass `npm test` (`e2e.js` plus `3d-prefab`, `3dplus`, and `eyes` tests).
 - Reference graph changes pass `node examples/hello.fn.yume.js refs-check .`.
 - Changed `.yume.js` files validate through their co-located runtime.
+- Generated `*.archive.yume.js` files stay untracked unless deliberately used as fixtures.
 - Public docs explain the current file layout and commands.

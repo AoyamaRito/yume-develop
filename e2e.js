@@ -1331,6 +1331,52 @@ await group('Handle Runtime Coverage (A14)', async () => {
     assert.ok((await rt2.show(F, 'head')).content.includes('return 1'));
   });
 
+  await test('v001/v002: trimVersions archives old versions', async () => {
+    const archivePath = F.replace(/\.yume\.js$/, '.archive.yume.js');
+
+    function rewriteRuntimeHead(value) {
+      const src = readFileSync(F, 'utf8');
+      const headStart = src.indexOf('// === HEAD ===') + '// === HEAD ==='.length;
+      const headEnd = src.indexOf('// === /HEAD ===');
+      writeFileSync(
+        F,
+        src.slice(0, headStart) +
+          `\nexport function test() { return ${value}; }\n` +
+          src.slice(headEnd),
+      );
+    }
+
+    await setup(rt1);
+    rewriteRuntimeHead(2);
+    await rt1.commitManual(F);
+    rewriteRuntimeHead(3);
+    await rt1.commitManual(F);
+    const r1 = await rt1.trimVersions(F, { keep: 1 });
+    assert.equal(r1.trimmed, 2);
+    assert.equal(r1.kept, 1);
+    assert.ok(existsSync(r1.archivePath));
+    assert.equal((await rt1.history(F)).length, 1);
+    const parsed1 = rt1.parseBlock(readFileSync(F, 'utf8'));
+    assert.equal(parsed1.block.trimmedAt.count, 2);
+    const archiveSrc1 = readFileSync(r1.archivePath, 'utf8');
+    const archive1 = JSON.parse(archiveSrc1
+      .slice(archiveSrc1.indexOf('export const __archive = ') + 'export const __archive = '.length)
+      .replace(/;\s*$/, ''));
+    assert.equal(archive1.versions.length, 2);
+    assert.ok(execSync(`node ${F} history`, { encoding: 'utf8' }).includes('archived'));
+
+    if (existsSync(archivePath)) unlinkSync(archivePath);
+    await setup(rt2);
+    rewriteRuntimeHead(2);
+    await rt2.commitManual(F);
+    rewriteRuntimeHead(3);
+    await rt2.commitManual(F);
+    const r2 = await rt2.trimVersions(F, { keep: 2 });
+    assert.equal(r2.trimmed, 1);
+    assert.equal((await rt2.history(F)).length, 2);
+    assert.equal(rt2.validateBlock(rt2.parseBlock(readFileSync(F, 'utf8')).block).ok, true);
+  });
+
   await test('v002: refs-check and impact', async () => {
     const f1 = `${TMP}/a.yume.js`;
     const f2 = `${TMP}/b.yume.js`;
