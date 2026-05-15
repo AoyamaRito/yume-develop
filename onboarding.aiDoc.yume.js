@@ -86,11 +86,31 @@ export const StartHere = {
     "ai-desk.js は CLI 実行時、コードの状態を観察して **stderr に 1 度だけ hint** を流す" +
     "(例: WebGL/Matrix4 検出 → `3dplus/` への routing)。" +
     "状態は cwd の `.ai-desk-state.json` に記録、二度目以降は静か。" +
-    "hint が出たら指示先のドキュメントを実際に読む。",
-};
+    \"hint が出たら指示先のドキュメントを実際に読む。\",
+    };
 
-// ============================================================
-// §1 絶対に守る禁忌(これを破ったらコミットしない)
+    // ============================================================
+    // §0.5 スナイパー・リーディング (Sniper Reading)
+    // ============================================================
+    export const SniperReading = {
+    rule: \".yume.js ファイルを探索する際、初手でファイル全体を read_file してはならない。\",
+    why: \"履歴ブロック(__block.versions)の巨大なノイズにより、AI の Spotlight(300行)が枯渇し、現在の実装(HEAD)を見失うため。\",
+    methods: [
+    {
+      name: \"CLI show head --raw\",
+      command: \"node <file>.yume.js show head --raw\",
+      benefit: \"メタデータを含まないピュアな HEAD ソースコードのみを取得できる。最も推奨される方法。\",
+    },
+    {
+      name: \"Grep HEAD line\",
+      command: \"grep -n '=== HEAD ===' <file>.yume.js\",
+      benefit: \"HEAD 領域の開始行を特定し、read_file(start_line: N) で履歴をスキップして読み取れる。\",
+    },
+    ],
+    };
+
+    // ============================================================
+    // §1 絶対に守る禁忌(これを破ったらコミットしない)
 //   各禁忌は { rule, why, axiom_ref } の構造化データ
 // ============================================================
 export const Forbidden = [
@@ -365,6 +385,15 @@ export function exportMarkdown() {
   out.push(`### Files to know`);
   for (const f of StartHere.files) out.push(`- **${f.path}**: ${f.purpose}`);
   out.push(`\n### stderr hint policy\n${StartHere.stderrHintPolicy}\n`);
+
+  out.push(`## §0.5 スナイパー・リーディング (Sniper Reading)`);
+  out.push(SniperReading.rule);
+  out.push(`\nwhy: ${SniperReading.why}`);
+  out.push(`\n### Methods`);
+  for (const m of SniperReading.methods) {
+    out.push(`- **${m.name}**: \`${m.command}\`  _(${m.benefit})_`);
+  }
+  out.push('');
 
   out.push(`## §1 Forbidden(これを破ったらコミットしない)`);
   for (const f of Forbidden) out.push(`- **${f.id}.** ${f.rule}  _(${f.why}, ${f.axiom_ref})_`);

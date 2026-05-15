@@ -455,6 +455,14 @@ await group('CLI', async () => {
     assert.ok(out.includes('return'));
   });
 
+  await test('show --raw', async () => {
+    const f = `examples/hello.fn.yume.js`;
+    const out = execSync(`node ${f} show head --raw`, { encoding: 'utf8' });
+    assert.ok(out.includes('export function hello'));
+    assert.ok(!out.includes('hash:'));
+    assert.ok(!out.includes('--- content'));
+  });
+
   await test('graph (JSON)', async () => {
     const f = `${TMP}/gr.js`;
     writeFileSync(f, `function a(){}`);

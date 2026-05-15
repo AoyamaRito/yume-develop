@@ -1991,6 +1991,10 @@ export async function cli(fileUrl, block, argv) {
     }
     case 'show': {
       const v = await show(fileUrl, argv[3] ?? 'head');
+      if (hasFlag(argv, '--raw')) {
+        process.stdout.write(v.content.endsWith('\n') ? v.content : `${v.content}\n`);
+        return;
+      }
       console.log(`hash: ${v.hash}`);
       console.log(`prevHash: ${v.prevHash ?? '-'}`);
       console.log(`ts: ${new Date(v.ts).toISOString()}`);
