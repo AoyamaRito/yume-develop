@@ -975,6 +975,7 @@ export async function refsCheck(fileUrls) {
         addUnresolvedRefIssue(issues, entry, ref);
         continue;
       }
+      if (target.file === entry.file) continue;
       adjacency.get(entry.file).add(target.file);
       incoming.set(target.file, (incoming.get(target.file) ?? 0) + 1);
     }
@@ -1253,6 +1254,7 @@ function buildReverseRefs(entries, byFile, byBlockId) {
 function addUnresolvedRefIssue(issues, entry, ref) {
   if (!ref || typeof ref.target !== 'string') return;
   if (ref.kind === 'calls') return;
+  if (isExternalModuleRef(ref)) return;
   const pathLike = looksLikePathRef(ref.target);
   issues.push({
     level: pathLike ? 'error' : 'warning',
@@ -1263,6 +1265,11 @@ function addUnresolvedRefIssue(issues, entry, ref) {
     ref,
     message: `${pathLike ? 'dangling path ref' : 'unresolved ref'} '${ref.kind}:${ref.target}'`,
   });
+}
+
+function isExternalModuleRef(ref) {
+  if (ref.kind !== 'import' && ref.kind !== 'export' && ref.kind !== 'dynamic-import') return false;
+  return !looksLikePathRef(ref.target);
 }
 
 function findRefCycles(entries, adjacency) {

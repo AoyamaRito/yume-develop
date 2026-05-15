@@ -610,15 +610,27 @@ function runDemo() {
 }
 
 if (typeof process !== 'undefined' && import.meta.url.endsWith(process.argv[1])) {
-  runCommand().catch(console.error);
+  const legacyVerbs = new Set([
+    'skeleton', 'focus', 'graph', 'impact', 'self', 'tag', 'tags',
+    'bible-info', 'bible-check', 'bible-summon', 'save', 'load', 'search',
+    'diff', 'blame', 'apply', 'apply-block', 'resolve', 'lint', 'export',
+    'stats', 'heavy', 'virtual-apply', 'heavy-apply', 'mermaid', 'infer-tags',
+    'context', 'e2e', 'demo'
+  ]);
+  const verb = process.argv[2];
+
+  if (legacyVerbs.has(verb) || !verb) {
+    await runCommand().catch(console.error);
+  } else {
+    const path = __block.runtime.path ?? `./runtimes/ver${__block.runtime.version}.handle.yume.js`;
+    const rt = await import(path);
+    await rt.cli(import.meta.url, __block, process.argv);
+  }
 }
 
 // === /HEAD ===
 
 // === BOOT ===
-if (import.meta.url === `file://${process.argv[1]}`) {
-  const path = __block.runtime.path ?? `./runtimes/ver${__block.runtime.version}.handle.yume.js`;
-  const rt = await import(path);
-  await rt.cli(import.meta.url, __block, process.argv);
-}
+// The logic above replaces the standard BOOT to support legacy ai-desk verbs
+// in this specific project CLI module.
 // === /BOOT ===

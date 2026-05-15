@@ -1,10 +1,17 @@
 {
   "name": "yume-develop",
   "version": "1.0.0",
-  "description": "ai-desk level-up to yume-files format",
+  "description": "Self-contained yume development workspace",
   "type": "module",
   "scripts": {
-    "test": "node --test"
+    "test": "node e2e.js && node --test 3d-prefab/test/prefabs.test.js && node --test 3dplus/tests/*.test.js && node --test eyes/test/*.test.js",
+    "test:e2e": "node e2e.js",
+    "test:prefab": "node --test 3d-prefab/test/prefabs.test.js",
+    "test:3dplus": "node --test 3dplus/tests/*.test.js",
+    "test:eyes": "node --test eyes/test/*.test.js",
+    "refs-check": "node examples/hello.fn.yume.js refs-check .",
+    "validate:runbook": "node runAndReadMe.aiDoc.yume.js validate",
+    "validate:spec": "node BLOCKFILE.aiDoc.yume.js validate"
   },
   "private": true
 }
