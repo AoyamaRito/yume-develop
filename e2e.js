@@ -1263,7 +1263,16 @@ function c(){ return b() + 999; }
 // ============================================================
 // 6. Handle Runtime Coverage (A14)
 // ============================================================
-await group('Handle Runtime Coverage (A14)', async () => {
+await test('eyes:debugger', async () => {
+  const demo = `headless-demo.fn.yume.js`;
+  const scenario = `examples/coma-scenario.js`;
+  const out = `${TMP}/replay_test.html`;
+  execSync(`node eyes.debugger.yume.js ${demo} ${scenario} --out ${out}`, { encoding: 'utf8' });
+  const html = readFileSync(out, 'utf8');
+  assert.ok(html.includes('Coma-Okuri Replay'));
+  assert.ok(html.includes('player-canvas'));
+});
+await test('Handle Runtime Coverage (A14)', async () => {
   const F = `${TMP}/test.yume.js`;
   
   async function setup(runtime) {
