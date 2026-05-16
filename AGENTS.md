@@ -5,48 +5,24 @@ This repository is the product-track workspace for the portable `.yume.js` file 
 ## Start Here
 
 1. Read `runAndReadMe.aiDoc.yume.js` first. It is the operational runbook for AI agents.
-2. Use `README.md` for the human-facing overview and examples.
-3. Use `BLOCKFILE.aiDoc.yume.js` only when exact format or runtime semantics are needed.
-4. Use `examples/hello.fn.yume.js` as the smallest valid `.yume.js` sample.
+1. Use `README.md` for the human-facing overview and examples.
+1. Use `BLOCKFILE.aiDoc.yume.js` only when exact format or runtime semantics are needed.
+1. Use `examples/hello.fn.yume.js` as the smallest valid `.yume.js` sample.
 
 ## Project Rules
 
-- Keep the runtime dependency-free. Do not add AST parser packages or other npm dependencies unless the project deliberately changes that constraint.
-- Keep normal development self-contained inside this repository. If behavior from `ai-desk` or `yume-files` is needed, port it here with local tests instead of adding a runtime dependency on a sibling checkout.
-- Treat `filename.domain.yume.js` as meaningful. The `domain` segment tells an AI whether the file is code, spec, workflow, template, world, style, character data, or another knowledge unit.
-- **Sniper Reading (理解速度の短縮):** `.yume.js` ファイルは履歴ブロックにより巨大になるため、初手で `read_file` してはならない。`node <file>.yume.js show head --raw` を使ってピュアな HEAD ソースのみを読み取るか、`grep` で `=== HEAD ===` の開始行を特定して部分的に読み取ること。
-- **Eyes over Server (サーバーなき検証):** UI や 3D ロジックの修正時、人間による目視確認(サーバー起動)を待たず、`ai-eyes` で描画命令(`draw_ops`)を構造的に比較・検証せよ。
-- For normal `.yume.js` edits, edit only the `HEAD` region, then run `node <file>.yume.js commit --note "why this change exists"`.
-- Do not hand-edit `__block.versions[]` unless deliberately repairing a broken file.
-- Do not introduce compression of `__block.versions[]` (e.g. zlib/base64 squash). The substrate value of `.yume.js` is that all history stays plaintext and AI/grep readable. This was tried on branch `feat/zlib-self-compression` and rejected: the added bug surface (decompression side-effects in `validateBlock`, GC of orphaned compressed payloads, rollback integrity, parse cost) outweighed the size savings, which are bounded in practice. If history bloat ever becomes a real problem, prefer moving old versions to a sibling `*.archive.yume.js` file in plaintext rather than compressing in place.
-- Use `notes` for mutable intent and commentary. Use `applyId` when one AI operation spans multiple files.
-- Use `heavy` for related context, `impact` for reverse-reference blast radius, and `refs-check` for graph health.
-- `*.archive.yume.js` files are gitignored by default. They are created by `node <file>.yume.js trim [--keep N]` and hold versions moved out of the main file. Use `git add -f` only when an archive is intentionally part of a fixture or release artifact.
-- Treat `.yume-work/` as generated intermediate/cache output. Keep it for debugging or resume, and ignore it in Git unless a fixture is intentionally added.
-- Treat `*.spec.yume.js` as a planned domain for unit case tables. Strategy: do not block on unit tests during coding; verify at e2e time that every spec case is covered by an actual e2e path. Schema is ad-hoc in Phase 1 (`runtime.spec.yume.js`); will harden once real usage proves the shape.
-- `cover.js` runs the spec table and reports declared-fn drift + runtime-export coverage. With `--e2e` (Phase 2.1) it spawns `e2e.js` with `YUME_COVER=1`, collects every runtime fn called during the e2e run via a one-line `globalThis.__yumeCoverHook?.()` at each export entry, and reports which spec cases are not reached by any e2e path (fn-level match; input-shape match is Phase 2.2). The hook is env-gated and a no-op under plain `npm test`.
-- Keep Markdown/HTML docs aligned when public usage changes.
+- **Dependency-Free**: Keep the runtime dependency-free. Do not add npm dependencies unless the project deliberately changes that constraint.
+- **Sniper Reading**: `.yume.js` files are huge due to history. Do not `read_file` blindly. Use `node runYume.js <file>.yume.js show head --raw` to get clean HEAD source.
+- **Eyes over Server**: Use `ai-eyes` for structural verification of UI/3D logic instead of waiting for human visual confirmation.
+- **REAL / SHADOW (A3)**: Markdown files (*.md) are SHADOWs. Never edit them directly. Edit the corresponding *.aiDoc.yume.js (REAL) and export.
+- **Strict Validation**: Run `validate` and `refs-check .` after any structural change.
 
 ## Common Commands
 
 ```sh
 npm test
-npm run test:e2e
-npm run test:prefab
-npm run test:3dplus
-npm run test:eyes
-node runAndReadMe.aiDoc.yume.js show head
-node runAndReadMe.aiDoc.yume.js show head --raw
-node runAndReadMe.aiDoc.yume.js validate
-node BLOCKFILE.aiDoc.yume.js show head
-node examples/hello.fn.yume.js refs-check .
-node examples/hello.fn.yume.js heavy hello 1 .
-node examples/hello.fn.yume.js impact hello 1 .
+node runYume.js runAndReadMe.aiDoc.yume.js show head --raw
+node runYume.js examples/hello.fn.yume.js refs-check .
+node runYume.js <file>.yume.js commit --note "why this change exists"
 ```
 
-## Completion Checks
-
-- Changed `.yume.js` files validate.
-- `refs-check .` has no new unresolved path or duplicate block-id errors.
-- `npm test` passes when runtime behavior, repository structure, prefab/3dplus/eyes flow behavior, or yume file invariants change.
-- Public docs still describe the current commands and file layout.

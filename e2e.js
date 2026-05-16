@@ -457,7 +457,7 @@ await group('CLI', async () => {
 
   await test('show --raw', async () => {
     const f = `examples/hello.fn.yume.js`;
-    const out = execSync(`node ${f} show head --raw`, { encoding: 'utf8' });
+    const out = execSync(`node runYume.js ${f} show head --raw`, { encoding: 'utf8' });
     assert.ok(out.includes('export function hello'));
     assert.ok(!out.includes('hash:'));
     assert.ok(!out.includes('--- content'));
@@ -1380,7 +1380,7 @@ await test('Handle Runtime Coverage (A14)', async () => {
       .slice(archiveSrc1.indexOf('export const __archive = ') + 'export const __archive = '.length)
       .replace(/;\s*$/, ''));
     assert.equal(archive1.versions.length, 2);
-    assert.ok(execSync(`node ${F} history`, { encoding: 'utf8' }).includes('archived'));
+    assert.ok(execSync( `node runYume.js ${F} history` , { encoding: 'utf8' }).includes('archived'));
 
     if (existsSync(archivePath)) unlinkSync(archivePath);
     await setup(rt2);
@@ -1444,7 +1444,7 @@ await test('Handle Runtime Coverage (A14)', async () => {
     await setup(rt1);
     
     // External call
-    assert.ok(execSync(`node ${F} history`, { encoding: 'utf8' }).includes('apply='));
+    assert.ok(execSync( `node runYume.js ${F} history` , { encoding: 'utf8' }).includes('apply='));
     
     // Direct call (for coverage)
     const { block } = rt1.parseBlock(readFileSync(F, 'utf8'));

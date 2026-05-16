@@ -629,8 +629,3 @@ if (typeof process !== 'undefined' && import.meta.url.endsWith(process.argv[1]))
 }
 
 // === /HEAD ===
-
-// === BOOT ===
-// The logic above replaces the standard BOOT to support legacy ai-desk verbs
-// in this specific project CLI module.
-// === /BOOT ===
