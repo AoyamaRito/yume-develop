@@ -1,6 +1,6 @@
 # yume-develop
 
-yume-develop is the product-track workspace for AI-Native development. It evolves the concepts proven in `ai-desk v2` into the self-contained `.yume.js` (BLOCKFILE) format.
+yume-develop is a workspace and reference implementation for AI-Native development. It evolves the concepts proven in `ai-desk v2` into the self-contained `.yume.js` (BLOCKFILE) format.
 
 This repository is intentionally self-contained. It is bootstrapped from `ai-desk v2` and the `yume-files` format work, but it does not require a sibling `yume-files` checkout at runtime.
 
@@ -24,7 +24,7 @@ Code is history. In yume-develop, every file is a `.yume.js` file that carries i
 
 - **ai-desk**: Research lab and reference implementation.
 - **yume-files**: Format/spec origin. Treat it as lineage, not a runtime dependency.
-- **yume-develop**: Mainline product workspace.
+- **yume-develop**: Mainline development workspace and reference library.
 
 ## Usage
 

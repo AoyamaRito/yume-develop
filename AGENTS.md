@@ -1,6 +1,6 @@
 # AI Agent Instructions for yume-develop
 
-This repository is the product-track workspace for the portable `.yume.js` file format and its co-located runtimes. It is intentionally self-contained: do not assume a sibling `yume-files` checkout is available at runtime.
+This repository is the development workspace for the portable `.yume.js` file format and its co-located runtimes. It is intentionally self-contained: do not assume a sibling `yume-files` checkout is available at runtime.
 
 ## Start Here
 

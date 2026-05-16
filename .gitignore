@@ -9,4 +9,11 @@ node_modules/
 npm-debug.log*
 worklog*
 worklog-*.js
-\n/test-screenshots/
+/test-screenshots/
+/agent-test-screenshots/
+/swarm-screenshots/
+yume-kantoku/agent-test-screenshots/
+yume-kantoku/swarm-screenshots/
+yume-kantoku/agent-screenshots/
+yume-kantoku/screenshots/
+.yume-player-harness-*.html
