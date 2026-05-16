@@ -28,7 +28,7 @@ Code is history. In yume-develop, every file is a `.yume.js` file that carries i
 
 ## Usage
 
-Files in this repository are executable and self-managing.
+Files in this repository are managed through `runYume.js`, which resolves the runtime pinned by each `.yume.js` file.
 
 ```bash
 # Run the complete local suite
@@ -38,13 +38,13 @@ npm test
 npm run test:e2e
 
 # List versions of a file
-node core.module.yume.js history
+node runYume.js core.module.yume.js history
 
 # Check the integrity of the reference graph
 node runYume.js examples/hello.fn.yume.js refs-check .
 
-# Generate SHADOW markdown from REAL JS source
-node <file>.yume.js export-md > <file>.md
+# Show clean HEAD source without embedded history
+node runYume.js <file>.yume.js show head --raw
 ```
 
 ## Completion Standard
@@ -52,4 +52,3 @@ node <file>.yume.js export-md > <file>.md
 - Changed .yume.js files validate.
 - Reference graph changes pass refs-check.
 - Public docs (SHADOW) are aligned with REAL source.
-

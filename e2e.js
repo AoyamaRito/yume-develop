@@ -463,6 +463,30 @@ await group('CLI', async () => {
     assert.ok(!out.includes('--- content'));
   });
 
+  await test('runYume parses __block when version content contains semicolon brace', async () => {
+    const f = `${TMP}/block-expr.yume.js`;
+    const head = `export const config = { enabled: true };\nexport function readConfig() { return config; }\n`;
+    const ts = 1714000000000;
+    const block = {
+      id: "block-expr",
+      type: "module",
+      schemaVersion: 1,
+      runtime: { name: "yume", version: "001" },
+      versions: [{
+        hash: rt1.hashContent(head, null, ts),
+        prevHash: null,
+        content: head,
+        ts,
+        refs: [],
+        tags: [],
+        applyId: null,
+      }],
+    };
+    writeFileSync(f, rt1.serializeBlock({ block, head }));
+    const out = execSync(`node runYume.js ${f} show head --raw`, { encoding: 'utf8' });
+    assert.ok(out.includes('export const config = { enabled: true };'));
+  });
+
   await test('graph (JSON)', async () => {
     const f = `${TMP}/gr.js`;
     writeFileSync(f, `function a(){}`);

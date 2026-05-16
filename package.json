@@ -9,9 +9,9 @@
     "test:prefab": "node --test 3d-prefab/test/prefabs.test.js",
     "test:3dplus": "node --test 3dplus/tests/*.test.js",
     "test:eyes": "node --test eyes/test/*.test.js",
-    "refs-check": "node examples/hello.fn.yume.js refs-check .",
-    "validate:runbook": "node runAndReadMe.aiDoc.yume.js validate",
-    "validate:spec": "node BLOCKFILE.aiDoc.yume.js validate"
+    "refs-check": "node runYume.js examples/hello.fn.yume.js refs-check .",
+    "validate:runbook": "node runYume.js runAndReadMe.aiDoc.yume.js validate",
+    "validate:spec": "node runYume.js BLOCKFILE.aiDoc.yume.js validate"
   },
   "private": true
 }
