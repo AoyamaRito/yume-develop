@@ -1372,6 +1372,46 @@ await test('Handle Runtime Coverage (A14)', async () => {
     assert.ok((await rt2.show(F, 'head')).content.includes('return 1'));
   });
 
+  await test('v002: schemaVersion 2 uses v numbers without hashes', async () => {
+    const head = 'export function test() { return 1; }';
+    const ts = 1714000000000;
+    const block = {
+      id: "test", type: "fn", schemaVersion: 2,
+      runtime: { name: "yume", version: "002" },
+      versions: [{
+        v: 1, content: head, ts,
+        refs: [], tags: [], applyId: null
+      }],
+      notes: {
+        v1: [{ id: 'n-seed', author: 'human', ts, text: 'seed' }]
+      }
+    };
+    writeFileSync(F, rt2.serializeBlock({ block, head, boot: '' }));
+
+    assert.equal(rt2.validateBlock(rt2.parseBlock(readFileSync(F, 'utf8')).block).ok, true);
+    assert.equal((await rt2.show(F, 'v1')).content, head);
+    assert.equal((await rt2.noteList(F, 'head'))[0].key, 'v1');
+    const n = await rt2.noteAdd(F, 'head', { author: 'ai', text: 'hashless note' });
+    assert.equal(n.key, 'v1');
+
+    const view = await rt2.heavy([F], 'test', 0);
+    assert.ok(view.includes('"version":"v1"'));
+    const res = await rt2.heavyApply([F], 'test', view.replace('return 1;', 'return 2;'), 0);
+    assert.equal(res.updated.length, 1);
+    assert.equal(Object.values(res.newHashes)[0], 'v2');
+
+    const versions = await rt2.history(F);
+    assert.equal(versions.length, 2);
+    assert.equal(versions[1].v, 2);
+    assert.equal(versions[1].hash, undefined);
+    assert.ok((await rt2.diff(F, 'v1', 'v2')).includes('return 2'));
+
+    await rt2.rollback(F, 'v1');
+    assert.equal((await rt2.show(F, 'head')).v, 3);
+    const historyOut = execSync(`node runYume.js ${F} history`, { encoding: 'utf8' });
+    assert.ok(historyOut.includes('v3'));
+  });
+
   await test('v001/v002: trimVersions archives old versions', async () => {
     const archivePath = F.replace(/\.yume\.js$/, '.archive.yume.js');
 
