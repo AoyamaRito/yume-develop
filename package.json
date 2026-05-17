@@ -4,12 +4,12 @@
   "description": "Self-contained yume development workspace",
   "type": "module",
   "scripts": {
-    "test": "node e2e.js && node --test 3d-prefab/test/prefabs.test.js && node --test 3dplus/tests/*.test.js && node --test eyes/test/*.test.js",
+    "test": "node e2e.js && node --test headless-demo.test.yume.js && node --test 3d-prefab/test/prefabs.test.js && node --test 3dplus/tests/*.test.js && node --test eyes/test/*.test.js",
     "test:e2e": "node e2e.js",
     "test:prefab": "node --test 3d-prefab/test/prefabs.test.js",
     "test:3dplus": "node --test 3dplus/tests/*.test.js",
     "test:eyes": "node --test eyes/test/*.test.js",
-    "refs-check": "node runYume.js examples/hello.fn.yume.js refs-check .",
+    "refs-check": "node runYume.js headless-demo.test.yume.js refs-check .",
     "validate:runbook": "node runYume.js runAndReadMe.aiDoc.yume.js validate",
     "validate:spec": "node runYume.js BLOCKFILE.aiDoc.yume.js validate"
   },
