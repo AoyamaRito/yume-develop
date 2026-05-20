@@ -137,6 +137,62 @@ export const Forbidden = [
 ];
 
 // ============================================================
+// §1.3 盲点・見落としがちな落とし穴 (LLM/Human Blind Spots & Pitfalls)
+//   軽く読んだ時に聞き流し・見落としがちだが、違反すると致命的な落とし穴
+// ============================================================
+export const BlindSpots = [
+  {
+    id: 1,
+    pitfall: "「とりあえず全体を読む」誘惑 (Sniper Reading 違反)",
+    symptom: "依存関係やコード把握のために .yume.js ファイルを丸ごと read_file してしまい、巨大な履歴 JSON データ (__block.versions) でコンテキストを使い切る、あるいは最新の実装を見失う。",
+    cure: "「初手でファイル全体を絶対に読むな」。必ず `node runYume.js <file> show head --raw` を使うか、grep で '=== HEAD ===' の開始行を特定して HEAD 部のみを限定して読む。",
+    axiom_ref: "A1, Physics.Spotlight, §0.5"
+  },
+  {
+    id: 2,
+    pitfall: "`REAL_*` プレフィックスの乱用・誤用 (A3 REAL/SHADOW 違反)",
+    symptom: "すべての状態変数に REAL_ を付けたり、ループ変数、DOM 要素、一時変数、ただの定数にまで REAL_ を付けてしまい、AST bootstrap 監視や状態バグ追跡の対象を絞り込めなくなる。",
+    cure: "REAL_* は「主要な状態」「Reducer等で更新され、描画・テスト・観測(eyes)の入力となる中核的な状態」にのみ限定して付与する。",
+    axiom_ref: "A3"
+  },
+  {
+    id: 3,
+    pitfall: "型情報の暗黙の依存 (LLMTyping / A11 違反)",
+    symptom: "変数名（worldX, screenY）やコメント、型定義（TypeScriptなど）だけで型を表現し、REAL値そのものは裸の数値やオブジェクトで持つ。LLM が context window の外側へ移動した瞬間、その変数名の意味を忘れハルシネーションを起こす。",
+    cure: "値そのものにドメインタグを埋め込んだ文字列として持つ（例：\"world:10,0,-5\" / \"usd:19.99\"）。値が self-describing であれば、AIが context を失っても絶対に推論を間違えない。",
+    axiom_ref: "Physics.LLMTyping, A11"
+  },
+  {
+    id: 4,
+    pitfall: "仕様（SPEC）を挟まない「いきなり実装」 (A8 Spec-First Versioning 違反)",
+    symptom: "仕様変更や新機能実装の際、仕様（SPEC）のみを定義したバージョン（コメント ＋ #SPEC# タグのみのバージョン）を挟むことなく、最初から実装コード（impl）を commit し、仕様の変遷履歴を失う。",
+    cure: "コードを書き換える前に、必ず「新仕様の定義（仕様コメントのみの spec version）」を Block.commit してから、その次のバージョンで実装コードをコミットする。",
+    axiom_ref: "A8"
+  },
+  {
+    id: 5,
+    pitfall: "純粋論理(Pure logic)と Adapter の混同 (A9 Crystallize 違反)",
+    symptom: "Block の中に、動的な dispatch、eval、Proxy、prototype 拡張、またはプラットフォーム特有の I/O や DOM 操作、タイマーなどの副作用を書いてしまう。Go にコンパイル（crystallize）できず、AIにとっても推論しにくい。",
+    cure: "Block 内には「Crystallize可能な Pure logic」のみを書く。I/O や DOM操作、動的ディスパッチは Block の外にある Adapter へ完全に分離し、Block 内部を極限までピュアに保つ。",
+    axiom_ref: "A9"
+  },
+  {
+    id: 6,
+    pitfall: "3D 座標を screen に射影して DOM 要素を追従させる (A10 Single Coord 違反)",
+    symptom: "3Dオブジェクトの上に浮かぶツールチップやラベルのために、world 座標を screen 座標に射影し、DOM の位置（CSS transformなど）をリアルタイムに同期しようとして座標統一性を崩す。",
+    cure: "world 座標を読んで DOM の位置をリアルタイムに同期させることは禁止。DOM は画面端のサイドバーやパネルなどの、3D空間と構造的に完全に分離されたものに限り、a11y/IME 目的でのみ許可する。",
+    axiom_ref: "A10"
+  },
+  {
+    id: 7,
+    pitfall: "ボトムアップでのテスト作成 (A14 Top-Down Verification 違反)",
+    symptom: "実装後に、場上がり的に個別のユニットテストをたくさん書き、全体の E2E シナリオや意図の表明が後回しになる。",
+    cure: "テストは必ず「Top-Down E2E-First」で開始する。まずシステム全体の意図を示す E2E シナリオ（e2e.js への追加）を書き、その実行から得られたカバレッジの「隙間」を埋めるように自律的にユニットテストを生成する。",
+    axiom_ref: "A14"
+  }
+];
+
+// ============================================================
 // §1.5 REAL_* variable convention(監視対象 state の命名)
 // ============================================================
 export const RealVariableRules = {
@@ -418,6 +474,15 @@ export function exportMarkdown() {
   for (const f of Forbidden) out.push(`- **${f.id}.** ${f.rule}  _(${f.why}, ${f.axiom_ref})_`);
   out.push('');
 
+  out.push(`## §1.3 盲点・見落としがちな落とし穴 (LLM/Human Blind Spots & Pitfalls)`);
+  out.push(`軽く読んだ時に聞き流し・見落としがちだが、違反すると致命的な落とし穴と対策一覧：\n`);
+  for (const b of BlindSpots) {
+    out.push(`### ⚠️ Pitfall ${b.id}: ${b.pitfall}`);
+    out.push(`- **症状**: ${b.symptom}`);
+    out.push(`- **対策**: ${b.cure}`);
+    out.push(`- **関連公理**: ${b.axiom_ref}\n`);
+  }
+
   out.push(`## §1.5 REAL_* Variables`);
   out.push(RealVariableRules.rule);
   out.push(`\nwhy: ${RealVariableRules.why}`);
@@ -492,18 +557,18 @@ export function exportMarkdown() {
   return out.join('\n');
 }
 
-if (typeof process !== 'undefined' && /AiRunAndRead_ONBOARDING\.js$/.test(process.argv[1] || '')) {
+if (typeof process !== 'undefined' && /(AiRunAndRead_ONBOARDING|onboarding\.aiDoc\.yume)\.js$/.test(process.argv[1] || '')) {
   if (process.argv[2] === 'export-md') {
     process.stdout.write(exportMarkdown());
   } else {
-    console.log(`\n##  AiRunAndRead_ONBOARDING.js v${VERSION}  ##\n`);
+    console.log(`\n##  onboarding.aiDoc.yume.js v${VERSION}  ##\n`);
     console.log(`Forbidden(${Forbidden.length} items):`);
     for (const f of Forbidden) console.log(`  ${f.id}. ${f.rule}`);
     console.log(`\nGraph ops(${GraphOps.length} intents):`);
     for (const o of GraphOps) console.log(`  - ${o.intent} → ${o.method}`);
     console.log(`\nUsage:`);
-    console.log(`  node AiRunAndRead_ONBOARDING.js export-md > AI_ONBOARDING.md`);
-    console.log(`  import { Forbidden, BlockOps, GraphOps, ... } from './AiRunAndRead_ONBOARDING.js'`);
+    console.log(`  node onboarding.aiDoc.yume.js export-md > AI_ONBOARDING.md`);
+    console.log(`  import { Forbidden, BlockOps, GraphOps, ... } from './onboarding.aiDoc.yume.js'`);
   }
 }
 

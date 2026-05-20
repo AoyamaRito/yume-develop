@@ -46,6 +46,44 @@ why: 人間がブラウザを開くコストは AI にとってのボトルネ�
 - **7.** Block.content / refs / tags を変数化しない  _(SHADOW 規約, A3, A6)_
 - **8.** 「人間の見やすさ」で判断しない  _(LLM 視点の情報密度で判断, A0, A7)_
 
+## §1.3 盲点・見落としがちな落とし穴 (LLM/Human Blind Spots & Pitfalls)
+軽く読んだ時に聞き流し・見落としがちだが、違反すると致命的な落とし穴と対策一覧：
+
+### ⚠️ Pitfall 1: 「とりあえず全体を読む」誘惑 (Sniper Reading 違反)
+- **症状**: 依存関係やコード把握のために .yume.js ファイルを丸ごと read_file してしまい、巨大な履歴 JSON データ (__block.versions) でコンテキストを使い切る、あるいは最新の実装を見失う。
+- **対策**: 「初手でファイル全体を絶対に読むな」。必ず `node runYume.js <file> show head --raw` を使うか、grep で '=== HEAD ===' の開始行を特定して HEAD 部のみを限定して読む。
+- **関連公理**: A1, Physics.Spotlight, §0.5
+
+### ⚠️ Pitfall 2: `REAL_*` プレフィックスの乱用・誤用 (A3 REAL/SHADOW 違反)
+- **症状**: すべての状態変数に REAL_ を付けたり、ループ変数、DOM 要素、一時変数、ただの定数にまで REAL_ を付けてしまい、AST bootstrap 監視や状態バグ追跡の対象を絞り込めなくなる。
+- **対策**: REAL_* は「主要な状態」「Reducer等で更新され、描画・テスト・観測(eyes)の入力となる中核的な状態」にのみ限定して付与する。
+- **関連公理**: A3
+
+### ⚠️ Pitfall 3: 型情報の暗黙の依存 (LLMTyping / A11 違反)
+- **症状**: 変数名（worldX, screenY）やコメント、型定義（TypeScriptなど）だけで型を表現し、REAL値そのものは裸の数値やオブジェクトで持つ。LLM が context window の外側へ移動した瞬間、その変数名の意味を忘れハルシネーションを起こす。
+- **対策**: 値そのものにドメインタグを埋め込んだ文字列として持つ（例："world:10,0,-5" / "usd:19.99"）。値が self-describing であれば、AIが context を失っても絶対に推論を間違えない。
+- **関連公理**: Physics.LLMTyping, A11
+
+### ⚠️ Pitfall 4: 仕様（SPEC）を挟まない「いきなり実装」 (A8 Spec-First Versioning 違反)
+- **症状**: 仕様変更や新機能実装の際、仕様（SPEC）のみを定義したバージョン（コメント ＋ #SPEC# タグのみのバージョン）を挟むことなく、最初から実装コード（impl）を commit し、仕様の変遷履歴を失う。
+- **対策**: コードを書き換える前に、必ず「新仕様の定義（仕様コメントのみの spec version）」を Block.commit してから、その次のバージョンで実装コードをコミットする。
+- **関連公理**: A8
+
+### ⚠️ Pitfall 5: 純粋論理(Pure logic)と Adapter の混同 (A9 Crystallize 違反)
+- **症状**: Block の中に、動的な dispatch、eval、Proxy、prototype 拡張、またはプラットフォーム特有の I/O や DOM 操作、タイマーなどの副作用を書いてしまう。Go にコンパイル（crystallize）できず、AIにとっても推論しにくい。
+- **対策**: Block 内には「Crystallize可能な Pure logic」のみを書く。I/O や DOM操作、動的ディスパッチは Block の外にある Adapter へ完全に分離し、Block 内部を極限までピュアに保つ。
+- **関連公理**: A9
+
+### ⚠️ Pitfall 6: 3D 座標を screen に射影して DOM 要素を追従させる (A10 Single Coord 違反)
+- **症状**: 3Dオブジェクトの上に浮かぶツールチップやラベルのために、world 座標を screen 座標に射影し、DOM の位置（CSS transformなど）をリアルタイムに同期しようとして座標統一性を崩す。
+- **対策**: world 座標を読んで DOM の位置をリアルタイムに同期させることは禁止。DOM は画面端のサイドバーやパネルなどの、3D空間と構造的に完全に分離されたものに限り、a11y/IME 目的でのみ許可する。
+- **関連公理**: A10
+
+### ⚠️ Pitfall 7: ボトムアップでのテスト作成 (A14 Top-Down Verification 違反)
+- **症状**: 実装後に、場上がり的に個別のユニットテストをたくさん書き、全体の E2E シナリオや意図の表明が後回しになる。
+- **対策**: テストは必ず「Top-Down E2E-First」で開始する。まずシステム全体の意図を示す E2E シナリオ（e2e.js への追加）を書き、その実行から得られたカバレッジの「隙間」を埋めるように自律的にユニットテストを生成する。
+- **関連公理**: A14
+
 ## §1.5 REAL_* Variables
 `REAL_*` は、AI / Kantoku が監視すべき実行 JS の「正の状態」にだけ付ける。
 
