@@ -436,6 +436,70 @@ await group('CLI', async () => {
     assert.ok(r.violations.some(v => v.name === 'No Frameworks'));
   });
 
+  await test('bible-check on runtime code generation → exit 1 + violation', async () => {
+    const f = `${TMP}/dynamic-code.js`;
+    writeFileSync(f, 'export const f = new Function("return 1");');
+    let exitCode = 0;
+    let stdout = '';
+    try { stdout = run(`bible-check ${f}`); }
+    catch (e) { exitCode = e.status; stdout = e.stdout?.toString() || ''; }
+    assert.equal(exitCode, 1);
+    const r = JSON.parse(stdout);
+    assert.equal(r.ok, false);
+    assert.ok(r.violations.some(v => v.name === 'No eval / new Function'));
+  });
+
+  await test('bible-audit-history reports old version without failing command', async () => {
+    const f = `${TMP}/audit-history.fn.yume.js`;
+    const block = {
+      id: 'audit-history',
+      type: 'fn',
+      schemaVersion: 2,
+      runtime: { name: 'yume', version: '002' },
+      versions: [
+        {
+          v: 1,
+          content: 'export const f = new Function("return 1");',
+          ts: 1716100000000,
+          refs: [],
+          tags: [],
+          applyId: null,
+        },
+        {
+          v: 2,
+          content: 'export function ok(){ return 1; }',
+          ts: 1716100000001,
+          refs: [],
+          tags: [],
+          applyId: null,
+        },
+      ],
+    };
+    writeFileSync(f, [
+      '// @yume-format: 1',
+      '',
+      'export const __block = ' + JSON.stringify(block, null, 2) + ';',
+      '',
+      '// === HEAD ===',
+      'export function ok(){ return 1; }',
+      '// === /HEAD ===',
+      '',
+    ].join('\n'));
+
+    const head = JSON.parse(run(`bible-check ${f}`));
+    assert.equal(head.ok, true);
+
+    const audit = JSON.parse(run(`bible-audit-history ${f}`));
+    assert.equal(audit.ok, false);
+    assert.equal(audit.versions, 2);
+    assert.equal(audit.violationCount, 1);
+    assert.equal(audit.violations[0].versionIndex, 0);
+    assert.equal(audit.violations[0].violation.name, 'No eval / new Function');
+
+    const alias = JSON.parse(run(`bible-check --history ${f}`));
+    assert.equal(alias.violationCount, audit.violationCount);
+  });
+
   await test('bible-check on all key repository files', async () => {
     const files = [
       'core.module.yume.js',
