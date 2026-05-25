@@ -526,6 +526,66 @@ await group('CLI', async () => {
     assert.ok(out.includes('CONTEXT_GRAVITY_FIELD'));
   });
 
+  await test('yume-map outputs minimal AI read index', async () => {
+    const dir = mkdtempSync(join(TMP, 'map-'));
+    const logic = join(dir, 'sample.logic.yume.js');
+    const testFile = join(dir, 'sample.test.yume.js');
+    const helper = join(dir, 'helper.js');
+    const block = {
+      id: 'sample-logic',
+      type: 'app',
+      schemaVersion: 2,
+      runtime: { name: 'yume', version: '002' },
+      versions: [{
+        v: 1,
+        content: '// === HEAD ===\nexport function stale(){ return "old"; }\n// === /HEAD ===',
+        ts: 1716100000000,
+        refs: [],
+        tags: [],
+        applyId: null,
+      }],
+    };
+    const testBlock = {
+      ...block,
+      id: 'sample-test',
+      type: 'test',
+      versions: [{ ...block.versions[0], content: 'export function testRender(){ return true; }' }],
+    };
+    writeFileSync(logic, [
+      '// @yume-format: 1',
+      '',
+      'export const __block = ' + JSON.stringify(block, null, 2) + ';',
+      '',
+      '// === HEAD ===',
+      "import { helper } from './helper.js';",
+      'export function render(){ return helper(); }',
+      '// === /HEAD ===',
+      '',
+    ].join('\n'));
+    writeFileSync(testFile, [
+      '// @yume-format: 1',
+      '',
+      'export const __block = ' + JSON.stringify(testBlock, null, 2) + ';',
+      '',
+      '// === HEAD ===',
+      'export function testRender(){ return true; }',
+      '// === /HEAD ===',
+      '',
+    ].join('\n'));
+    writeFileSync(helper, 'export function helper(){ return "ok"; }');
+
+    const result = JSON.parse(run(`yume-map ${dir}`));
+    assert.equal(result.ok, true);
+    assert.equal(result.kind, 'yume-map');
+    const entry = result.entries.find(e => e.path === 'sample.logic.yume.js');
+    assert.ok(entry);
+    assert.equal(entry.kind, 'yume');
+    assert.equal(entry.block.id, 'sample-logic');
+    assert.ok(entry.read.includes('show head --raw'));
+    assert.ok(entry.tests.includes('sample.test.yume.js'));
+    assert.ok(entry.refs.some(r => r.kind === 'import' && r.target === './helper.js'));
+  });
+
   await test('skeleton', async () => {
     const f = `${TMP}/sk.js`;
     writeFileSync(f, `function a(){} function b(){ a(); }`);
