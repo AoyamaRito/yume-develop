@@ -186,6 +186,12 @@ function findMarkerOutsideStrings(source, marker, startFrom) {
       i++; continue;
     }
     if (c === '/' && source[i + 1] === '*') { inBlockComment = true; i += 2; continue; }
+    if (c === '/' && source[i + 1] === '/') {
+      if (source.startsWith(marker, i)) return i;
+      const nl = source.indexOf('\n', i + 2);
+      i = nl < 0 ? source.length : nl;
+      continue;
+    }
     if (c === '"' || c === "'" || c === '`') { inString = true; stringChar = c; i++; continue; }
 
     if (source.startsWith(marker, i)) return i;

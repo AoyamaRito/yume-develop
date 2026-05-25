@@ -4,8 +4,12 @@
   "description": "Self-contained yume development workspace",
   "type": "module",
   "scripts": {
-    "test": "node e2e.js && node --test headless-demo.test.yume.js && node --test 3d-prefab/test/prefabs.test.js && node --test 3dplus/tests/*.test.js && node --test eyes/test/*.test.js",
+    "test": "node e2e.js && node --test headless-demo.test.yume.js && node --test shift-app.test.yume.js && node --test shift-app.unit.test.yume.js && node --test restaurant-lp.test.yume.js && node --test restaurant-lp.unit.test.yume.js && node --test kaikei-v4/kaikei.test.yume.js && node --test kaikei-v4/kaikei.unit.test.yume.js && node --test code-learner.test.yume.js && node --test code-learner.unit.test.yume.js && node --test 3d-prefab/test/prefabs.test.js && node --test 3dplus/tests/*.test.js && node --test eyes/test/*.test.js",
     "test:e2e": "node e2e.js",
+    "test:shift": "node --test shift-app.test.yume.js && node --test shift-app.unit.test.yume.js",
+    "test:restaurant": "node --test restaurant-lp.test.yume.js && node --test restaurant-lp.unit.test.yume.js",
+    "test:kaikei": "node --test kaikei-v4/kaikei.test.yume.js && node --test kaikei-v4/kaikei.unit.test.yume.js",
+    "test:codelearner": "node --test code-learner.test.yume.js && node --test code-learner.unit.test.yume.js",
     "test:prefab": "node --test 3d-prefab/test/prefabs.test.js",
     "test:3dplus": "node --test 3dplus/tests/*.test.js",
     "test:eyes": "node --test eyes/test/*.test.js",

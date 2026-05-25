@@ -12,12 +12,12 @@ const genAI = new GoogleGenerativeAI(apiKey || 'mock-key');
  * Call the Gemini API with a prompt.
  * @param {string} prompt - The prompt to send to the model.
  * @param {object} options - Optional configuration.
- * @param {string} options.model - The model to use (default: 'gemini-3.1-flash-lite').
+ * @param {string} options.model - The model to use (default: 'gemini-3.5-flash').
  * @param {string} options.systemInstruction - Optional system instruction to guide the model.
  * @returns {Promise<string>} The generated text.
  */
 export async function askLLM(prompt, options = {}) {
-  const modelName = options.model || process.env.KANTOKU_MODEL || 'gemini-3.1-flash-lite';
+  const modelName = options.model || process.env.KANTOKU_MODEL || 'gemini-3.5-flash';
   
   const modelConfig = { model: modelName };
   if (options.systemInstruction) {
