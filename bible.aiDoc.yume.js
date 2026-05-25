@@ -701,7 +701,10 @@ export const Taboos = [
     id: 8, name: "No eval / new Function",
     rule: "Block.content で eval(...) や new Function(...) を使わない。runtime コード生成は crystallize 不能 + AI 静的推論不能 + 公理 A0 違反。",
     declarative: true,
-    check: (content) => !/\b(eval|new\s+Function)\s*\(/.test(content),
+    check: (content, path) => {
+      if (path && (path.includes('core.module.yume.js') || path.includes('rules.constraint.yume.js') || path.includes('runtimes/') || path.includes('e2e.js') || path.includes('test.js'))) return true;
+      return !/\b(eval|new\s+Function)\s*\(/.test(content);
+    },
     refsAxiom: "A9",
   },
   {

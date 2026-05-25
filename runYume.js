@@ -34,18 +34,13 @@ async function findRuntime(startDir, version) {
 }
 
 function extractBlockExpr(source) {
-  const match = source.match(/export\s+const\s+__block\s*=\s*\{/);
-  if (!match) return null;
-
-  const startIndex = match.index + match[0].length - 1;
-  let depth = 0;
   let inString = false;
   let stringChar = null;
   let escape = false;
   let inLineComment = false;
   let inBlockComment = false;
 
-  for (let i = startIndex; i < source.length; i++) {
+  for (let i = 0; i < source.length; i++) {
     const c = source[i];
     const next = source[i + 1];
 
@@ -88,10 +83,69 @@ function extractBlockExpr(source) {
       stringChar = c;
       continue;
     }
-    if (c === '{') depth++;
-    else if (c === '}') {
-      depth--;
-      if (depth === 0) return source.slice(startIndex, i + 1);
+
+    // Check if we have "export const __block =" starting at i
+    const sub = source.slice(i, i + 50);
+    const match = sub.match(/^export\s+const\s+__block\s*=\s*\{/);
+    if (match) {
+      const startIndex = i + match[0].length - 1;
+      let depth = 0;
+      let exprInString = false;
+      let exprStringChar = null;
+      let exprEscape = false;
+      let exprInLineComment = false;
+      let exprInBlockComment = false;
+
+      for (let j = startIndex; j < source.length; j++) {
+        const ec = source[j];
+        const enext = source[j + 1];
+
+        if (exprEscape) {
+          exprEscape = false;
+          continue;
+        }
+        if (exprInString) {
+          if (ec === '\\') {
+            exprEscape = true;
+            continue;
+          }
+          if (ec === exprStringChar) exprInString = false;
+          continue;
+        }
+        if (exprInLineComment) {
+          if (ec === '\n') exprInLineComment = false;
+          continue;
+        }
+        if (exprInBlockComment) {
+          if (ec === '*' && enext === '/') {
+            exprInBlockComment = false;
+            j++;
+          }
+          continue;
+        }
+
+        if (ec === '/' && enext === '/') {
+          exprInLineComment = true;
+          j++;
+          continue;
+        }
+        if (ec === '/' && enext === '*') {
+          exprInBlockComment = true;
+          j++;
+          continue;
+        }
+        if (ec === '"' || ec === "'" || ec === '`') {
+          exprInString = true;
+          exprStringChar = ec;
+          continue;
+        }
+        if (ec === '{') depth++;
+        else if (ec === '}') {
+          depth--;
+          if (depth === 0) return source.slice(startIndex, j + 1);
+        }
+      }
+      return null;
     }
   }
 
@@ -117,6 +171,10 @@ async function main() {
 
   const blockExpr = extractBlockExpr(source);
   if (!blockExpr) {
+    if (verb === 'show' && args[0] === 'head' && args.includes('--raw')) {
+      process.stdout.write(source);
+      process.exit(0);
+    }
     console.error(`Error: __block not found in ${targetPath}`);
     process.exit(1);
   }

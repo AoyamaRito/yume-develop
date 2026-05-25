@@ -436,6 +436,27 @@ await group('CLI', async () => {
     assert.ok(r.violations.some(v => v.name === 'No Frameworks'));
   });
 
+  await test('bible-check on all key repository files', async () => {
+    const files = [
+      'core.module.yume.js',
+      'cli.module.yume.js',
+      'examples/hello.fn.yume.js',
+      'janken.fn.yume.js',
+      'shift-app.logic.yume.js',
+      'restaurant-lp.logic.yume.js',
+      'rules.constraint.yume.js',
+    ];
+    for (const f of files) {
+      let exitCode = 0;
+      let stdout = '';
+      try { stdout = run(`bible-check ${f}`); }
+      catch (e) { exitCode = e.status; stdout = e.stdout?.toString() || ''; }
+      assert.equal(exitCode, 0, `bible-check on ${f} failed with exit code ${exitCode}`);
+      const r = JSON.parse(stdout);
+      assert.equal(r.ok, true, `bible-check on ${f} failed: ${JSON.stringify(r.violations)}`);
+    }
+  });
+
   await test('bible-summon outputs gravity-field prompt', async () => {
     const out = run('bible-summon A0 A8');
     assert.ok(out.includes('CONTEXT_GRAVITY_FIELD'));
