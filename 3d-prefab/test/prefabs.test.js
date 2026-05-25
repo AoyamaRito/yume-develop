@@ -7,7 +7,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 
 import { prefabs, behaviors, compose, transitionForEvent } from '../prefabs.js';
-import { w, l, s, o, parseCoord, requireDomain } from '../coord.js';
+import { w, l, s, o, parseCoord, requireDomain, setRealTagsOn } from '../coord.js';
 
 // 旧 makeTransition 互換ヘルパー — flow.click を 1 回 transition として返す
 function makeClickTransition(prefab) {
@@ -54,6 +54,35 @@ test('parseCoord: 形式不正で throw', () => {
 test('requireDomain: 一致で values、不一致で throw', () => {
   assert.deepEqual(requireDomain('world:5,0,2', 'world'), [5, 0, 2]);
   assert.throws(() => requireDomain('screen:300,200', 'world'), /domain mismatch/);
+});
+
+test('TWIN / REAL_TAGS_ON bypass mode', () => {
+  // Normally TAGS are ON
+  assert.equal(w(1.5, 0, 2), 'world:1.5,0,2');
+
+  // Turn TAGS OFF (TWIN mode)
+  setRealTagsOn(false);
+
+  try {
+    const twinVal = w(1.5, 0, 2);
+    assert.deepEqual(twinVal, [1.5, 0, 2]); // Should return numerical array (TWIN) directly
+
+    const req = requireDomain(twinVal, 'world');
+    assert.deepEqual(req, [1.5, 0, 2]); // Bypasses parsing completely and returns the values
+
+    // Testing behavior with TWIN variables
+    const state = {
+      currentWorldPos: w(0, 0, 0),
+      targetWorldPos: w(10, 0, 0),
+      lerpRate: 0.1
+    };
+
+    const out = behaviors.lerpToTarget(state, { kind: 'tick' });
+    assert.deepEqual(out.currentWorldPos, [1, 0, 0]); // Calculates fast using pure arrays!
+  } finally {
+    // ALWAYS restore TAGS ON so other tests continue working normally
+    setRealTagsOn(true);
+  }
 });
 
 // ============================================================
