@@ -531,6 +531,7 @@ await group('CLI', async () => {
     const logic = join(dir, 'sample.logic.yume.js');
     const testFile = join(dir, 'sample.test.yume.js');
     const helper = join(dir, 'helper.js');
+    const noise = join(dir, 'noise.logic.yume.js');
     const block = {
       id: 'sample-logic',
       type: 'app',
@@ -569,21 +570,34 @@ await group('CLI', async () => {
       '',
       '// === HEAD ===',
       'export function testRender(){ return true; }',
+      "import './sample.logic.yume.js';",
       '// === /HEAD ===',
       '',
     ].join('\n'));
     writeFileSync(helper, 'export function helper(){ return "ok"; }');
+    writeFileSync(noise, 'export function noise(){ return 0; }');
+    execSync(`git -C ${dir} init`, { stdio: 'ignore' });
+    execSync(`git -C ${dir} add sample.logic.yume.js sample.test.yume.js helper.js`, { stdio: 'ignore' });
 
-    const result = JSON.parse(run(`yume-map ${dir}`));
+    const result = JSON.parse(run(`yume-map --top=2 ${dir}`));
     assert.equal(result.ok, true);
     assert.equal(result.kind, 'yume-map');
+    assert.equal(result.source, 'git-tracked');
+    assert.ok(result.readOrder.length <= 2);
+    assert.ok(!result.entries.some(e => e.path === 'noise.logic.yume.js'));
     const entry = result.entries.find(e => e.path === 'sample.logic.yume.js');
     assert.ok(entry);
     assert.equal(entry.kind, 'yume');
     assert.equal(entry.block.id, 'sample-logic');
     assert.ok(entry.read.includes('show head --raw'));
     assert.ok(entry.tests.includes('sample.test.yume.js'));
-    assert.ok(entry.refs.some(r => r.kind === 'import' && r.target === './helper.js'));
+    assert.ok(entry.testConfidence.includes('import'));
+    assert.ok(entry.refs.some(r => r.kind === 'import' && r.target === './helper.js' && r.resolved === 'helper.js'));
+    assert.ok(entry.next.includes('helper.js'));
+
+    const all = JSON.parse(run(`yume-map --all ${dir}`));
+    assert.equal(all.source, 'filesystem');
+    assert.ok(all.entries.some(e => e.path === 'noise.logic.yume.js'));
   });
 
   await test('skeleton', async () => {
