@@ -7,7 +7,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 
 import { prefabs, behaviors, compose, transitionForEvent } from '../prefabs.js';
-import { w, l, s, o, parseCoord, requireDomain, setRealTagsOn } from '../coord.js';
+import { w, l, s, o, parseCoord, requireDomain, setRealTagsOn, equal, TwinQueue, TwinStack } from '../coord.js';
 
 // 旧 makeTransition 互換ヘルパー — flow.click を 1 回 transition として返す
 function makeClickTransition(prefab) {
@@ -83,6 +83,145 @@ test('TWIN / REAL_TAGS_ON bypass mode', () => {
     // ALWAYS restore TAGS ON so other tests continue working normally
     setRealTagsOn(true);
   }
+});
+
+test('equal() coordinates comparison robustness', () => {
+  // 1. Same reference / string comparison
+  assert.ok(equal('world:1,2,3', 'world:1,2,3'));
+  assert.ok(!equal('world:1,2,3', 'world:1,2,4'));
+
+  // 2. Twin numerical array comparison
+  assert.ok(equal([1, 2, 3], [1, 2, 3]));
+  assert.ok(!equal([1, 2, 3], [1, 2, 4]));
+  assert.ok(!equal([1, 2, 3], [1, 2]));
+
+  // 3. Hybrid string and twin numerical array comparison
+  assert.ok(equal([1, 2, 3], 'world:1,2,3'));
+  assert.ok(equal('world:1,2,3', [1, 2, 3]));
+  assert.ok(!equal([1, 2, 3], 'world:1,2,4'));
+  assert.ok(!equal('world:1,2,3', [1, 2, 4]));
+
+  // 4. Edge cases
+  assert.ok(equal(undefined, undefined));
+  assert.ok(!equal(null, 'world:1,2,3'));
+});
+
+test('TwinQueue: basic operations, FIFO and circular bounds', () => {
+  const q = new TwinQueue(3);
+  q.enqueue('a');
+  q.enqueue('b');
+  q.enqueue('c');
+  assert.throws(() => q.enqueue('d'), /overflow/); // Max capacity reached
+
+  assert.equal(q.dequeue(), 'a');
+  q.enqueue('d'); // Should reuse space (circular)
+  assert.equal(q.dequeue(), 'b');
+  assert.equal(q.dequeue(), 'c');
+  assert.equal(q.dequeue(), 'd');
+  assert.equal(q.dequeue(), undefined); // Empty
+});
+
+test('TwinQueue: REAL_QUE and TWIN dual serialization roundtrip', () => {
+  // === Test 1: Tag ON Mode (Standard string queue serialization) ===
+  setRealTagsOn(true);
+  try {
+    const q = new TwinQueue(10);
+    q.enqueue('world:1.5,0,2');
+    q.enqueue('click');
+    q.enqueue('world:2.5,0,3');
+
+    const realStr = q.toRealString();
+    assert.equal(realStr, 'queue:world:1.5,0,2;click;world:2.5,0,3');
+
+    // Deserialization in Tag ON Mode
+    const qRestored = TwinQueue.fromRealString(realStr);
+    assert.equal(qRestored.dequeue(), 'world:1.5,0,2');
+    assert.equal(qRestored.dequeue(), 'click');
+    assert.equal(qRestored.dequeue(), 'world:2.5,0,3');
+  } finally {
+    setRealTagsOn(true);
+  }
+
+  // === Test 2: Tag OFF Mode (Numeric Array TWIN Queue serialization) ===
+  setRealTagsOn(false);
+  try {
+    const q = new TwinQueue(10);
+    q.enqueue([1.5, 0, 2]);
+    q.enqueue('click');
+    q.enqueue([2.5, 0, 3]);
+
+    const realStr = q.toRealString();
+    assert.equal(realStr, 'queue:world:1.5,0,2;click;world:2.5,0,3'); // Serialization outputs readable string A11 format
+
+    // Deserialization in Tag OFF Mode (Hydrates back to raw numeric arrays)
+    const qRestored = TwinQueue.fromRealString(realStr);
+    assert.deepEqual(qRestored.dequeue(), [1.5, 0, 2]);
+    assert.equal(qRestored.dequeue(), 'click');
+    assert.deepEqual(qRestored.dequeue(), [2.5, 0, 3]);
+  } finally {
+    setRealTagsOn(true);
+  }
+
+  // === Test 3: Empty queue serialization safety ===
+  const emptyQ = new TwinQueue(5);
+  assert.equal(emptyQ.toRealString(), 'queue:');
+  const emptyQRestored = TwinQueue.fromRealString('queue:');
+  assert.equal(emptyQRestored.dequeue(), undefined);
+});
+
+test('TwinStack: basic operations and LIFO', () => {
+  const s = new TwinStack(3);
+  s.push('x');
+  s.push('y');
+  s.push('z');
+  assert.throws(() => s.push('w'), /overflow/);
+
+  assert.equal(s.pop(), 'z');
+  assert.equal(s.pop(), 'y');
+  assert.equal(s.pop(), 'x');
+  assert.equal(s.pop(), undefined);
+});
+
+test('TwinStack: REAL_STACK and TWIN dual serialization roundtrip', () => {
+  // === Test 1: Tag ON Mode ===
+  setRealTagsOn(true);
+  try {
+    const s = new TwinStack(10);
+    s.push('world:1.5,0,2');
+    s.push('local:0,1,0');
+
+    const realStr = s.toRealString();
+    assert.equal(realStr, 'stack:world:1.5,0,2;local:0,1,0');
+
+    const sRestored = TwinStack.fromRealString(realStr);
+    assert.equal(sRestored.pop(), 'local:0,1,0');
+    assert.equal(sRestored.pop(), 'world:1.5,0,2');
+  } finally {
+    setRealTagsOn(true);
+  }
+
+  // === Test 2: Tag OFF Mode ===
+  setRealTagsOn(false);
+  try {
+    const s = new TwinStack(10);
+    s.push([1.5, 0, 2]);
+    s.push('click');
+
+    const realStr = s.toRealString();
+    assert.equal(realStr, 'stack:world:1.5,0,2;click');
+
+    const sRestored = TwinStack.fromRealString(realStr);
+    assert.equal(sRestored.pop(), 'click');
+    assert.deepEqual(sRestored.pop(), [1.5, 0, 2]);
+  } finally {
+    setRealTagsOn(true);
+  }
+
+  // === Test 3: Empty stack serialization safety ===
+  const emptyS = new TwinStack(5);
+  assert.equal(emptyS.toRealString(), 'stack:');
+  const emptySRestored = TwinStack.fromRealString('stack:');
+  assert.equal(emptySRestored.pop(), undefined);
 });
 
 // ============================================================
