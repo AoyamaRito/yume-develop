@@ -1,6 +1,6 @@
 # AI Agent Instructions for yume-develop
 
-This repository is the development workspace for the portable `.yume.js` file format and its co-located runtimes. It is intentionally self-contained: do not assume a sibling `yume-files` checkout is available at runtime.
+This repository is the product-track workspace for the portable `.yume.js` file format and its co-located runtimes. It is intentionally self-contained: do not assume a sibling `yume-files` checkout is available at runtime.
 
 ## Start Here
 
@@ -15,14 +15,14 @@ This repository is the development workspace for the portable `.yume.js` file fo
 - **Sniper Reading**: `.yume.js` files are huge due to history. Do not `read_file` blindly. Use `node runYume.js <file>.yume.js show head --raw` to get clean HEAD source.
 - **Eyes over Server**: Use `ai-eyes` for structural verification of UI/3D logic instead of waiting for human visual confirmation.
 - **REAL / SHADOW (A3)**: Markdown files (*.md) are SHADOWs. Never edit them directly. Edit the corresponding *.aiDoc.yume.js (REAL) and export.
-- **Strict Validation**: Run `validate` and `refs-check .` after any structural change.
+- **No In-Repo Samples**: Do not create app demos, sample projects, or throwaway experiments inside this repository. Put them outside `yume-develop`, for example under `/Users/AoyamaRito/PJs/sample/`.
+- **Strict Validation**: Run `validate` for touched `.yume.js` files and `npm run refs-check` after any structural change.
 
 ## Common Commands
 
 ```sh
 npm test
 node runYume.js runAndReadMe.aiDoc.yume.js show head --raw
-node runYume.js examples/hello.fn.yume.js refs-check .
+npm run refs-check
 node runYume.js <file>.yume.js commit --note "why this change exists"
 ```
-

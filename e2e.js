@@ -506,8 +506,6 @@ await group('CLI', async () => {
       'cli.module.yume.js',
       'examples/hello.fn.yume.js',
       'janken.fn.yume.js',
-      'shift-app.logic.yume.js',
-      'restaurant-lp.logic.yume.js',
       'rules.constraint.yume.js',
     ];
     for (const f of files) {

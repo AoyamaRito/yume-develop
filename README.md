@@ -41,7 +41,7 @@ npm run test:e2e
 node runYume.js core.module.yume.js history
 
 # Check the integrity of the reference graph
-node runYume.js examples/hello.fn.yume.js refs-check .
+npm run refs-check
 
 # Show clean HEAD source without embedded history
 node runYume.js <file>.yume.js show head --raw
