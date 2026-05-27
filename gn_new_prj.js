@@ -1,8 +1,8 @@
 #!/usr/bin/env node
-// setup.js — bootstrap a new yume project outside yume-develop
+// gn_new_prj.js — bootstrap a new yume project outside yume-develop
 //
 // Usage:
-//   node setup.js <target-dir>
+//   node gn_new_prj.js <target-dir>
 //
 // Creates:
 //   <target-dir>/
@@ -85,7 +85,7 @@ async function exists(p) {
 async function main() {
   const target = process.argv[2];
   if (!target) {
-    console.error('Usage: node setup.js <target-dir>');
+    console.error('Usage: node gn_new_prj.js <target-dir>');
     process.exit(1);
   }
 
