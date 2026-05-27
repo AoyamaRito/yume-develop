@@ -1,4 +1,5 @@
 // @yume-format: 1
+// @deprecated: superseded by ver002. Kept for pinned-version compatibility only. Do not use for new files.
 // ver001.handle.yume.js — yume runtime v001(role=handle)
 //
 // v001 では plain ESM module(__block / versions / 自己 commit なし、bootstrap 回避)。
@@ -1535,7 +1536,7 @@ async function listYumeFiles(root) {
     if (entry.isDirectory()) {
       if (entry.name === 'node_modules' || entry.name === '.git') continue;
       files.push(...await listYumeFiles(path));
-    } else if (entry.isFile() && entry.name.endsWith('.yume.js')) {
+    } else if (entry.isFile() && entry.name.endsWith('.yume.js') && !entry.name.endsWith('.archive.yume.js')) {
       files.push(path);
     }
   }

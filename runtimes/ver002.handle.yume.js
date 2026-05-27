@@ -1591,7 +1591,7 @@ async function listYumeFiles(root) {
     if (entry.isDirectory()) {
       if (entry.name === 'node_modules' || entry.name === '.git') continue;
       files.push(...await listYumeFiles(path));
-    } else if (entry.isFile() && entry.name.endsWith('.yume.js')) {
+    } else if (entry.isFile() && entry.name.endsWith('.yume.js') && !entry.name.endsWith('.archive.yume.js')) {
       files.push(path);
     }
   }

@@ -6,7 +6,7 @@ export const __block = {
   "schemaVersion": 1,
   "runtime": {
     "name": "yume",
-    "version": "001"
+    "version": "002"
   },
   "api": [
     "commit",
