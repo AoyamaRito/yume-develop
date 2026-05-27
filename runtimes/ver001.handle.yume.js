@@ -1767,7 +1767,9 @@ export async function commitManual(fileUrl, opts = {}) {
   try {
     const source = await readFile(filePath, 'utf8');
     const parsed = parseBlock(source);
-    assertValidBlock(parsed.block);
+    if (parsed.block.versions.length > 0) {
+      assertValidBlock(parsed.block);
+    }
     const headInSource = parsed.head;
     const lastVersion  = parsed.block.versions.at(-1);
     const lastContent  = lastVersion?.content ?? '';
@@ -1775,6 +1777,7 @@ export async function commitManual(fileUrl, opts = {}) {
     if (headInSource === lastContent) return { committed: false };
 
     const newVersion = appendVersion(parsed.block, headInSource, opts);
+    assertValidBlock(parsed.block);
     await atomicWrite(filePath, serializeBlock(parsed));
     return { committed: true, newHash: newVersion.hash, applyId: newVersion.applyId };
   } finally {
