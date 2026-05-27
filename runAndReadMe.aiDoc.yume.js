@@ -419,7 +419,7 @@ export const RunAndReadMe = {
       "e2e.js"
     ],
     untrackedDocsAndArtifacts: [
-      "READ_THE_LIST.md",
+      "start.md",
       "CONTEXT_FILES.md",
       "GEMINI.md",
       "plan.mermaid.md",
@@ -506,9 +506,9 @@ export const RunAndReadMe = {
   ]
 };
 
-export function exportReadTheListMarkdown() {
+export function exportStartMarkdown() {
   const out = [];
-  out.push("# READ_THE_LIST — yume-develop AI起動ショートリスト");
+  out.push("# start — yume-develop AI起動ショートリスト");
   out.push("");
   out.push("> Generated from `runAndReadMe.aiDoc.yume.js`. Do not edit this Markdown directly.");
   out.push("");

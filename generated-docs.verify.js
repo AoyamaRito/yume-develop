@@ -18,7 +18,7 @@ const generatedDocs = [
   ['AGENTS.md', agents.exportMarkdown()],
   ['README.md', readme.exportMarkdown()],
   ['BIBLE.md', bible.Kernel.exportMarkdown()],
-  ['READ_THE_LIST.md', runbook.exportReadTheListMarkdown()],
+  ['start.md', runbook.exportStartMarkdown()],
   ['CONTEXT_FILES.md', runbook.exportContextFilesMarkdown()],
 ];
 

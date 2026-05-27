@@ -41,7 +41,7 @@ Observed: 2026-05-27
 - `e2e.js`
 
 ### Untracked Docs And Artifacts
-- `READ_THE_LIST.md`
+- `start.md`
 - `CONTEXT_FILES.md`
 - `GEMINI.md`
 - `plan.mermaid.md`
