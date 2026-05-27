@@ -11,6 +11,7 @@
 - **差分検知 & 逆配分 (apply)**: 編集コードの適用時、現在の head と完全に同一 (content/refs/tags) なら履歴を増やさず `unchanged` とする。`heavyApply` は複数の Block をヘッダで区切って一括展開 (expand) し、編集後に各 Block へ自動的に逆配分 (apply) する核心的な仕組み。
 - **Constraint Folding (静的具現化)**: 動的なコード生成 (`eval` / `new Function`) を徹底排除するため、あらゆる多次元の制約・組み合わせは、Block生成時に全世界線を静的JSONとして具現化して埋め込み、評価時はフィルタリングのみで評価する美学 (`rules.constraint.yume.js` 参照)。
 - **ai-eyes (視覚の構造化)**: AIが重いブラウザ起動（Playwright）を待たずに爆速でビジュアルアサーション（E2E）を行えるよう、CanvasやWebGLの描画命令を傍受してin-memoryで「脳内構造データ」に変換し、自律E2Eデバッグを完結させる観測インフラ。
+- **REAL / SHADOW と `REAL_*`**: 状態遷移のフリーズを Kantoku (監督システム) が機械観測できるよう、実行JS内の「真の主要状態」には必ず `REAL_*` 接頭語を付与し、それ以外は一時的な派生値 (SHADOW) として保持禁止とする美学 (`manual.aiDoc.yume.js` 参照)。
 - Markdown は原則 SHADOW。対応する `.aiDoc.yume.js` がある場合は REAL 側を更新して生成する。
 - runtime handler (`runtimes/ver*.handle.yume.js`) は `.yume.js` 名だが `__block` を持たない plain ESM の例外。
 - `yume-develop` は本体開発用。サンプルアプリや実験プロジェクトはこの中に作らず、外部の `/Users/AoyamaRito/PJs/sample/` などへ置く。
