@@ -60,6 +60,15 @@ export const __block = {
       "applyId": "apply-2026-05-29-6e1c93c3",
       "hash": "99f1ef5ab2dbc96728e14385a60d50129fb928b632173b8381d4e1c802fbe983",
       "prevHash": "1254d8a1e1a98a02bde586afdcce0ff28b356d2b247713891dace358a3c1c23e"
+    },
+    {
+      "content": "// README.aiDoc.yume.js — REAL source for README.md.\n// README.md は universal first-read (人間と AI 共通の入口)。\n// AI bootstrap を先頭に、人間 overview を後段に配置する SHADOW を生成する。\n\nexport const Content = {\n  title: \"yume-develop\",\n\n  // AI bootstrap: 新規セッションで repo に入った agent が最初に踏むブロック。\n  aiBootstrap: {\n    headline: \"AI agents: read this section first, then use AGENTS.aiDoc.yume.js as the structured data surface.\",\n    accessMethods: [\n      { kind: \"show head\", cmd: \"node runYume.js AGENTS.aiDoc.yume.js show head --raw\" },\n      { kind: \"import\",    cmd: \"import { ColdStart, TaskRoutes, Forbidden, BlindSpots, BlockOps, GraphOps, Glossary, VirtualHeavy, RealVariable, AutoUseProtocol, OperatingModel, ContextEconomy } from './AGENTS.aiDoc.yume.js'\" },\n    ],\n    coldStart: [\n      \"Read this README section; do not start by opening every `.yume.js` file.\",\n      \"Load `ColdStart` and `TaskRoutes` from `AGENTS.aiDoc.yume.js` to choose the narrowest next files.\",\n      \"For any `.yume.js`, read HEAD with `node runYume.js <file>.yume.js show head --raw`; avoid embedded history unless the task is history-specific.\",\n    ],\n    facts: [\n      \"Axioms (A0–A14): BIBLE.md or `node runYume.js bible.aiDoc.yume.js show head --raw`.\",\n      \"`.yume.js` is a portable Block file (HEAD + append-only history). Edit HEAD; commit via runtime.\",\n      \"AGENTS.md / GEMINI.md are SHADOW stubs (CLI auto-load convention) that point here.\",\n    ],\n    taskRoutes: [\n      { task: \"onboarding/docs\", read: \"README.aiDoc.yume.js + AGENTS.aiDoc.yume.js\", verify: \"npm run docs:check && npm run validate:docs\" },\n      { task: \"runtime/core semantics\", read: \"core.module.yume.js + e2e.js\", verify: \"npm test\" },\n      { task: \"CLI or command behavior\", read: \"cli.module.yume.js + runYume.js + e2e.js\", verify: \"npm run test:e2e\" },\n      { task: \"format/runtime spec\", read: \"BLOCKFILE.aiDoc.yume.js + runtime.spec.yume.js\", verify: \"npm run validate:spec\" },\n      { task: \"UI/canvas observation\", read: \"eyes.observation.yume.js + virtual-canvas.module.yume.js\", verify: \"npm run test:eyes\" },\n      { task: \"3D work\", read: \"3dplus/README.md + 3d-prefab/README.md, then routed source\", verify: \"npm run test:3dplus && npm run test:prefab\" },\n    ],\n  },\n\n  // 人間 overview: github landing で読む人向け。\n  summary: \"yume-develop is a self-contained workspace for AI-Native development on the `.yume.js` (BLOCKFILE) portable file format.\",\n  philosophy: [\n    { name: \"All-as-Block\",       detail: \"Functions, constraints, observations, and documentation are all Blocks.\" },\n    { name: \"Versions-as-Body\",    detail: \"A Block's true state is its append-only `versions` array.\" },\n    { name: \"Top-Down E2E-First (Axiom A14)\", detail: \"Start with E2E scenarios; fill coverage gaps with autonomously generated unit tests.\" },\n  ],\n  contents: [\n    { path: \"AGENTS.aiDoc.yume.js\", desc: \"AI single import surface — rules, ops, manual, runbook, axiom pointers.\" },\n    { path: \"bible.aiDoc.yume.js\",  desc: \"Canonical philosophy and axioms (A0–A14).\" },\n    { path: \"core.module.yume.js\",  desc: \"Block / Graph / parseJS implementation.\" },\n    { path: \"cli.module.yume.js\",   desc: \"CLI implementation.\" },\n    { path: \"runtimes/\",             desc: \"Co-located yume runtimes (ver001 / ver002 handlers).\" },\n  ],\n  usage: [\n    { cmd: \"npm test\",                                              desc: \"Run the complete local suite.\" },\n    { cmd: \"npm run verify\",                                         desc: \"docs:check + validate + refs-check + tests.\" },\n    { cmd: \"node runYume.js <file>.yume.js show head --raw\",         desc: \"Clean HEAD source, history-free (sniper reading).\" },\n    { cmd: \"node cli.module.yume.js yume-map . --top=20\",            desc: \"Repository map for targeted exploration after bootstrap.\" },\n    { cmd: \"node runYume.js <file>.yume.js commit --note \\\"why\\\"\",   desc: \"Append a new version after editing HEAD.\" },\n    { cmd: \"npm run refs-check\",                                     desc: \"Reference graph integrity.\" },\n  ],\n  completion: [\n    \"Changed .yume.js files validate.\",\n    \"Reference graph changes pass refs-check.\",\n    \"Public docs (SHADOW) are aligned with REAL source.\",\n  ],\n};\n\nexport const exportMarkdown = () => {\n  const out = [];\n  out.push(`# ${Content.title}`);\n  out.push(\"\");\n  out.push(\"> Generated from `README.aiDoc.yume.js`. Do not edit this Markdown directly.\");\n  out.push(\"\");\n\n  // AI bootstrap — top of file so any agent landing here finds it first.\n  out.push(\"## For AI Agents (first read)\");\n  out.push(\"\");\n  out.push(Content.aiBootstrap.headline);\n  out.push(\"\");\n  out.push(\"### Access\");\n  for (const m of Content.aiBootstrap.accessMethods) {\n    out.push(`- ${m.kind}: \\`${m.cmd}\\``);\n  }\n  out.push(\"\");\n  out.push(\"### Cold Start\");\n  Content.aiBootstrap.coldStart.forEach((s, i) => out.push(`${i + 1}. ${s}`));\n  out.push(\"\");\n  out.push(\"### Facts\");\n  for (const f of Content.aiBootstrap.facts) out.push(`- ${f}`);\n  out.push(\"\");\n  out.push(\"### Task Routes\");\n  for (const r of Content.aiBootstrap.taskRoutes) {\n    out.push(`- **${r.task}** — read: ${r.read}; verify: \\`${r.verify}\\``);\n  }\n  out.push(\"\");\n\n  // Human overview.\n  out.push(\"## Overview\");\n  out.push(\"\");\n  out.push(Content.summary);\n  out.push(\"\");\n\n  out.push(\"## Philosophy\");\n  out.push(\"\");\n  for (const p of Content.philosophy) out.push(`- **${p.name}** — ${p.detail}`);\n  out.push(\"\");\n\n  out.push(\"## Contents\");\n  out.push(\"\");\n  for (const c of Content.contents) out.push(`- \\`${c.path}\\` — ${c.desc}`);\n  out.push(\"\");\n\n  out.push(\"## Usage\");\n  out.push(\"\");\n  out.push(\"```sh\");\n  Content.usage.forEach((u, i) => {\n    if (i > 0) out.push(\"\");\n    out.push(`# ${u.desc}`);\n    out.push(u.cmd);\n  });\n  out.push(\"```\");\n  out.push(\"\");\n\n  out.push(\"## Completion Standard\");\n  out.push(\"\");\n  for (const c of Content.completion) out.push(`- ${c}`);\n  out.push(\"\");\n\n  return out.join(\"\\n\");\n};\n",
+      "ts": 1780015198000,
+      "refs": [],
+      "tags": [],
+      "applyId": "apply-2026-05-29-3815a8b8",
+      "hash": "31d3632162b1b8ecd4c442a7f7b484f6efb6397611f801ca57e3d23059ec1a80",
+      "prevHash": "99f1ef5ab2dbc96728e14385a60d50129fb928b632173b8381d4e1c802fbe983"
     }
   ],
   "notes": {
@@ -104,6 +113,14 @@ export const __block = {
         "ts": 1780013726824,
         "text": "fix lie: AGENTS/GEMINI are not 3-line stubs; restructure aiBootstrap (Access vs Facts subsections); fix Usage trailing empty line"
       }
+    ],
+    "apply:apply-2026-05-29-3815a8b8": [
+      {
+        "id": "n-3fb05615-0ce6-450f-9e1c-2c8cb1a156d2",
+        "author": "human",
+        "ts": 1780015198004,
+        "text": "add AI cold-start routes to README"
+      }
     ]
   }
 };
@@ -118,15 +135,28 @@ export const Content = {
 
   // AI bootstrap: 新規セッションで repo に入った agent が最初に踏むブロック。
   aiBootstrap: {
-    headline: "AI agents: this repo's structured rules live in AGENTS.aiDoc.yume.js. Access two ways:",
+    headline: "AI agents: read this section first, then use AGENTS.aiDoc.yume.js as the structured data surface.",
     accessMethods: [
       { kind: "show head", cmd: "node runYume.js AGENTS.aiDoc.yume.js show head --raw" },
-      { kind: "import",    cmd: "import { Forbidden, BlindSpots, BlockOps, GraphOps, Glossary, VirtualHeavy, RealVariable, AutoUseProtocol, OperatingModel, ContextEconomy } from './AGENTS.aiDoc.yume.js'" },
+      { kind: "import",    cmd: "import { ColdStart, TaskRoutes, Forbidden, BlindSpots, BlockOps, GraphOps, Glossary, VirtualHeavy, RealVariable, AutoUseProtocol, OperatingModel, ContextEconomy } from './AGENTS.aiDoc.yume.js'" },
+    ],
+    coldStart: [
+      "Read this README section; do not start by opening every `.yume.js` file.",
+      "Load `ColdStart` and `TaskRoutes` from `AGENTS.aiDoc.yume.js` to choose the narrowest next files.",
+      "For any `.yume.js`, read HEAD with `node runYume.js <file>.yume.js show head --raw`; avoid embedded history unless the task is history-specific.",
     ],
     facts: [
       "Axioms (A0–A14): BIBLE.md or `node runYume.js bible.aiDoc.yume.js show head --raw`.",
       "`.yume.js` is a portable Block file (HEAD + append-only history). Edit HEAD; commit via runtime.",
       "AGENTS.md / GEMINI.md are SHADOW stubs (CLI auto-load convention) that point here.",
+    ],
+    taskRoutes: [
+      { task: "onboarding/docs", read: "README.aiDoc.yume.js + AGENTS.aiDoc.yume.js", verify: "npm run docs:check && npm run validate:docs" },
+      { task: "runtime/core semantics", read: "core.module.yume.js + e2e.js", verify: "npm test" },
+      { task: "CLI or command behavior", read: "cli.module.yume.js + runYume.js + e2e.js", verify: "npm run test:e2e" },
+      { task: "format/runtime spec", read: "BLOCKFILE.aiDoc.yume.js + runtime.spec.yume.js", verify: "npm run validate:spec" },
+      { task: "UI/canvas observation", read: "eyes.observation.yume.js + virtual-canvas.module.yume.js", verify: "npm run test:eyes" },
+      { task: "3D work", read: "3dplus/README.md + 3d-prefab/README.md, then routed source", verify: "npm run test:3dplus && npm run test:prefab" },
     ],
   },
 
@@ -148,6 +178,7 @@ export const Content = {
     { cmd: "npm test",                                              desc: "Run the complete local suite." },
     { cmd: "npm run verify",                                         desc: "docs:check + validate + refs-check + tests." },
     { cmd: "node runYume.js <file>.yume.js show head --raw",         desc: "Clean HEAD source, history-free (sniper reading)." },
+    { cmd: "node cli.module.yume.js yume-map . --top=20",            desc: "Repository map for targeted exploration after bootstrap." },
     { cmd: "node runYume.js <file>.yume.js commit --note \"why\"",   desc: "Append a new version after editing HEAD." },
     { cmd: "npm run refs-check",                                     desc: "Reference graph integrity." },
   ],
@@ -175,8 +206,16 @@ export const exportMarkdown = () => {
     out.push(`- ${m.kind}: \`${m.cmd}\``);
   }
   out.push("");
+  out.push("### Cold Start");
+  Content.aiBootstrap.coldStart.forEach((s, i) => out.push(`${i + 1}. ${s}`));
+  out.push("");
   out.push("### Facts");
   for (const f of Content.aiBootstrap.facts) out.push(`- ${f}`);
+  out.push("");
+  out.push("### Task Routes");
+  for (const r of Content.aiBootstrap.taskRoutes) {
+    out.push(`- **${r.task}** — read: ${r.read}; verify: \`${r.verify}\``);
+  }
   out.push("");
 
   // Human overview.
