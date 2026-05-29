@@ -42,6 +42,24 @@ export const __block = {
       "applyId": "apply-2026-05-27-ffaf3593",
       "hash": "049ea8e36cecdf6c3bc1c2ea72763e6fb1a678efe67a2087a40584e32ff026f8",
       "prevHash": "c516cb38078408c79244502029dc10bc618ccf3d1d9f59b1ba2ded02dac8cdc5"
+    },
+    {
+      "content": "// README.aiDoc.yume.js — REAL source for README.md.\n// README.md は universal first-read (人間と AI 共通の入口)。\n// AI bootstrap を先頭に、人間 overview を後段に配置する SHADOW を生成する。\n\nexport const Content = {\n  title: \"yume-develop\",\n\n  // AI bootstrap: 新規セッションで repo に入った agent が最初に踏むブロック。\n  aiBootstrap: {\n    headline: \"AI agents: this repo's structured rules live in AGENTS.aiDoc.yume.js (single import surface).\",\n    methods: [\n      { kind: \"show head\", cmd: \"node runYume.js AGENTS.aiDoc.yume.js show head --raw\" },\n      { kind: \"import\",    cmd: \"import { Forbidden, BlindSpots, BlockOps, GraphOps, Glossary, VirtualHeavy, RealVariable, AutoUseProtocol, OperatingModel, ContextEconomy } from './AGENTS.aiDoc.yume.js'\" },\n    ],\n    extras: [\n      \"Axioms (A0–A14): BIBLE.md or `node runYume.js bible.aiDoc.yume.js show head --raw`.\",\n      \".yume.js is portable Block file (HEAD + append-only history). Edit HEAD; commit via runtime.\",\n      \"AGENTS.md / GEMINI.md are 3-line stubs pointing here.\",\n    ],\n  },\n\n  // 人間 overview: github landing で読む人向け。\n  summary: \"yume-develop is a self-contained workspace for AI-Native development on the `.yume.js` (BLOCKFILE) portable file format.\",\n  philosophy: [\n    { name: \"All-as-Block\",       detail: \"Functions, constraints, observations, and documentation are all Blocks.\" },\n    { name: \"Versions-as-Body\",    detail: \"A Block's true state is its append-only `versions` array.\" },\n    { name: \"Top-Down E2E-First (Axiom A14)\", detail: \"Start with E2E scenarios; fill coverage gaps with autonomously generated unit tests.\" },\n  ],\n  contents: [\n    { path: \"AGENTS.aiDoc.yume.js\", desc: \"AI single import surface — rules, ops, manual, runbook, axiom pointers.\" },\n    { path: \"bible.aiDoc.yume.js\",  desc: \"Canonical philosophy and axioms (A0–A14).\" },\n    { path: \"core.module.yume.js\",  desc: \"Block / Graph / parseJS implementation.\" },\n    { path: \"cli.module.yume.js\",   desc: \"CLI implementation.\" },\n    { path: \"runtimes/\",             desc: \"Co-located yume runtimes (ver001 / ver002 handlers).\" },\n  ],\n  usage: [\n    { cmd: \"npm test\",                                              desc: \"Run the complete local suite.\" },\n    { cmd: \"npm run verify\",                                         desc: \"docs:check + validate + refs-check + tests.\" },\n    { cmd: \"node runYume.js <file>.yume.js show head --raw\",         desc: \"Clean HEAD source, history-free (sniper reading).\" },\n    { cmd: \"node runYume.js <file>.yume.js commit --note \\\"why\\\"\",   desc: \"Append a new version after editing HEAD.\" },\n    { cmd: \"npm run refs-check\",                                     desc: \"Reference graph integrity.\" },\n  ],\n  completion: [\n    \"Changed .yume.js files validate.\",\n    \"Reference graph changes pass refs-check.\",\n    \"Public docs (SHADOW) are aligned with REAL source.\",\n  ],\n};\n\nexport const exportMarkdown = () => {\n  const out = [];\n  out.push(`# ${Content.title}`);\n  out.push(\"\");\n  out.push(\"> Generated from `README.aiDoc.yume.js`. Do not edit this Markdown directly.\");\n  out.push(\"\");\n\n  // AI bootstrap — top of file so any agent landing here finds it first.\n  out.push(\"## For AI Agents (first read)\");\n  out.push(\"\");\n  out.push(Content.aiBootstrap.headline);\n  out.push(\"\");\n  for (const m of Content.aiBootstrap.methods) {\n    out.push(`- ${m.kind}: \\`${m.cmd}\\``);\n  }\n  out.push(\"\");\n  for (const e of Content.aiBootstrap.extras) out.push(`- ${e}`);\n  out.push(\"\");\n\n  // Human overview.\n  out.push(\"## Overview\");\n  out.push(\"\");\n  out.push(Content.summary);\n  out.push(\"\");\n\n  out.push(\"## Philosophy\");\n  out.push(\"\");\n  for (const p of Content.philosophy) out.push(`- **${p.name}** — ${p.detail}`);\n  out.push(\"\");\n\n  out.push(\"## Contents\");\n  out.push(\"\");\n  for (const c of Content.contents) out.push(`- \\`${c.path}\\` — ${c.desc}`);\n  out.push(\"\");\n\n  out.push(\"## Usage\");\n  out.push(\"\");\n  out.push(\"```sh\");\n  for (const u of Content.usage) {\n    out.push(`# ${u.desc}`);\n    out.push(u.cmd);\n    out.push(\"\");\n  }\n  out.push(\"```\");\n  out.push(\"\");\n\n  out.push(\"## Completion Standard\");\n  out.push(\"\");\n  for (const c of Content.completion) out.push(`- ${c}`);\n  out.push(\"\");\n\n  return out.join(\"\\n\");\n};\n",
+      "ts": 1780013265124,
+      "refs": [],
+      "tags": [],
+      "applyId": "apply-2026-05-29-f107dd58",
+      "hash": "1254d8a1e1a98a02bde586afdcce0ff28b356d2b247713891dace358a3c1c23e",
+      "prevHash": "049ea8e36cecdf6c3bc1c2ea72763e6fb1a678efe67a2087a40584e32ff026f8"
+    },
+    {
+      "content": "// README.aiDoc.yume.js — REAL source for README.md.\n// README.md は universal first-read (人間と AI 共通の入口)。\n// AI bootstrap を先頭に、人間 overview を後段に配置する SHADOW を生成する。\n\nexport const Content = {\n  title: \"yume-develop\",\n\n  // AI bootstrap: 新規セッションで repo に入った agent が最初に踏むブロック。\n  aiBootstrap: {\n    headline: \"AI agents: this repo's structured rules live in AGENTS.aiDoc.yume.js. Access two ways:\",\n    accessMethods: [\n      { kind: \"show head\", cmd: \"node runYume.js AGENTS.aiDoc.yume.js show head --raw\" },\n      { kind: \"import\",    cmd: \"import { Forbidden, BlindSpots, BlockOps, GraphOps, Glossary, VirtualHeavy, RealVariable, AutoUseProtocol, OperatingModel, ContextEconomy } from './AGENTS.aiDoc.yume.js'\" },\n    ],\n    facts: [\n      \"Axioms (A0–A14): BIBLE.md or `node runYume.js bible.aiDoc.yume.js show head --raw`.\",\n      \"`.yume.js` is a portable Block file (HEAD + append-only history). Edit HEAD; commit via runtime.\",\n      \"AGENTS.md / GEMINI.md are SHADOW stubs (CLI auto-load convention) that point here.\",\n    ],\n  },\n\n  // 人間 overview: github landing で読む人向け。\n  summary: \"yume-develop is a self-contained workspace for AI-Native development on the `.yume.js` (BLOCKFILE) portable file format.\",\n  philosophy: [\n    { name: \"All-as-Block\",       detail: \"Functions, constraints, observations, and documentation are all Blocks.\" },\n    { name: \"Versions-as-Body\",    detail: \"A Block's true state is its append-only `versions` array.\" },\n    { name: \"Top-Down E2E-First (Axiom A14)\", detail: \"Start with E2E scenarios; fill coverage gaps with autonomously generated unit tests.\" },\n  ],\n  contents: [\n    { path: \"AGENTS.aiDoc.yume.js\", desc: \"AI single import surface — rules, ops, manual, runbook, axiom pointers.\" },\n    { path: \"bible.aiDoc.yume.js\",  desc: \"Canonical philosophy and axioms (A0–A14).\" },\n    { path: \"core.module.yume.js\",  desc: \"Block / Graph / parseJS implementation.\" },\n    { path: \"cli.module.yume.js\",   desc: \"CLI implementation.\" },\n    { path: \"runtimes/\",             desc: \"Co-located yume runtimes (ver001 / ver002 handlers).\" },\n  ],\n  usage: [\n    { cmd: \"npm test\",                                              desc: \"Run the complete local suite.\" },\n    { cmd: \"npm run verify\",                                         desc: \"docs:check + validate + refs-check + tests.\" },\n    { cmd: \"node runYume.js <file>.yume.js show head --raw\",         desc: \"Clean HEAD source, history-free (sniper reading).\" },\n    { cmd: \"node runYume.js <file>.yume.js commit --note \\\"why\\\"\",   desc: \"Append a new version after editing HEAD.\" },\n    { cmd: \"npm run refs-check\",                                     desc: \"Reference graph integrity.\" },\n  ],\n  completion: [\n    \"Changed .yume.js files validate.\",\n    \"Reference graph changes pass refs-check.\",\n    \"Public docs (SHADOW) are aligned with REAL source.\",\n  ],\n};\n\nexport const exportMarkdown = () => {\n  const out = [];\n  out.push(`# ${Content.title}`);\n  out.push(\"\");\n  out.push(\"> Generated from `README.aiDoc.yume.js`. Do not edit this Markdown directly.\");\n  out.push(\"\");\n\n  // AI bootstrap — top of file so any agent landing here finds it first.\n  out.push(\"## For AI Agents (first read)\");\n  out.push(\"\");\n  out.push(Content.aiBootstrap.headline);\n  out.push(\"\");\n  out.push(\"### Access\");\n  for (const m of Content.aiBootstrap.accessMethods) {\n    out.push(`- ${m.kind}: \\`${m.cmd}\\``);\n  }\n  out.push(\"\");\n  out.push(\"### Facts\");\n  for (const f of Content.aiBootstrap.facts) out.push(`- ${f}`);\n  out.push(\"\");\n\n  // Human overview.\n  out.push(\"## Overview\");\n  out.push(\"\");\n  out.push(Content.summary);\n  out.push(\"\");\n\n  out.push(\"## Philosophy\");\n  out.push(\"\");\n  for (const p of Content.philosophy) out.push(`- **${p.name}** — ${p.detail}`);\n  out.push(\"\");\n\n  out.push(\"## Contents\");\n  out.push(\"\");\n  for (const c of Content.contents) out.push(`- \\`${c.path}\\` — ${c.desc}`);\n  out.push(\"\");\n\n  out.push(\"## Usage\");\n  out.push(\"\");\n  out.push(\"```sh\");\n  Content.usage.forEach((u, i) => {\n    if (i > 0) out.push(\"\");\n    out.push(`# ${u.desc}`);\n    out.push(u.cmd);\n  });\n  out.push(\"```\");\n  out.push(\"\");\n\n  out.push(\"## Completion Standard\");\n  out.push(\"\");\n  for (const c of Content.completion) out.push(`- ${c}`);\n  out.push(\"\");\n\n  return out.join(\"\\n\");\n};\n",
+      "ts": 1780013726819,
+      "refs": [],
+      "tags": [],
+      "applyId": "apply-2026-05-29-6e1c93c3",
+      "hash": "99f1ef5ab2dbc96728e14385a60d50129fb928b632173b8381d4e1c802fbe983",
+      "prevHash": "1254d8a1e1a98a02bde586afdcce0ff28b356d2b247713891dace358a3c1c23e"
     }
   ],
   "notes": {
@@ -70,72 +88,130 @@ export const __block = {
         "ts": 1779864451605,
         "text": "Use npm refs-check as the canonical graph check"
       }
+    ],
+    "apply:apply-2026-05-29-f107dd58": [
+      {
+        "id": "n-bd81ee05-8e42-435c-891b-0d665cacb90e",
+        "author": "human",
+        "ts": 1780013265126,
+        "text": "rewrite as universal first-read: AI bootstrap section at top + human overview; drop references to removed onboarding.aiDoc; cleanup contents listing"
+      }
+    ],
+    "apply:apply-2026-05-29-6e1c93c3": [
+      {
+        "id": "n-0857f10d-c017-4e7c-9bf9-3f41ed6b1c4e",
+        "author": "human",
+        "ts": 1780013726824,
+        "text": "fix lie: AGENTS/GEMINI are not 3-line stubs; restructure aiBootstrap (Access vs Facts subsections); fix Usage trailing empty line"
+      }
     ]
   }
 };
 
 // === HEAD ===
-// README.aiDoc.yume.js - REAL source for README.md
-// This file is the REAL (Axiom A3). README.md is a SHADOW generated from this.
+// README.aiDoc.yume.js — REAL source for README.md.
+// README.md は universal first-read (人間と AI 共通の入口)。
+// AI bootstrap を先頭に、人間 overview を後段に配置する SHADOW を生成する。
 
 export const Content = {
   title: "yume-develop",
-  summary: "yume-develop is a workspace and reference implementation for AI-Native development. It evolves the concepts proven in `ai-desk v2` into the self-contained `.yume.js` (BLOCKFILE) format.",
-  bootstrap: "This repository is intentionally self-contained. It is bootstrapped from `ai-desk v2` and the `yume-files` format work, but it does not require a sibling `yume-files` checkout at runtime.",
+
+  // AI bootstrap: 新規セッションで repo に入った agent が最初に踏むブロック。
+  aiBootstrap: {
+    headline: "AI agents: this repo's structured rules live in AGENTS.aiDoc.yume.js. Access two ways:",
+    accessMethods: [
+      { kind: "show head", cmd: "node runYume.js AGENTS.aiDoc.yume.js show head --raw" },
+      { kind: "import",    cmd: "import { Forbidden, BlindSpots, BlockOps, GraphOps, Glossary, VirtualHeavy, RealVariable, AutoUseProtocol, OperatingModel, ContextEconomy } from './AGENTS.aiDoc.yume.js'" },
+    ],
+    facts: [
+      "Axioms (A0–A14): BIBLE.md or `node runYume.js bible.aiDoc.yume.js show head --raw`.",
+      "`.yume.js` is a portable Block file (HEAD + append-only history). Edit HEAD; commit via runtime.",
+      "AGENTS.md / GEMINI.md are SHADOW stubs (CLI auto-load convention) that point here.",
+    ],
+  },
+
+  // 人間 overview: github landing で読む人向け。
+  summary: "yume-develop is a self-contained workspace for AI-Native development on the `.yume.js` (BLOCKFILE) portable file format.",
   philosophy: [
-    { name: "All-as-Block", detail: "Functions, constraints, observations, and documentation are all represented as Blocks." },
-    { name: "Versions-as-Body", detail: "The true state of a Block is its append-only `versions` array." },
-    { name: "Top-Down E2E-First Verification (Axiom A14)", detail: "Testing starts with End-to-End scenarios to establish the 'gravitational field' of context. Unit tests are then autonomously generated by AI to fill coverage gaps identified during E2E execution." }
+    { name: "All-as-Block",       detail: "Functions, constraints, observations, and documentation are all Blocks." },
+    { name: "Versions-as-Body",    detail: "A Block's true state is its append-only `versions` array." },
+    { name: "Top-Down E2E-First (Axiom A14)", detail: "Start with E2E scenarios; fill coverage gaps with autonomously generated unit tests." },
   ],
   contents: [
-    { path: "core.module.yume.js", desc: "Core logic for Block and Graph management." },
-    { path: "cli.module.yume.js", desc: "The Command Line Interface." },
-    { path: "runtimes/", desc: "Co-located yume runtimes." },
-    { path: "bible.aiDoc.yume.js", desc: "The canonical philosophy and axioms (including A14)." },
-    { path: "onboarding.aiDoc.yume.js", desc: "Rules and guidelines for AI agents working in this repo." }
+    { path: "AGENTS.aiDoc.yume.js", desc: "AI single import surface — rules, ops, manual, runbook, axiom pointers." },
+    { path: "bible.aiDoc.yume.js",  desc: "Canonical philosophy and axioms (A0–A14)." },
+    { path: "core.module.yume.js",  desc: "Block / Graph / parseJS implementation." },
+    { path: "cli.module.yume.js",   desc: "CLI implementation." },
+    { path: "runtimes/",             desc: "Co-located yume runtimes (ver001 / ver002 handlers)." },
   ],
-  relationship: {
-    aiDesk: "Research lab and reference implementation.",
-    yumeFiles: "Format/spec origin. Treat it as lineage, not a runtime dependency.",
-    yumeDevelop: "Mainline development workspace and reference library."
-  },
-  usage: {
-    commands: [
-      { cmd: "npm test", desc: "Run the complete local suite" },
-      { cmd: "npm run test:e2e", desc: "Run e2e suite" },
-      { cmd: "node runYume.js core.module.yume.js history", desc: "List versions of a file" },
-      { cmd: "npm run refs-check", desc: "Check the integrity of the reference graph" },
-      { cmd: "node runYume.js <file>.yume.js show head --raw", desc: "Show clean HEAD source without embedded history" }
-    ]
-  },
+  usage: [
+    { cmd: "npm test",                                              desc: "Run the complete local suite." },
+    { cmd: "npm run verify",                                         desc: "docs:check + validate + refs-check + tests." },
+    { cmd: "node runYume.js <file>.yume.js show head --raw",         desc: "Clean HEAD source, history-free (sniper reading)." },
+    { cmd: "node runYume.js <file>.yume.js commit --note \"why\"",   desc: "Append a new version after editing HEAD." },
+    { cmd: "npm run refs-check",                                     desc: "Reference graph integrity." },
+  ],
   completion: [
     "Changed .yume.js files validate.",
     "Reference graph changes pass refs-check.",
-    "Public docs (SHADOW) are aligned with REAL source."
-  ]
+    "Public docs (SHADOW) are aligned with REAL source.",
+  ],
 };
 
 export const exportMarkdown = () => {
-  let md = `# ${Content.title}\n\n${Content.summary}\n\n${Content.bootstrap}\n\n`;
-  
-  md += `## Philosophy\n\nCode is history. In yume-develop, every file is a \`.yume.js\` file that carries its own entire version history, dependency graph, and metadata within itself.\n\n`;
-  md += Content.philosophy.map(p => `- **${p.name}**: ${p.detail}`).join('\n') + '\n\n';
-  
-  md += `## Contents\n\n`;
-  md += Content.contents.map(c => `- \`${c.path}\`: ${c.desc}`).join('\n') + '\n\n';
-  
-  md += `## Relationship to ai-desk and yume-files\n\n`;
-  md += `- **ai-desk**: ${Content.relationship.aiDesk}\n`;
-  md += `- **yume-files**: ${Content.relationship.yumeFiles}\n`;
-  md += `- **yume-develop**: ${Content.relationship.yumeDevelop}\n\n`;
-  
-  md += `## Usage\n\nFiles in this repository are managed through \`runYume.js\`, which resolves the runtime pinned by each \`.yume.js\` file.\n\n\`\`\`bash\n`;
-  md += Content.usage.commands.map(c => `# ${c.desc}\n${c.cmd}`).join('\n\n') + '\n```\n\n';
-  
-  md += `## Completion Standard\n\n`;
-  md += Content.completion.map(c => `- ${c}`).join('\n') + '\n';
-  
-  return md;
+  const out = [];
+  out.push(`# ${Content.title}`);
+  out.push("");
+  out.push("> Generated from `README.aiDoc.yume.js`. Do not edit this Markdown directly.");
+  out.push("");
+
+  // AI bootstrap — top of file so any agent landing here finds it first.
+  out.push("## For AI Agents (first read)");
+  out.push("");
+  out.push(Content.aiBootstrap.headline);
+  out.push("");
+  out.push("### Access");
+  for (const m of Content.aiBootstrap.accessMethods) {
+    out.push(`- ${m.kind}: \`${m.cmd}\``);
+  }
+  out.push("");
+  out.push("### Facts");
+  for (const f of Content.aiBootstrap.facts) out.push(`- ${f}`);
+  out.push("");
+
+  // Human overview.
+  out.push("## Overview");
+  out.push("");
+  out.push(Content.summary);
+  out.push("");
+
+  out.push("## Philosophy");
+  out.push("");
+  for (const p of Content.philosophy) out.push(`- **${p.name}** — ${p.detail}`);
+  out.push("");
+
+  out.push("## Contents");
+  out.push("");
+  for (const c of Content.contents) out.push(`- \`${c.path}\` — ${c.desc}`);
+  out.push("");
+
+  out.push("## Usage");
+  out.push("");
+  out.push("```sh");
+  Content.usage.forEach((u, i) => {
+    if (i > 0) out.push("");
+    out.push(`# ${u.desc}`);
+    out.push(u.cmd);
+  });
+  out.push("```");
+  out.push("");
+
+  out.push("## Completion Standard");
+  out.push("");
+  for (const c of Content.completion) out.push(`- ${c}`);
+  out.push("");
+
+  return out.join("\n");
 };
 
 // === /HEAD ===

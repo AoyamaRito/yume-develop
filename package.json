@@ -12,8 +12,7 @@
     "docs:generate": "node generated-docs.verify.js --write",
     "docs:check": "node generated-docs.verify.js",
     "refs-check": "node runYume.js headless-demo.test.yume.js refs-check .",
-    "validate:runbook": "node runYume.js runAndReadMe.aiDoc.yume.js validate",
-    "validate:docs": "node runYume.js AGENTS.aiDoc.yume.js validate && node runYume.js README.aiDoc.yume.js validate && node runYume.js bible.aiDoc.yume.js validate && node runYume.js runAndReadMe.aiDoc.yume.js validate",
+    "validate:docs": "node runYume.js AGENTS.aiDoc.yume.js validate && node runYume.js README.aiDoc.yume.js validate && node runYume.js bible.aiDoc.yume.js validate",
     "validate:spec": "node runYume.js BLOCKFILE.aiDoc.yume.js validate",
     "verify": "npm run docs:check && npm run validate:docs && npm run validate:spec && npm run refs-check && npm test"
   },

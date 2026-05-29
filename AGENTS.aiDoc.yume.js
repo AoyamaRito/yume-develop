@@ -42,6 +42,51 @@ export const __block = {
       "applyId": "apply-2026-05-27-ecf35415",
       "hash": "f5118d0ef1cde6ecdd83ad3d622dc1009581869b0f9ad5675dabe5c4b8a5dd8e",
       "prevHash": "36b7b04f66d6cff79d1babcacf9ecf34ca93450837ab08367fb7101291f8e1e3"
+    },
+    {
+      "content": "// AGENTS.aiDoc.yume.js — REAL source for AGENTS.md (canonical AI 入口)\n// This file is the REAL (Axiom A3). AGENTS.md / GEMINI.md / start.md / CONTEXT_FILES.md は SHADOW。\n//\n// 構造:\n//   - 単一入口: AGENTS.md (このファイルから生成)\n//   - 詳細層:   AI_ONBOARDING.md (onboarding.aiDoc), MANUAL.md (manual.aiDoc), BIBLE.md (bible.aiDoc)\n//   - stub:    start.md / CONTEXT_FILES.md / GEMINI.md は AGENTS.md へ redirect するだけ\n//\n// 本文は他 REAL から import して構築する (A1: 重複削減、A3: REAL 1 箇所更新で全 SHADOW 追従)。\n\nimport {\n  Forbidden,\n  BlindSpots,\n  SniperReading,\n  EyesOverServer,\n  RealVariableRules,\n} from './onboarding.aiDoc.yume.js';\n\nexport const FileMap = {\n  必読: [\n    { path: 'AGENTS.md (this)', purpose: '単一入口。30 秒で全体把握' },\n    { path: 'BIBLE.md', purpose: '公理 A0–A14。判断に迷ったらここ' },\n    { path: 'runAndReadMe.aiDoc.yume.js HEAD', purpose: '運用ランブック詳細' },\n    { path: 'core.module.yume.js HEAD', purpose: 'Block / Graph / parseJS 実装' },\n    { path: 'cli.module.yume.js HEAD', purpose: 'CLI 実装' },\n  ],\n  詳細: [\n    { path: 'AI_ONBOARDING.md', purpose: 'Forbidden / Pitfalls / BlockOps / GraphOps / Constraint / Observation 完全版' },\n    { path: 'MANUAL.md', purpose: 'REAL_* 規約と CLI 操作の詳細マニュアル' },\n    { path: 'BLOCKFILE.aiDoc.yume.js', purpose: '形式仕様 (正確なセマンティクスが必要なときだけ)' },\n    { path: 'runtime.spec.yume.js', purpose: 'runtime spec' },\n    { path: 'e2e.js', purpose: 'E2E テスト全件' },\n  ],\n  重い: [\n    { path: 'bible.aiDoc.yume.js', purpose: 'BIBLE.md で足りないときだけ' },\n    { path: 'coverage.verify.yume.js', purpose: 'coverage 作業時だけ' },\n    { path: '/Users/AoyamaRito/PJs/sample/', purpose: '本体作業では読まない' },\n  ],\n  routing: [\n    { trigger: '3D / WebGL / Matrix', file: '3dplus/, 3d-prefab/' },\n    { trigger: 'UI / canvas 検証', file: 'eyes/ (ai-eyes 観測ハーネス)' },\n    { trigger: 'CLI 拡張', file: 'cli.module.yume.js + e2e.js' },\n  ],\n};\n\nexport const StderrHintPolicy =\n  \"runYume.js / ai-desk は CLI 実行時、コードの状態を観察して stderr に 1 度だけ hint を流す\" +\n  \" (例: WebGL/Matrix4 検出 → 3dplus/ への routing)。状態は cwd の `.ai-desk-state.json` に記録、\" +\n  \"二度目以降は静か。hint が出たら指示先のドキュメントを実際に読む。\";\n\nexport const RepositoryBoundary = {\n  role: \"yume-develop は yume-files の product/runtime workspace (self-contained)。\",\n  externalSampleRoot: \"/Users/AoyamaRito/PJs/sample/\",\n  rules: [\n    \"サンプルアプリ / 実験を yume-develop 内に作らない。/Users/AoyamaRito/PJs/sample/<project>/ などへ。\",\n    \"yume-develop の test は core runtime / CLI / docs generation / 3D prefab / eyes に限定。\",\n    \"Markdown は SHADOW、対応する .aiDoc.yume.js (REAL) を編集して generate する。\",\n  ],\n};\n\nexport const RealShadowSummary =\n  \"REAL = .aiDoc.yume.js (編集する場所)、SHADOW = .md (自動生成、直接編集禁止)。\" +\n  \"実行 JS 内では主要状態を `REAL_*` 接頭語で明示、derived / cache / loop / DOM / 一時値には付けない\" +\n  \" (詳細: MANUAL.md / BIBLE.md A3)。\";\n\nexport const CommonCommands = [\n  { name: 'HEAD だけ読む', cmd: 'node runYume.js <file>.yume.js show head --raw' },\n  { name: 'touched yume file を検証', cmd: 'node runYume.js <file>.yume.js validate' },\n  { name: 'HEAD 変更を履歴化', cmd: 'node runYume.js <file>.yume.js commit --note \"why\"' },\n  { name: 'repository graph check', cmd: 'npm run refs-check' },\n  { name: 'SHADOW md 再生成', cmd: 'npm run docs:generate' },\n  { name: 'SHADOW md 整合確認', cmd: 'npm run docs:check' },\n  { name: 'full local suite', cmd: 'npm test' },\n  { name: 'full verification', cmd: 'npm run verify' },\n];\n\nexport const DoneCriteria = [\n  \"Changed .yume.js files validate.\",\n  \"npm run docs:check passes when generated docs are touched.\",\n  \"npm run refs-check has no new unresolved path or duplicate-id errors.\",\n  \"npm test passes when runtime behavior or repository structure changes.\",\n];\n\nexport const ReportFormat = \"変更内容、検証結果、残リスクを短く報告する。\";\n\nexport const exportMarkdown = () => {\n  const out = [];\n  out.push('# AI Agent Instructions for yume-develop');\n  out.push('');\n  out.push('> Generated from `AGENTS.aiDoc.yume.js`. Do not edit this Markdown directly.');\n  out.push('> このリポジトリで作業する AI の **単一入口**。start.md / GEMINI.md / CONTEXT_FILES.md はこのファイルへの redirect stub。');\n  out.push('');\n  out.push('## TL;DR');\n  out.push('');\n  out.push('yume-develop は `.yume.js` (BLOCKFILE) format と runtimes の product workspace (self-contained)。');\n  out.push('Markdown は SHADOW、編集は対応する `.aiDoc.yume.js` (REAL) → `npm run docs:generate` で再生成。');\n  out.push('');\n  out.push('## 必読 (この順)');\n  out.push('');\n  for (const f of FileMap.必読) out.push(`- **${f.path}** — ${f.purpose}`);\n  out.push('');\n  out.push('## 詳細 (必要になったら)');\n  out.push('');\n  for (const f of FileMap.詳細) out.push(`- **${f.path}** — ${f.purpose}`);\n  out.push('');\n  out.push('## 重い・後回し');\n  out.push('');\n  for (const f of FileMap.重い) out.push(`- **${f.path}** — ${f.purpose}`);\n  out.push('');\n  out.push('## Routing (状況別に追加で読む)');\n  out.push('');\n  for (const r of FileMap.routing) out.push(`- ${r.trigger} → \\`${r.file}\\``);\n  out.push('');\n  out.push('## 禁忌 (Forbidden — break = no commit)');\n  out.push('');\n  for (const f of Forbidden) out.push(`${f.id}. **${f.rule}**  _(${f.why}, ${f.axiom_ref})_`);\n  out.push('');\n  out.push('全 Forbidden の詳細と例外条件は AI_ONBOARDING.md を参照。');\n  out.push('');\n  out.push('## 盲点 (Pitfalls — 軽く読むと見落とす)');\n  out.push('');\n  for (const b of BlindSpots) {\n    out.push(`### ${b.id}. ${b.pitfall}`);\n    out.push(`- 症状: ${b.symptom}`);\n    out.push(`- 対策: ${b.cure}`);\n    out.push(`- 関連公理: ${b.axiom_ref}`);\n    out.push('');\n  }\n  out.push('## Sniper Reading');\n  out.push('');\n  out.push(SniperReading.rule);\n  out.push('');\n  out.push(`why: ${SniperReading.why}`);\n  out.push('');\n  for (const m of SniperReading.methods) out.push(`- **${m.name}**: \\`${m.command}\\` — ${m.benefit}`);\n  out.push('');\n  out.push('## Eyes over Server');\n  out.push('');\n  out.push(EyesOverServer.rule);\n  out.push('');\n  for (const s of EyesOverServer.workflow) out.push(`- ${s}`);\n  out.push('');\n  out.push('## REAL / SHADOW & `REAL_*`');\n  out.push('');\n  out.push(RealShadowSummary);\n  out.push('');\n  out.push(`Use \\`REAL_*\\` for: ${RealVariableRules.use_for.join(' / ')}`);\n  out.push(`Do NOT use for: ${RealVariableRules.do_not_use_for.join(' / ')}`);\n  out.push('');\n  out.push('## stderr hint policy');\n  out.push('');\n  out.push(StderrHintPolicy);\n  out.push('');\n  out.push('## Repository Boundary');\n  out.push('');\n  out.push(RepositoryBoundary.role);\n  out.push('');\n  for (const r of RepositoryBoundary.rules) out.push(`- ${r}`);\n  out.push('');\n  out.push('## Common Commands');\n  out.push('');\n  out.push('```sh');\n  for (const c of CommonCommands) {\n    out.push(`# ${c.name}`);\n    out.push(c.cmd);\n    out.push('');\n  }\n  out.push('```');\n  out.push('');\n  out.push('## 完了条件');\n  out.push('');\n  for (const c of DoneCriteria) out.push(`- ${c}`);\n  out.push('');\n  out.push('## 報告形式');\n  out.push('');\n  out.push(ReportFormat);\n  out.push('');\n  return out.join('\\n');\n};\n\n// stub generators for redirector SHADOWs (start.md / CONTEXT_FILES.md / GEMINI.md)\nexport const exportStubMarkdown = (name) => [\n  `# ${name}`,\n  '',\n  '> Generated from `AGENTS.aiDoc.yume.js` (redirect stub). Do not edit this Markdown directly.',\n  '',\n  'このファイルは **redirect stub** です。yume-develop の AI 入口は **AGENTS.md** に統合されています。',\n  '',\n  '➡️  [AGENTS.md](./AGENTS.md) を読んでください。',\n  '',\n  '理由: 入口を 1 箇所に集約することで Bible A1 (ローカリティ極大化) と A3 (REAL/SHADOW) を実利的に運用する (複数入口は隠れた依存を生む)。',\n  '',\n].join('\\n');\n\nexport const exportGeminiMarkdown = () => exportStubMarkdown('GEMINI.md');\n",
+      "ts": 1780011942868,
+      "refs": [
+        {
+          "kind": "import",
+          "target": "./onboarding.aiDoc.yume.js"
+        },
+        {
+          "kind": "calls",
+          "target": "exportStubMarkdown"
+        }
+      ],
+      "tags": [],
+      "applyId": "apply-2026-05-28-fdf04348",
+      "hash": "baa58ad7f726f3ba4b9bd31d494228f2271fcb86f03ebd96dd67a19e5cac707b",
+      "prevHash": "f5118d0ef1cde6ecdd83ad3d622dc1009581869b0f9ad5675dabe5c4b8a5dd8e"
+    },
+    {
+      "content": "// AGENTS.aiDoc.yume.js — yume-develop の AI 単一知識面 (canonical REAL).\n//\n// AI agent: AGENTS.md / GEMINI.md は 3 行 stub。本文はこのファイル。\n//   show head: node runYume.js AGENTS.aiDoc.yume.js show head --raw\n//   import:    import { Forbidden, BlindSpots, FileMap, BlockOps, ... } from './AGENTS.aiDoc.yume.js'\n//\n// 人間 audience: README.md (overview) と BIBLE.md (公理 archive) のみ。\n// 旧 onboarding.aiDoc / manual.aiDoc とその SHADOW (AI_ONBOARDING.md / MANUAL.md /\n// start.md / CONTEXT_FILES.md) はこのファイルに統合され廃止 → /PJs/trash/。\n//\n// 構造化 export:\n//   navigation : FileMap StderrHintPolicy RepositoryBoundary RealShadowSummary\n//                CommonCommands DoneCriteria ReportFormat\n//   discipline : Forbidden BlindSpots SniperReading EyesOverServer RealVariable\n//   ops        : BlockOps ParseRules GraphOps Persistence TestingRules\n//                CliExtension HeavyApplyRules V1Relation ConstraintRules\n//                ObservationRules CommitConventions Compass\n//   manual     : Glossary QuickStart Workflow CliCommands VirtualHeavy\n//                ProgrammaticApi LintKinds ParseJSRules\n//\n// 注: CliCommands / Workflow / QuickStart は ai-desk v2 由来の legacy 操作系。\n//     yume-develop の現行 CLI は runYume.js を一次面とする (show / commit / validate / history /\n//     heavy / refs-check 等)。\n\nexport const VERSION = \"3.0\";\nexport const DATE = \"2026-05-29\";\n\n// ── navigation ──\n\nexport const FileMap = {\n  必読: [\n    'AGENTS.aiDoc.yume.js (this) — 単一 REAL 入口、structured data 群',\n    'BIBLE.md — 公理 A0–A14 (人間にも見せる archive)',\n    'runAndReadMe.aiDoc.yume.js HEAD — 運用ランブック詳細',\n    'core.module.yume.js HEAD — Block / Graph / parseJS 実装',\n    'cli.module.yume.js HEAD — CLI 実装',\n  ],\n  詳細: [\n    'BLOCKFILE.aiDoc.yume.js — 形式仕様 (正確なセマンティクスが必要なときだけ)',\n    'runtime.spec.yume.js — runtime spec',\n    'e2e.js — E2E テスト全件',\n  ],\n  重い: [\n    'bible.aiDoc.yume.js — BIBLE.md で足りないときだけ',\n    'coverage.verify.yume.js — coverage 作業時だけ',\n    '/Users/AoyamaRito/PJs/sample/ — 本体作業では読まない',\n  ],\n  routing: [\n    { trigger: '3D / WebGL / Matrix', file: '3dplus/, 3d-prefab/' },\n    { trigger: 'UI / canvas 検証', file: 'eyes/ (ai-eyes 観測ハーネス)' },\n    { trigger: 'CLI 拡張', file: 'cli.module.yume.js + e2e.js' },\n  ],\n};\n\nexport const StderrHintPolicy =\n  \"runYume.js / ai-desk は CLI 実行時、コードの状態を観察して stderr に 1 度だけ hint を流す\" +\n  \" (例: WebGL/Matrix4 検出 → 3dplus/ への routing)。状態は cwd の `.ai-desk-state.json` に記録、\" +\n  \"二度目以降は静か。hint が出たら指示先のドキュメントを実際に読む。\";\n\nexport const RepositoryBoundary = {\n  role: \"yume-develop は yume-files の product/runtime workspace (self-contained)。\",\n  externalSampleRoot: \"/Users/AoyamaRito/PJs/sample/\",\n  rules: [\n    \"サンプルアプリ / 実験を yume-develop 内に作らない。/Users/AoyamaRito/PJs/sample/<project>/ などへ。\",\n    \"yume-develop の test は core runtime / CLI / docs generation / 3D prefab / eyes に限定。\",\n    \"Markdown は SHADOW、対応する .aiDoc.yume.js (REAL) を編集して generate する。\",\n  ],\n};\n\nexport const RealShadowSummary =\n  \"REAL = .aiDoc.yume.js (編集する場所)、SHADOW = .md (自動生成、直接編集禁止)。\" +\n  \"実行 JS 内では主要状態を `REAL_*` 接頭語で明示、derived / cache / loop / DOM / 一時値には付けない\" +\n  \" (詳細: 下記 RealVariable export / BIBLE.md A3)。\";\n\nexport const CommonCommands = [\n  { name: 'HEAD だけ読む', cmd: 'node runYume.js <file>.yume.js show head --raw' },\n  { name: 'touched yume file を検証', cmd: 'node runYume.js <file>.yume.js validate' },\n  { name: 'HEAD 変更を履歴化', cmd: 'node runYume.js <file>.yume.js commit --note \"why\"' },\n  { name: 'repository graph check', cmd: 'npm run refs-check' },\n  { name: 'SHADOW md 再生成', cmd: 'npm run docs:generate' },\n  { name: 'SHADOW md 整合確認', cmd: 'npm run docs:check' },\n  { name: 'full local suite', cmd: 'npm test' },\n  { name: 'full verification', cmd: 'npm run verify' },\n];\n\nexport const DoneCriteria = [\n  \"Changed .yume.js files validate.\",\n  \"npm run docs:check passes when generated docs are touched.\",\n  \"npm run refs-check has no new unresolved path or duplicate-id errors.\",\n  \"npm test passes when runtime behavior or repository structure changes.\",\n];\n\nexport const ReportFormat = \"変更内容、検証結果、残リスクを短く報告する。\";\n\n// ── discipline (旧 onboarding.aiDoc 由来) ──\n\nexport const Forbidden = [\n  { id: 1, rule: \"TypeScript を導入しない\",                              why: \"型情報による隠匿排除\",                     axiom_ref: 'A0' },\n  { id: 2, rule: \"npm install で外部依存を入れない\",                      why: \"Eternal Compatibility\",                     axiom_ref: 'Bible§3' },\n  { id: 3, rule: \"build / transpile step を作らない\",                     why: \"ソース = 実行ファイル\",                     axiom_ref: 'Bible§3' },\n  { id: 4, rule: \"フレームワーク(React 等)を入れない\",                    why: \"暗黙の規約は隠匿の温床\",                   axiom_ref: 'A0' },\n  { id: 5, rule: \"コメントマーカー(// [ai_s_emblem:...])を新規に書かない\", why: \"マーカー廃止、tags は // @tags: で書く\",  axiom_ref: 'Bible§4' },\n  { id: 6, rule: \"Block.versions を直接書き換えない、commit() 経由のみ\",   why: \"REAL の append-only 性\",                    axiom_ref: 'A4, A6' },\n  { id: 7, rule: \"Block.content / refs / tags を変数化しない\",            why: \"SHADOW 規約\",                               axiom_ref: 'A3, A6' },\n  { id: 8, rule: \"「人間の見やすさ」で判断しない\",                         why: \"LLM 視点の情報密度で判断\",                 axiom_ref: 'A0, A7' },\n];\n\nexport const BlindSpots = [\n  { id: 1, pitfall: \"「とりあえず全体を読む」誘惑 (Sniper Reading 違反)\",\n    symptom: \"依存関係やコード把握のために .yume.js ファイルを丸ごと read_file してしまい、巨大な履歴 JSON データ (__block.versions) でコンテキストを使い切る、あるいは最新の実装を見失う。\",\n    cure: \"「初手でファイル全体を絶対に読むな」。必ず `node runYume.js <file> show head --raw` を使うか、grep で 'HEAD ===' の開始行を特定して HEAD 部のみを限定して読む。\",\n    axiom_ref: \"A1, Physics.Spotlight\" },\n  { id: 2, pitfall: \"REAL_* プレフィックスの乱用・誤用 (A3 REAL/SHADOW 違反)\",\n    symptom: \"すべての状態変数に REAL_ を付けたり、ループ変数、DOM 要素、一時変数、ただの定数にまで REAL_ を付けてしまい、AST bootstrap 監視や状態バグ追跡の対象を絞り込めなくなる。\",\n    cure: \"REAL_* は「主要な状態」「Reducer等で更新され、描画・テスト・観測(eyes)の入力となる中核的な状態」にのみ限定して付与する。\",\n    axiom_ref: \"A3\" },\n  { id: 3, pitfall: \"型情報の暗黙の依存 (LLMTyping / A11 違反)\",\n    symptom: \"変数名（worldX, screenY）やコメント、型定義（TypeScriptなど）だけで型を表現し、REAL値そのものは裸の数値やオブジェクトで持つ。LLM が context window の外側へ移動した瞬間、その変数名の意味を忘れハルシネーションを起こす。\",\n    cure: \"値そのものにドメインタグを埋め込んだ文字列として持つ（例：\\\"world:10,0,-5\\\" / \\\"usd:19.99\\\"）。値が self-describing であれば、AIが context を失っても絶対に推論を間違えない。\",\n    axiom_ref: \"Physics.LLMTyping, A11\" },\n  { id: 4, pitfall: \"仕様（SPEC）を挟まない「いきなり実装」 (A8 Spec-First Versioning 違反)\",\n    symptom: \"仕様変更や新機能実装の際、仕様（SPEC）のみを定義したバージョン（コメント ＋ #SPEC# タグのみのバージョン）を挟むことなく、最初から実装コード（impl）を commit し、仕様の変遷履歴を失う。\",\n    cure: \"コードを書き換える前に、必ず「新仕様の定義（仕様コメントのみの spec version）」を Block.commit してから、その次のバージョンで実装コードをコミットする。\",\n    axiom_ref: \"A8\" },\n  { id: 5, pitfall: \"純粋論理(Pure logic)と Adapter の混同 (A9 Crystallize 違反)\",\n    symptom: \"Block の中に、動的な dispatch、eval、Proxy、prototype 拡張、またはプラットフォーム特有の I/O や DOM 操作、タイマーなどの副作用を書いてしまう。Go にコンパイル（crystallize）できず、AIにとっても推論しにくい。\",\n    cure: \"Block 内には「Crystallize可能な Pure logic」のみを書く。I/O や DOM操作、動的ディスパッチは Block の外にある Adapter へ完全に分離し、Block 内部を極限までピュアに保つ。\",\n    axiom_ref: \"A9\" },\n  { id: 6, pitfall: \"3D 座標を screen に射影して DOM 要素を追従させる (A10 Single Coord 違反)\",\n    symptom: \"3Dオブジェクトの上に浮かぶツールチップやラベルのために、world 座標を screen 座標に射影し、DOM の位置（CSS transformなど）をリアルタイムに同期しようとして座標統一性を崩す。\",\n    cure: \"world 座標を読んで DOM の位置をリアルタイムに同期させることは禁止。DOM は画面端のサイドバーやパネルなどの、3D空間と構造的に完全に分離されたものに限り、a11y/IME 目的でのみ許可する。\",\n    axiom_ref: \"A10\" },\n  { id: 7, pitfall: \"ボトムアップでのテスト作成 (A14 Top-Down Verification 違反)\",\n    symptom: \"実装後に、場上がり的に個別のユニットテストをたくさん書き、全体の E2E シナリオや意図の表明が後回しになる。\",\n    cure: \"テストは必ず「Top-Down E2E-First」で開始する。まずシステム全体の意図を示す E2E シナリオ（e2e.js への追加）を書き、その実行から得られたカバレッジの「隙間」を埋めるように自律的にユニットテストを生成する。\",\n    axiom_ref: \"A14\" },\n];\n\nexport const SniperReading = {\n  rule: \".yume.js ファイルを探索する際、初手でファイル全体を read_file してはならない。\",\n  why: \"履歴ブロック(__block.versions)の巨大なノイズにより、AI の Spotlight(300行)が枯渇し、現在の実装(HEAD)を見失うため。\",\n  methods: [\n    { name: \"CLI show head --raw\", command: \"node runYume.js <file>.yume.js show head --raw\", benefit: \"メタデータを含まないピュアな HEAD ソースのみ。最も推奨。\" },\n    { name: \"Grep HEAD line\",       command: \"grep -n 'HEAD ===' <file>.yume.js\",              benefit: \"HEAD 領域の開始行を特定し、read_file(offset) で履歴をスキップして読む。\" },\n  ],\n};\n\nexport const EyesOverServer = {\n  rule: \"UI や 3D ロジックの修正時、人間による目視確認(サーバー起動)を待たず、ai-eyes で自律検証せよ。\",\n  why: \"人間がブラウザを開くコストは AI にとってのボトルネック。描画命令(draw_ops)を構造的に比較することで、ハルシネーションを物理的に排除できる。\",\n  workflow: [\n    \"1. 修正後に `node eyes.observation.yume.js <target>` を実行。\",\n    \"2. 出力された draw_ops を前回の正常値(snapshot Block)と diff。\",\n    \"3. 座標や色が意図通りであれば、目視なしでパスと判断。\",\n    \"4. 複雑な挙動(アニメ等)は `node eyes.debugger.yume.js <demo> <scenario>` で HTML 動画ログを生成し、コマ送りで最終確認。\",\n  ],\n};\n\nexport const RealVariable = {\n  rule: \"`REAL_*` は、AI / Kantoku が監視すべき実行 JS の「正の状態」にだけ付ける。\",\n  purpose: \"実行 JS 内で AI / Kantoku が変化を追跡すべき「正の状態」を示す命名規約。型や単位の表現ではなく、観測・検証・prompt 生成の起点。\",\n  why: \"REAL_* があると、初期化時 AST bootstrap / 実行 trace / eyes_check / prompt 生成の対象を狭められる。全変数を監視せず、状態バグの根だけを追うための接頭語。AST が返す性質名は `isWatched`。`check` は検査実行の名前に限定する。\",\n  useFor: [\n    \"アプリの主要 state\",\n    \"dispatch / reducer 後に更新される state\",\n    \"render / eyes / test の入力になる state\",\n    \"失われると挙動判断が壊れる state\",\n  ],\n  avoidFor: [\n    \"一時値\",\n    \"DOM 要素\",\n    \"derived view / cache\",\n    \"単なる定数\",\n    \"loop counter\",\n  ],\n  rules: [\n    \"AST で `REAL_*` を検出した結果は `isWatched: true` と表現する\",\n    \"`check` は検査実行の動詞なので、監視対象かどうかの boolean 名には使わない\",\n    \"`REAL_*` は初期化時に記録可能である\",\n    \"`REAL_*` の再代入は trace 対象にできる\",\n    \"`REAL_*` は JSON serializable を推奨する\",\n    \"event / dispatch 後に `REAL_*` が変化しない場合、Kantoku は state_frozen 系の警告を出せる\",\n    \"`REAL_*` が変わった後、古い eyes / test / verification は stale とみなす\",\n  ],\n  example: \"let REAL_state = initialState();\\nfor (const evt of events) {\\n  REAL_state = dispatch(REAL_state, evt);\\n  render(ctx, REAL_state);\\n}\",\n};\n\n// ── ops (旧 onboarding.aiDoc 由来) ──\n\nexport const BlockOps = {\n  create: {\n    rule: \"新規 Block は `new Block({id, type, meta})` してから `commit()` で初回 version を append。\",\n    naming: \"id は `<moduleId>:<prefix>:<name>` 規約。prefix は 'fn' か 'class'。\",\n    types: ['function', 'class', 'module', 'constraint', 'observation', 'twin'],\n  },\n  update: {\n    rule: \"必ず `commit()` で新 version を append。古い version は消さない・触らない。\",\n    pattern: \"head() の値をベースに、変更したい部分だけ差し替えて新 version を作る。\",\n  },\n  rollback: {\n    rule: \"過去に戻すときは `b.rollback(versionIndex)` を使う。履歴を消さず、新 version として commit。\",\n    禁忌: \"b.versions = b.versions.slice(0, n) のような直接削除は禁忌。\",\n  },\n};\n\nexport const ParseRules = {\n  function:    \"function 宣言 → Block(type:'function')\",\n  arrow:       \"const x = () => {} → Block(type:'function', tags:['arrow'])\",\n  klass:       \"class 宣言 → Block(type:'class')\",\n  imports:     \"import 文 → module Block の refs に { kind:'import', target } で追加\",\n  calls:       \"同モジュール内の関数呼び出し → refs に { kind:'calls', target } で追加\",\n  tagComments: \"直前コメントの // @tags: a, b → tags に取り込み(20 行遡及)\",\n  v1emblems:   \"// [ai_s_emblem:#a#b Name] は互換読み専用、新規記述禁止\",\n  limitations: [\n    \"文字列リテラル中の function キーワードを誤検出する可能性\",\n    \"ネスト関数の捕捉が浅い場合がある\",\n    \"対応が必要なら parseJS 内の正規表現を拡張(将来的に AST 置換)\",\n  ],\n};\n\nexport const GraphOps = [\n  { intent: \"この関数を変えたら何に影響する?\",   method: \"g.impact(id)\" },\n  { intent: \"この関数を呼んでるのは?\",          method: \"g.backward(id)\" },\n  { intent: \"この関数が呼ぶのは?\",              method: \"g.forward(id)\" },\n  { intent: \"特定の文字列を含む Block は?\",      method: \"g.search('TODO')\" },\n  { intent: \"export されてる Block は?\",        method: \"g.byTag('export')\" },\n  { intent: \"class だけ取りたい\",               method: \"g.byType('class')\" },\n  { intent: \"過去の状態のグラフが見たい\",        method: \"g.at(timestamp)\" },\n  { intent: \"全 Block の整合性チェック\",         method: \"g.verify()\" },\n];\n\nexport const Persistence = {\n  default_filename: \"graph.json\",\n  derived_filename: \"*.local.json\",\n  rule: [\n    \"saveGraph(graph, path) で JSON 1 ファイルに保存\",\n    \"graph.json と *.local.json は .gitignore 済み\",\n    \"共有が必要な永続データは別名 + レビュー後 commit\",\n  ],\n};\n\nexport const TestingRules = {\n  rule: \"テストは必ず『Top-Down E2E-First』で書くこと。ボトムアップのTDDは禁止。\",\n  workflow: [\n    \"1. 全体のシナリオを定義するE2Eテストを先に書く（意図の宣言）。\",\n    \"2. E2Eを通すための実装を行う。\",\n    \"3. E2E実行時のコードカバレッジを計測し、未通過のBlockや分岐（隙間）を特定する。\",\n    \"4. その隙間を埋めるための単体テストを自律的に追加し、網羅率を上げる。\",\n  ],\n};\n\nexport const CliExtension = {\n  rule: \"CLI の新コマンドは cli.module.yume.js の runCommand() に case を追加。\",\n  steps: [\n    \"1. case 'mycommand': を実装\",\n    \"2. デフォルトケース(commands list)に追加\",\n    \"3. e2e の CLI group にテスト追加\",\n    \"4. BIBLE.md Rituals に追加\",\n  ],\n};\n\nexport const HeavyApplyRules = {\n  rule: \"`heavy-apply` は `virtual-apply` 後に同じ root / depth で再展開する。AI が編集後の heavy view を即再読するための編集ループ。\",\n  command: \"node runYume.js <file>.yume.js heavy-apply <root-id> <patch> [--depth=N] [--out=after.txt]\",\n  stdout: \"--out 無しなら再展開 heavy content を stdout。ログは stderr。\",\n  warning: \"expand 時と heavy-apply 時の --depth を必ず揃える。\",\n};\n\nexport const V1Relation = {\n  rules: [\n    \"v1 の Bible(AI_NATIVE_MASTER_BIBLE.md)は v1 のまま、触らない\",\n    \"v1 emblem マーカーは v2 でも読める(parseJS が tags に取り込む)が、新規記述禁止\",\n    \"v1 と v2 は併存可能。v1 = 固定された過去、v2 = canonical\",\n    \"v1 機能で v2 未移植のもの(focus/apply/check/coverage 等)は段階的に Block 化\",\n  ],\n};\n\nexport const ConstraintRules = {\n  api: \"constraintBlock({id, axes, values, derive}) → evalConstraint(cb, filter?)\",\n  derive_must_be: \"純粋関数(I/O・乱数・時刻に触れない、Bible §7 Twin 規約と同じ)\",\n  filter: \"浅い等価(merged[k] === v)。範囲条件は derive で派生フラグを作る\",\n  contradiction: \"filter 結果が空集合のとき _contradiction: true で返る\",\n};\n\nexport const ObservationRules = {\n  api: \"observationBlock({id, observedId, snapshot, tags})\",\n  id_convention: \"タイムスタンプ + 連番(時系列の自然な並び)\",\n  snapshot: \"構造化データ(画像バイナリは別途保存して URL で参照)\",\n  refs: \"{ kind: 'observes', target: observedId } が自動付与\",\n};\n\nexport const CommitConventions = {\n  format: \"<type>: <summary>\",\n  types: {\n    init:     \"初回コミット\",\n    feat:     \"新機能\",\n    fix:      \"バグ修正\",\n    docs:     \"ドキュメント\",\n    test:     \"テスト追加・修正\",\n    clearify: \"振る舞いを変えない構造調整(AI 向け最適化)\",\n    chore:    \"ビルド・ツール周り\",\n  },\n  example: \"feat(parse): support generator function syntax\",\n};\n\nexport const Compass = [\n  { 迷い: \"Block の type を増やすべきか\",   判断軸: \"既存 type で表現できないか先に検討。新 type は最後の手段。\" },\n  { 迷い: \"関数を分割すべきか\",             判断軸: \"「LLM が一目で全文脈を把握できるか」で決める。基本はインライン化(A1)。\" },\n  { 迷い: \"命名で迷ったとき\",               判断軸: \"動詞 + 目的語で書く。略語は使わない(LLM の学習に負ける)。\" },\n  { 迷い: \"ドキュメントを書くべきか\",        判断軸: \"LLM が読む前提。冗長を恐れない。具体例を必ず添える。\" },\n  { 迷い: \"新 .md を作りたくなった\",         判断軸: \"AI 用なら .md 禁止、.aiDoc.yume.js (REAL) を作る。人間用は README のみ。\" },\n];\n\n// ── manual (旧 manual.aiDoc 由来。CliCommands / Workflow は legacy ai-desk v2 操作系) ──\n\nexport const Glossary = {\n  Block:    \"{ id, type, versions[], meta }。すべての構成要素の単位\",\n  Version:  \"{ content, refs, children, tags, timestamp, prevHash, hash }。append-only、これが REAL\",\n  head:     \"最新 Version。block.content 等の getter は head() から派生(SHADOW)\",\n  Graph:    \"Block の集合 + 双方向走査(forward / backward / impact)\",\n  ref:      \"{ kind, target }。kind は import / calls / contains / link / observes 等\",\n  VirtualHeavy: \"root + forward 推移閉包を 1 content に展開して LLM に渡し、戻りを各 Block に逆配分する機構\",\n  REALVariable: \"`REAL_*`。実行 JS 内で AI / Kantoku が監視すべき正の状態を示す変数名接頭語\",\n};\n\nexport const QuickStart = [\n  { cmd: \"npm test\", desc: \"全テスト (e2e + 3d-prefab + 3dplus + eyes)\" },\n  { cmd: \"node runYume.js <file>.yume.js show head --raw\", desc: \"HEAD だけ読む\" },\n  { cmd: \"node runYume.js <file>.yume.js validate\", desc: \".yume.js 形式検証\" },\n  { cmd: \"npm run refs-check\", desc: \"repository graph check\" },\n];\n\nexport const Workflow = [\n  { step: 1, name: \"既存 JS を Graph 化して保存\",\n    cmds: [\"node runYume.js save graph.json src/foo.js src/bar.js\", \"node runYume.js resolve graph.json\"],\n    note: \"graph.json が永続のソース。以降の apply / virtual-apply はこれを書き換える(append のみ)\" },\n  { step: 2, name: \"構造を把握\",\n    cmds: [\"skeleton\", \"stats\", \"tags\", \"mermaid\"] },\n  { step: 3, name: \"1 Block にズーム\",\n    cmds: [\"focus <module> <id>\", \"context <module> <id> <depth>\"],\n    note: \"context は target + 1 段の forward/backward を markdown で出す(LLM プロンプト用)\" },\n  { step: 4, name: \"影響範囲を見る(変更前のリスク評価)\",\n    cmds: [\"impact <module> <id>\"],\n    note: \"id を変えると壊れうる Block 全部(backward の推移閉包)\" },\n  { step: 5, name: \"編集して反映 — 3 つの粒度\",\n    sub: [\n      { granularity: \"ファイル全体 patch\",          cmd: \"apply graph.json patch.js <moduleId>\",      what: \"patch を parseJS → Block 単位で diff → 変更分だけ commit\" },\n      { granularity: \"1 関数だけ patch\",            cmd: \"apply-block graph.json <blockId> patch.js\", what: \"mini-parse して refs/tags 自動再計算 → 1 Block に commit\" },\n      { granularity: \"重厚関数(root + 依存) patch\", cmd: \"virtual-apply graph.json <rootId> patch.txt\", what: \"BLOCK ヘッダで分割 → 各 Block に逆配分 commit\" },\n    ] },\n  { step: 6, name: \"履歴を見る\",\n    cmds: [\"diff <module> <id>\", \"blame <module> <id> <ref>\"] },\n  { step: 7, name: \"Graph をコードに戻す\",\n    cmds: [\"export graph.json <moduleId> out.js\"],\n    note: \"module Block の contains 順に Block の content を結合して再生成。import の named/default/namespace 区別は完全 round-trip しない(MVP の限界)\" },\n];\n\nexport const CliCommands = {\n  observe: [\n    { cmd: \"skeleton <file>\",              use: \"Block 一覧 + refs\" },\n    { cmd: \"focus <file> <id>\",            use: \"指定 Block の content\" },\n    { cmd: \"context <file> <id> [depth]\",  use: \"target + 近傍を LLM 用 markdown に整形\" },\n    { cmd: \"stats <file>\",                 use: \"集計(block / version / byType / byTag)\" },\n    { cmd: \"tags <file>\",                  use: \"全タグと件数\" },\n    { cmd: \"tag <file> <tag>\",             use: \"あるタグを持つ Block 一覧\" },\n    { cmd: \"search <file> <query>\",        use: \"content の部分一致検索\" },\n    { cmd: \"impact <file> <id>\",           use: \"backward 推移閉包(変更時の影響範囲)\" },\n    { cmd: \"diff <file> <id> [i] [j]\",     use: \"version 間差分\" },\n    { cmd: \"blame <file> <id> <ref>\",      use: \"ref が初めて追加された version\" },\n    { cmd: \"mermaid <file>\",               use: \"flowchart LR を stdout\" },\n    { cmd: \"infer-tags <file> <id>\",       use: \"content からタグ推論(test/io/pure 等)\" },\n    { cmd: \"lint <file> [--summary] [--only=K1,K2]\", use: \"8 種の整合性チェック\" },\n    { cmd: \"self\",                          use: \"自分自身を解析\" },\n  ],\n  persist: [\n    { cmd: \"save <out.json> <files...>\",   use: \"ファイル群 → Graph → JSON\" },\n    { cmd: \"load <in.json>\",                use: \"JSON 読み込み + verify\" },\n    { cmd: \"graph <files...>\",              use: \"parseJS 結果を JSON で stdout\" },\n    { cmd: \"resolve <graph.json>\",          use: \"import の相対パスを Block ID に解決\" },\n    { cmd: \"export <graph.json> <moduleId> [out.js]\", use: \"Graph から JS 再生成\" },\n  ],\n  edit_append_only: [\n    { cmd: \"apply <graph.json> <patch.js> <moduleId>\",   use: \"ファイル単位 patch\" },\n    { cmd: \"apply-block <graph.json> <blockId> <patch>\", use: \"1 Block 単位 patch(- で stdin)\" },\n    { cmd: \"virtual-apply <graph.json> <rootId> <patch>\", use: \"仮想重厚関数の逆配分(- で stdin)\" },\n    { cmd: \"heavy-apply <graph.json> <rootId> <patch|-> [--depth=N] [--out=after.txt]\", use: \"virtual-apply 後に同じ scope を再展開\" },\n  ],\n  virtualHeavy: [\n    { cmd: \"heavy <file|graph.json> <root-id> [--depth=N]\", use: \"root + 依存を 1 content に展開して stdout\" },\n  ],\n  verify: [\n    { cmd: \"e2e\", use: \"テスト実行(npm test と同じ)\" },\n  ],\n};\n\nexport const VirtualHeavy = {\n  problem: {\n    description: \"LLM は全文脈集約された方が間違えない(重厚関数原則)。ただし Block 分割は履歴・検索・refs に必要。普通は二者択一。\",\n    layers: {\n      物理層: \"graph.json 上の状態。細粒度 Block + versions + refs。最適化対象: 管理 / 履歴 / 影響分析\",\n      論理層: \"LLM に渡す content。root + forward 推移閉包を 1 つの巨大 content に展開。最適化対象: LLM の認知(全文脈集約)\",\n    },\n    insight: \"両者を往復させる機構が Virtual Heavy Function。展開だけでは半分。逆配分があって初めて閉じる。\",\n  },\n  workflow: [\n    \"1. save graph.json src/foo.js\",\n    \"2. resolve graph.json\",\n    \"3. heavy src/foo.js <rootId> --depth=3 > heavy.txt\",\n    \"4. heavy.txt を LLM に投げる(BLOCK ヘッダを残したまま content だけ編集して返してもらう)\",\n    \"5. virtual-apply graph.json <rootId> heavy.txt\",\n    \"6. 連続編集するときは heavy-apply graph.json <rootId> heavy.txt --depth=3 --out=heavy.after.txt\",\n    \"7. diff src/foo.js <rootId>\",\n    \"8. lint src/foo.js --summary\",\n  ],\n  expandedFormatRules: [\n    { line: \"// === Virtual Heavy Function ... ===\", role: \"全体ヘッダ\",                     editable: \"残す\" },\n    { line: \"// --- BLOCK: <id> (<type>) ---\",       role: \"境界ヘッダ。Apply の分割キー\",   editable: \"絶対に変えない・消さない・追加しない\" },\n    { line: \"// tags: ... / // refs: ...\",            role: \"参考表示(commit 時に除去)\",     editable: \"触っても無視される\" },\n    { line: \"<content>\",                              role: \"Block の本体\",                   editable: \"ここを編集する\" },\n    { line: \"// === end of virtual heavy ===\",        role: \"終端マーカー\",                   editable: \"残す\" },\n  ],\n  applyBehaviors: [\n    \"スコープ内 + content 変化あり → 新 version を append(refs/tags は head 継承)\",\n    \"スコープ内 + content 同じ → 何もしない(version 履歴を汚さない)\",\n    \"スコープ外 id → 静かに skip(エラー出さず、log だけ)\",\n  ],\n  updateActions: [\n    { action: \"updated\",              meaning: \"既存 Block に新 version が append された\",      verdict: \"期待通り\" },\n    { action: \"created\",              meaning: \"Block が無かったので新規作成された\",            verdict: \"本来あり得ない(virtualHeavy は既存 Block を集めるため)。発生したら設計バグ\" },\n    { action: \"unchanged\",            meaning: \"content が head と同一だったので何もしなかった\", verdict: \"履歴を汚さない正しい挙動\" },\n    { action: \"skipped-out-of-scope\", meaning: \"入力に virtualHeavy 集合に無い id のヘッダがあった\", verdict: \"要確認。LLM がヘッダを勝手に追加 / 改変した可能性\" },\n  ],\n  failureModes: [\n    { id: 1, mistake: \"LLM が BLOCK ヘッダを書き換え/翻訳した\",                       result: \"その segment が skipped-out-of-scope で消える\",   fix: \"プロンプトに「ヘッダ行は絶対変更しない」を明記\" },\n    { id: 2, mistake: \"LLM が新規 BLOCK ヘッダを追加して関数を生やした\",              result: \"skipped-out-of-scope で消える(既存セットに無い)\",  fix: \"別途 apply-block で新規追加、または apply で patch.js として渡す\" },\n    { id: 3, mistake: \"expand と apply で --depth が違う\",                              result: \"スコープ集合がズレる、一部 segment が skip\",       fix: \"同じ depth・同じ kind を必ず使う(opts を変数に切り出して両方に渡す)\" },\n    { id: 4, mistake: \"apply 後に元の root を消した / id を改名した\",                  result: \"次回 expand で全く違う集合が出る\",                   fix: \"rename は rollback + 新 id 作成 → 旧 id 非推奨化、で段階的に\" },\n    { id: 5, mistake: \"content の { } が崩れた\",                                         result: \"commit 自体は通るが lint の brace-mismatch が出る\", fix: \"lint --only=brace で即検出、再 expand → 修正 → re-apply\" },\n    { id: 6, mistake: \"refs/tags 行を本気で書き換えた\",                                  result: \"無視される(commit 時に head から継承)\",            fix: \"refs/tags を変えたいなら apply-block で smart 再計算 / 手動 commit\" },\n  ],\n  safetyNet: \"Apply は append-only なので何度やり直しても履歴は壊れない。失敗を恐れずに往復を回す。万一の時は b.rollback(prevIndex) で過去 version を新 version として復元。\",\n};\n\nexport const ProgrammaticApi = {\n  imports: [\n    \"Block, Graph\",\n    \"parseJS, parseMD, loadProject, checkBraces\",\n    \"saveGraph, loadGraph, buildAndSave\",\n    \"applyPatch, applyToBlock, applyBlockSmart, resolveImports\",\n    \"virtualHeavy, expandVirtualHeavy, virtualApply\",\n    \"exportModule, exportToFile, exportMermaid\",\n    \"inferTags, graphStats, blockContext, formatContextForLLM\",\n    \"constraintBlock, evalConstraint\",\n    \"observationBlock\",\n  ],\n  blockOps: [\n    \"b.versions.length / b.content / b.head() / b.at(timestamp)\",\n    \"b.diff(0, 1) / b.blameRef('x')\",\n    \"b.rollback(0)  // 過去状態を新しい past として commit、履歴は保持\",\n    \"b.verify()      // hash チェーン検証\",\n  ],\n  graphOps: [\n    \"g.forward(id, kind?) / g.backward(id, kind?) / g.impact(id, kind?)\",\n    \"g.byType('function') / g.byTag('export')\",\n    \"g.search('TODO', { type, tag, includeOldVersions })\",\n    \"g.at(timestamp) / g.lint({orphan:false}) / g.verify()\",\n  ],\n};\n\nexport const LintKinds = [\n  { kind: 'broken-ref',     detects: \"target が存在しない ref(import の外部モジュールは除外)\",  offFlag: \"{ broken: false }\" },\n  { kind: 'orphan',         detects: \"誰からも参照されない非 module Block\",                         offFlag: \"{ orphan: false }\" },\n  { kind: 'circular',       detects: \"forward の循環\",                                                offFlag: \"{ circular: false }\" },\n  { kind: 'brace-mismatch', detects: \"content の { } が不揃い(文字列・regex は skip)\",           offFlag: \"{ brace: false }\" },\n  { kind: 'calls-leak',     detects: \"他関数呼び出しの形跡があるが calls ref が無い\",                offFlag: \"{ calls: false }\" },\n  { kind: 'tag-mismatch',   detects: \"type と tags が不整合\",                                         offFlag: \"{ tags: false }\" },\n  { kind: 'empty-block',    detects: \"content / refs / children がすべて空\",                          offFlag: \"{ empty: false }\" },\n  { kind: 'hash-broken',    detects: \"version の prevHash チェーン破損\",                              offFlag: \"{ hash: false }\" },\n];\n\nexport const ParseJSRules = [\n  { syntax: \"ファイル全体\",                                              produces: \"module Block。refs に import と contains\" },\n  { syntax: \"function foo(){} / export function / async function\",      produces: \"function Block(tags: function, async?, export?, generator?)\" },\n  { syntax: \"const foo = () => {}\",                                       produces: \"function Block(tags: function, arrow)\" },\n  { syntax: \"class Foo {} / export class\",                                produces: \"class Block(tags: class, export?, default?)\" },\n  { syntax: \"import ... from 'x'\",                                         produces: \"module の refs に { kind: 'import', target: 'x' }\" },\n  { syntax: \"同モジュール内の関数呼び出し\",                              produces: \"calls ref(名前ベース、後段で再 commit)\" },\n  { syntax: \"// [ai_s_emblem:#a#b Name] / // @tags: a, b\",                 produces: \"tags に取込(v1 互換、20 行遡及)\" },\n];\n\n// ── SHADOW stub generator (AGENTS.md / GEMINI.md) ──\n\nconst SHADOW_STUB = [\n  \"AGENTS.md / GEMINI.md は SHADOW。本文はこのファイルではなく AGENTS.aiDoc.yume.js にある。\",\n  \"\",\n  \"AI agent:\",\n  \"  show head: node runYume.js AGENTS.aiDoc.yume.js show head --raw\",\n  \"  import:    import { Forbidden, BlindSpots, FileMap, BlockOps, GraphOps,\",\n  \"                      Glossary, Workflow, VirtualHeavy, RealVariable, ... }\",\n  \"                      from './AGENTS.aiDoc.yume.js'\",\n  \"\",\n  \"人間 audience: README.md (overview) / BIBLE.md (axioms)。\",\n  \"旧 SHADOW (AI_ONBOARDING.md / MANUAL.md / start.md / CONTEXT_FILES.md) は廃止 → /PJs/trash/。\",\n  \"\",\n].join(\"\\n\");\n\nexport const exportMarkdown = () => SHADOW_STUB;\nexport const exportGeminiMarkdown = () => SHADOW_STUB;\n",
+      "ts": 1780012632349,
+      "refs": [],
+      "tags": [],
+      "applyId": "apply-2026-05-28-ab45a89d",
+      "hash": "68ff0bf5de92cd805e23660ef72599b319abc12984a2332a8e0fa088fcd4603f",
+      "prevHash": "baa58ad7f726f3ba4b9bd31d494228f2271fcb86f03ebd96dd67a19e5cac707b"
+    },
+    {
+      "content": "// AGENTS.aiDoc.yume.js — yume-develop の AI structured-data import 面。\n//\n// universal first-read は README.md (人間と AI 共通の入口)。README から\n// このファイルへ誘導される。AGENTS.md / GEMINI.md は CLI 慣習向けの stub。\n//\n// AI agent 用 access:\n//   show head: node runYume.js AGENTS.aiDoc.yume.js show head --raw\n//   import:    import { Forbidden, BlindSpots, BlockOps, ... } from './AGENTS.aiDoc.yume.js'\n//\n// 構造化 export:\n//   repo nav    : FileMap StderrHintPolicy RepositoryBoundary RealShadowSummary\n//                  CommonCommands DoneCriteria ReportFormat\n//   discipline  : Forbidden BlindSpots SniperReading EyesOverServer RealVariable\n//   block ops   : BlockOps ParseRules GraphOps Persistence TestingRules\n//                  CliExtension HeavyApplyRules V1Relation ConstraintRules\n//                  ObservationRules CommitConventions Compass\n//   protocol    : AutoUseProtocol OperatingModel YumeFileEditing ContextEconomy\n//                  DesignBoundaries UsageCatalog PrivacyBoundaries DecisionRules\n//   manual      : Glossary VirtualHeavy ProgrammaticApi LintKinds ParseJSRules\n//   legacy ref  : LegacyAiDeskQuickStart LegacyAiDeskWorkflow LegacyAiDeskCliCommands\n//                  (ai-desk v2 操作系。現行 CLI は runYume.js — 値を import する agent は\n//                   名前自体に Legacy が埋まっているので誤用しない)\n\nexport const FileMap = {\n  files: [\n    'README.md — universal first-read (humans + AI bootstrap)',\n    'AGENTS.aiDoc.yume.js (this) — AI structured data import surface',\n    'bible.aiDoc.yume.js / BIBLE.md — axioms A0–A14',\n    'core.module.yume.js — Block / Graph / parseJS implementation',\n    'cli.module.yume.js — CLI implementation',\n    'BLOCKFILE.aiDoc.yume.js — format spec (use only when exact semantics needed)',\n    'runtime.spec.yume.js — runtime spec',\n    'e2e.js — E2E tests',\n    'coverage.verify.yume.js — coverage harness',\n    '/Users/AoyamaRito/PJs/sample/ — external experiments (do not read during core work)',\n  ],\n  routing: [\n    { trigger: '3D / WebGL / Matrix', file: '3dplus/, 3d-prefab/' },\n    { trigger: 'UI / canvas 検証',     file: 'eyes/ (ai-eyes 観測ハーネス)' },\n    { trigger: 'CLI 拡張',              file: 'cli.module.yume.js + e2e.js' },\n  ],\n};\n\nexport const StderrHintPolicy =\n  \"runYume.js / ai-desk は CLI 実行時、コードの状態を観察して stderr に 1 度だけ hint を流す\" +\n  \" (例: WebGL/Matrix4 検出 → 3dplus/ への routing)。状態は cwd の `.ai-desk-state.json` に記録、\" +\n  \"二度目以降は静か。hint が出たら指示先のドキュメントを実際に読む。\";\n\nexport const RepositoryBoundary = {\n  role: \"yume-develop は yume-files の product/runtime workspace (self-contained)。\",\n  externalSampleRoot: \"/Users/AoyamaRito/PJs/sample/\",\n  rules: [\n    \"サンプルアプリ / 実験を yume-develop 内に作らない。/Users/AoyamaRito/PJs/sample/<project>/ などへ。\",\n    \"yume-develop の test は core runtime / CLI / docs generation / 3D prefab / eyes に限定。\",\n    \"Markdown は SHADOW、対応する .aiDoc.yume.js (REAL) を編集して generate する。\",\n  ],\n};\n\nexport const RealShadowSummary =\n  \"REAL = .aiDoc.yume.js (編集する場所)、SHADOW = .md (自動生成、直接編集禁止)。\" +\n  \"実行 JS 内では主要状態を `REAL_*` 接頭語で明示、derived / cache / loop / DOM / 一時値には付けない\" +\n  \" (詳細: 下記 RealVariable export / BIBLE.md A3)。\";\n\nexport const CommonCommands = [\n  { name: 'HEAD だけ読む', cmd: 'node runYume.js <file>.yume.js show head --raw' },\n  { name: 'touched yume file を検証', cmd: 'node runYume.js <file>.yume.js validate' },\n  { name: 'HEAD 変更を履歴化', cmd: 'node runYume.js <file>.yume.js commit --note \"why\"' },\n  { name: 'repository graph check', cmd: 'npm run refs-check' },\n  { name: 'SHADOW md 再生成', cmd: 'npm run docs:generate' },\n  { name: 'SHADOW md 整合確認', cmd: 'npm run docs:check' },\n  { name: 'full local suite', cmd: 'npm test' },\n  { name: 'full verification', cmd: 'npm run verify' },\n];\n\nexport const DoneCriteria = [\n  \"Changed .yume.js files validate.\",\n  \"npm run docs:check passes when generated docs are touched.\",\n  \"npm run refs-check has no new unresolved path or duplicate-id errors.\",\n  \"npm test passes when runtime behavior or repository structure changes.\",\n];\n\nexport const ReportFormat = \"変更内容、検証結果、残リスクを短く報告する。\";\n\nexport const Forbidden = [\n  { id: 1, rule: \"TypeScript を導入しない\",                              why: \"型情報による隠匿排除\",                     axiom_ref: 'A0' },\n  { id: 2, rule: \"npm install で外部依存を入れない\",                      why: \"Eternal Compatibility\",                     axiom_ref: 'Bible§3' },\n  { id: 3, rule: \"build / transpile step を作らない\",                     why: \"ソース = 実行ファイル\",                     axiom_ref: 'Bible§3' },\n  { id: 4, rule: \"フレームワーク(React 等)を入れない\",                    why: \"暗黙の規約は隠匿の温床\",                   axiom_ref: 'A0' },\n  { id: 5, rule: \"コメントマーカー(// [ai_s_emblem:...])を新規に書かない\", why: \"マーカー廃止、tags は // @tags: で書く\",  axiom_ref: 'Bible§4' },\n  { id: 6, rule: \"Block.versions を直接書き換えない、commit() 経由のみ\",   why: \"REAL の append-only 性\",                    axiom_ref: 'A4, A6' },\n  { id: 7, rule: \"Block.content / refs / tags を変数化しない\",            why: \"SHADOW 規約\",                               axiom_ref: 'A3, A6' },\n  { id: 8, rule: \"「人間の見やすさ」で判断しない\",                         why: \"LLM 視点の情報密度で判断\",                 axiom_ref: 'A0, A7' },\n];\n\nexport const BlindSpots = [\n  { id: 1, pitfall: \"「とりあえず全体を読む」誘惑 (Sniper Reading 違反)\",\n    symptom: \"依存関係やコード把握のために .yume.js ファイルを丸ごと read_file してしまい、巨大な履歴 JSON データ (__block.versions) でコンテキストを使い切る、あるいは最新の実装を見失う。\",\n    cure: \"「初手でファイル全体を絶対に読むな」。必ず `node runYume.js <file> show head --raw` を使うか、grep で 'HEAD ===' の開始行を特定して HEAD 部のみを限定して読む。\",\n    axiom_ref: \"A1, Physics.Spotlight\" },\n  { id: 2, pitfall: \"REAL_* プレフィックスの乱用・誤用 (A3 REAL/SHADOW 違反)\",\n    symptom: \"すべての状態変数に REAL_ を付けたり、ループ変数、DOM 要素、一時変数、ただの定数にまで REAL_ を付けてしまい、AST bootstrap 監視や状態バグ追跡の対象を絞り込めなくなる。\",\n    cure: \"REAL_* は「主要な状態」「Reducer等で更新され、描画・テスト・観測(eyes)の入力となる中核的な状態」にのみ限定して付与する。\",\n    axiom_ref: \"A3\" },\n  { id: 3, pitfall: \"型情報の暗黙の依存 (LLMTyping / A11 違反)\",\n    symptom: \"変数名（worldX, screenY）やコメント、型定義（TypeScriptなど）だけで型を表現し、REAL値そのものは裸の数値やオブジェクトで持つ。LLM が context window の外側へ移動した瞬間、その変数名の意味を忘れハルシネーションを起こす。\",\n    cure: \"値そのものにドメインタグを埋め込んだ文字列として持つ（例：\\\"world:10,0,-5\\\" / \\\"usd:19.99\\\"）。値が self-describing であれば、AIが context を失っても絶対に推論を間違えない。\",\n    axiom_ref: \"Physics.LLMTyping, A11\" },\n  { id: 4, pitfall: \"仕様（SPEC）を挟まない「いきなり実装」 (A8 Spec-First Versioning 違反)\",\n    symptom: \"仕様変更や新機能実装の際、仕様（SPEC）のみを定義したバージョン（コメント ＋ #SPEC# タグのみのバージョン）を挟むことなく、最初から実装コード（impl）を commit し、仕様の変遷履歴を失う。\",\n    cure: \"コードを書き換える前に、必ず「新仕様の定義（仕様コメントのみの spec version）」を Block.commit してから、その次のバージョンで実装コードをコミットする。\",\n    axiom_ref: \"A8\" },\n  { id: 5, pitfall: \"純粋論理(Pure logic)と Adapter の混同 (A9 Crystallize 違反)\",\n    symptom: \"Block の中に、動的な dispatch、eval、Proxy、prototype 拡張、またはプラットフォーム特有の I/O や DOM 操作、タイマーなどの副作用を書いてしまう。Go にコンパイル（crystallize）できず、AIにとっても推論しにくい。\",\n    cure: \"Block 内には「Crystallize可能な Pure logic」のみを書く。I/O や DOM操作、動的ディスパッチは Block の外にある Adapter へ完全に分離し、Block 内部を極限までピュアに保つ。\",\n    axiom_ref: \"A9\" },\n  { id: 6, pitfall: \"3D 座標を screen に射影して DOM 要素を追従させる (A10 Single Coord 違反)\",\n    symptom: \"3Dオブジェクトの上に浮かぶツールチップやラベルのために、world 座標を screen 座標に射影し、DOM の位置（CSS transformなど）をリアルタイムに同期しようとして座標統一性を崩す。\",\n    cure: \"world 座標を読んで DOM の位置をリアルタイムに同期させることは禁止。DOM は画面端のサイドバーやパネルなどの、3D空間と構造的に完全に分離されたものに限り、a11y/IME 目的でのみ許可する。\",\n    axiom_ref: \"A10\" },\n  { id: 7, pitfall: \"ボトムアップでのテスト作成 (A14 Top-Down Verification 違反)\",\n    symptom: \"実装後に、場上がり的に個別のユニットテストをたくさん書き、全体の E2E シナリオや意図の表明が後回しになる。\",\n    cure: \"テストは必ず「Top-Down E2E-First」で開始する。まずシステム全体の意図を示す E2E シナリオ（e2e.js への追加）を書き、その実行から得られたカバレッジの「隙間」を埋めるように自律的にユニットテストを生成する。\",\n    axiom_ref: \"A14\" },\n];\n\nexport const SniperReading = {\n  rule: \".yume.js ファイルを探索する際、初手でファイル全体を read_file してはならない。\",\n  why: \"履歴ブロック(__block.versions)の巨大なノイズにより、AI の Spotlight(300行)が枯渇し、現在の実装(HEAD)を見失うため。\",\n  methods: [\n    { name: \"CLI show head --raw\", command: \"node runYume.js <file>.yume.js show head --raw\", benefit: \"メタデータを含まないピュアな HEAD ソースのみ。最も推奨。\" },\n    { name: \"Grep HEAD line\",       command: \"grep -n 'HEAD ===' <file>.yume.js\",              benefit: \"HEAD 領域の開始行を特定し、read_file(offset) で履歴をスキップして読む。\" },\n  ],\n};\n\nexport const EyesOverServer = {\n  rule: \"UI や 3D ロジックの修正時、人間による目視確認(サーバー起動)を待たず、ai-eyes で自律検証せよ。\",\n  why: \"人間がブラウザを開くコストは AI にとってのボトルネック。描画命令(draw_ops)を構造的に比較することで、ハルシネーションを物理的に排除できる。\",\n  workflow: [\n    \"1. 修正後に `node eyes.observation.yume.js <target>` を実行。\",\n    \"2. 出力された draw_ops を前回の正常値(snapshot Block)と diff。\",\n    \"3. 座標や色が意図通りであれば、目視なしでパスと判断。\",\n    \"4. 複雑な挙動(アニメ等)は `node eyes.debugger.yume.js <demo> <scenario>` で HTML 動画ログを生成し、コマ送りで最終確認。\",\n  ],\n};\n\nexport const RealVariable = {\n  rule: \"`REAL_*` は、AI / Kantoku が監視すべき実行 JS の「正の状態」にだけ付ける。\",\n  purpose: \"実行 JS 内で AI / Kantoku が変化を追跡すべき「正の状態」を示す命名規約。型や単位の表現ではなく、観測・検証・prompt 生成の起点。\",\n  why: \"REAL_* があると、初期化時 AST bootstrap / 実行 trace / eyes_check / prompt 生成の対象を狭められる。全変数を監視せず、状態バグの根だけを追うための接頭語。AST が返す性質名は `isWatched`。`check` は検査実行の名前に限定する。\",\n  useFor: [\n    \"アプリの主要 state\",\n    \"dispatch / reducer 後に更新される state\",\n    \"render / eyes / test の入力になる state\",\n    \"失われると挙動判断が壊れる state\",\n  ],\n  avoidFor: [\n    \"一時値\",\n    \"DOM 要素\",\n    \"derived view / cache\",\n    \"単なる定数\",\n    \"loop counter\",\n  ],\n  rules: [\n    \"AST で `REAL_*` を検出した結果は `isWatched: true` と表現する\",\n    \"`check` は検査実行の動詞なので、監視対象かどうかの boolean 名には使わない\",\n    \"`REAL_*` は初期化時に記録可能である\",\n    \"`REAL_*` の再代入は trace 対象にできる\",\n    \"`REAL_*` は JSON serializable を推奨する\",\n    \"event / dispatch 後に `REAL_*` が変化しない場合、Kantoku は state_frozen 系の警告を出せる\",\n    \"`REAL_*` が変わった後、古い eyes / test / verification は stale とみなす\",\n  ],\n  example: \"let REAL_state = initialState();\\nfor (const evt of events) {\\n  REAL_state = dispatch(REAL_state, evt);\\n  render(ctx, REAL_state);\\n}\",\n};\n\nexport const BlockOps = {\n  create: {\n    rule: \"新規 Block は `new Block({id, type, meta})` してから `commit()` で初回 version を append。\",\n    naming: \"id は `<moduleId>:<prefix>:<name>` 規約。prefix は 'fn' か 'class'。\",\n    types: ['function', 'class', 'module', 'constraint', 'observation', 'twin'],\n  },\n  update: {\n    rule: \"必ず `commit()` で新 version を append。古い version は消さない・触らない。\",\n    pattern: \"head() の値をベースに、変更したい部分だけ差し替えて新 version を作る。\",\n  },\n  rollback: {\n    rule: \"過去に戻すときは `b.rollback(versionIndex)` を使う。履歴を消さず、新 version として commit。\",\n    禁忌: \"b.versions = b.versions.slice(0, n) のような直接削除は禁忌。\",\n  },\n};\n\nexport const ParseRules = {\n  function:    \"function 宣言 → Block(type:'function')\",\n  arrow:       \"const x = () => {} → Block(type:'function', tags:['arrow'])\",\n  klass:       \"class 宣言 → Block(type:'class')\",\n  imports:     \"import 文 → module Block の refs に { kind:'import', target } で追加\",\n  calls:       \"同モジュール内の関数呼び出し → refs に { kind:'calls', target } で追加\",\n  tagComments: \"直前コメントの // @tags: a, b → tags に取り込み(20 行遡及)\",\n  v1emblems:   \"// [ai_s_emblem:#a#b Name] は互換読み専用、新規記述禁止\",\n  limitations: [\n    \"文字列リテラル中の function キーワードを誤検出する可能性\",\n    \"ネスト関数の捕捉が浅い場合がある\",\n    \"対応が必要なら parseJS 内の正規表現を拡張(将来的に AST 置換)\",\n  ],\n};\n\nexport const GraphOps = [\n  { intent: \"この関数を変えたら何に影響する?\",   method: \"g.impact(id)\" },\n  { intent: \"この関数を呼んでるのは?\",          method: \"g.backward(id)\" },\n  { intent: \"この関数が呼ぶのは?\",              method: \"g.forward(id)\" },\n  { intent: \"特定の文字列を含む Block は?\",      method: \"g.search('TODO')\" },\n  { intent: \"export されてる Block は?\",        method: \"g.byTag('export')\" },\n  { intent: \"class だけ取りたい\",               method: \"g.byType('class')\" },\n  { intent: \"過去の状態のグラフが見たい\",        method: \"g.at(timestamp)\" },\n  { intent: \"全 Block の整合性チェック\",         method: \"g.verify()\" },\n];\n\nexport const Persistence = {\n  default_filename: \"graph.json\",\n  derived_filename: \"*.local.json\",\n  rule: [\n    \"saveGraph(graph, path) で JSON 1 ファイルに保存\",\n    \"graph.json と *.local.json は .gitignore 済み\",\n    \"共有が必要な永続データは別名 + レビュー後 commit\",\n  ],\n};\n\nexport const TestingRules = {\n  rule: \"テストは必ず『Top-Down E2E-First』で書くこと。ボトムアップのTDDは禁止。\",\n  workflow: [\n    \"1. 全体のシナリオを定義するE2Eテストを先に書く（意図の宣言）。\",\n    \"2. E2Eを通すための実装を行う。\",\n    \"3. E2E実行時のコードカバレッジを計測し、未通過のBlockや分岐（隙間）を特定する。\",\n    \"4. その隙間を埋めるための単体テストを自律的に追加し、網羅率を上げる。\",\n  ],\n};\n\nexport const CliExtension = {\n  rule: \"CLI の新コマンドは cli.module.yume.js の runCommand() に case を追加。\",\n  steps: [\n    \"1. case 'mycommand': を実装\",\n    \"2. デフォルトケース(commands list)に追加\",\n    \"3. e2e の CLI group にテスト追加\",\n    \"4. BIBLE.md Rituals に追加\",\n  ],\n};\n\nexport const HeavyApplyRules = {\n  rule: \"`heavy-apply` は `virtual-apply` 後に同じ root / depth で再展開する。AI が編集後の heavy view を即再読するための編集ループ。\",\n  command: \"node runYume.js <file>.yume.js heavy-apply <root-id> <patch> [--depth=N] [--out=after.txt]\",\n  stdout: \"--out 無しなら再展開 heavy content を stdout。ログは stderr。\",\n  warning: \"expand 時と heavy-apply 時の --depth を必ず揃える。\",\n};\n\nexport const V1Relation = {\n  rules: [\n    \"v1 の Bible(AI_NATIVE_MASTER_BIBLE.md)は v1 のまま、触らない\",\n    \"v1 emblem マーカーは v2 でも読める(parseJS が tags に取り込む)が、新規記述禁止\",\n    \"v1 と v2 は併存可能。v1 = 固定された過去、v2 = canonical\",\n    \"v1 機能で v2 未移植のもの(focus/apply/check/coverage 等)は段階的に Block 化\",\n  ],\n};\n\nexport const ConstraintRules = {\n  api: \"constraintBlock({id, axes, values, derive}) → evalConstraint(cb, filter?)\",\n  derive_must_be: \"純粋関数(I/O・乱数・時刻に触れない、Bible §7 Twin 規約と同じ)\",\n  filter: \"浅い等価(merged[k] === v)。範囲条件は derive で派生フラグを作る\",\n  contradiction: \"filter 結果が空集合のとき _contradiction: true で返る\",\n};\n\nexport const ObservationRules = {\n  api: \"observationBlock({id, observedId, snapshot, tags})\",\n  id_convention: \"タイムスタンプ + 連番(時系列の自然な並び)\",\n  snapshot: \"構造化データ(画像バイナリは別途保存して URL で参照)\",\n  refs: \"{ kind: 'observes', target: observedId } が自動付与\",\n};\n\nexport const CommitConventions = {\n  format: \"<type>: <summary>\",\n  types: {\n    init:     \"初回コミット\",\n    feat:     \"新機能\",\n    fix:      \"バグ修正\",\n    docs:     \"ドキュメント\",\n    test:     \"テスト追加・修正\",\n    clearify: \"振る舞いを変えない構造調整(AI 向け最適化)\",\n    chore:    \"ビルド・ツール周り\",\n  },\n  example: \"feat(parse): support generator function syntax\",\n};\n\nexport const Compass = [\n  { 迷い: \"Block の type を増やすべきか\",   判断軸: \"既存 type で表現できないか先に検討。新 type は最後の手段。\" },\n  { 迷い: \"関数を分割すべきか\",             判断軸: \"「LLM が一目で全文脈を把握できるか」で決める。基本はインライン化(A1)。\" },\n  { 迷い: \"命名で迷ったとき\",               判断軸: \"動詞 + 目的語で書く。略語は使わない(LLM の学習に負ける)。\" },\n  { 迷い: \"ドキュメントを書くべきか\",        判断軸: \"LLM が読む前提。冗長を恐れない。具体例を必ず添える。\" },\n  { 迷い: \"新 .md を作りたくなった\",         判断軸: \"AI 用なら .md 禁止、.aiDoc.yume.js (REAL) を作る。人間用は README のみ。\" },\n];\n\n// 旧 runAndReadMe.aiDoc.yume.js から統合した protocol 系 export。\n\nexport const AutoUseProtocol = {\n  understandingChecklist: [\n    \"A .yume.js file is a JavaScript module carrying current content, append-only history, refs, tags, notes, apply groups, and a pinned runtime.\",\n    \"filename.domain.yume.js is semantic; the domain tells an AI how to treat the file.\",\n    \"Normal yume edits happen in HEAD, then runtime commit appends a new version.\",\n    \"__block.versions is not hand-edited during ordinary work.\",\n    \"notes are mutable commentary outside the version hash.\",\n    \"applyId ties multi-file AI operations together.\",\n    \"refs and tags form the retrieval and impact graph.\",\n    \"v001 runtime stays zero-dependency and avoids AST package dependencies.\",\n  ],\n  futureTaskLoop: [\n    \"Classify the user request: read, explain, create yume file, edit yume file, edit docs/site, inspect graph, or verify release readiness.\",\n    \"Gather the narrowest useful context first; prefer refs, tags, heavy, impact, notes-search, and apply-search over broad scanning.\",\n    \"If creating a yume file, choose a clear filename.domain.yume.js name and include refs/tags that future AI runs can use.\",\n    \"If editing a yume file, edit HEAD only and commit through the runtime.\",\n    \"If changing shared semantics, run impact before editing and refs-check after editing.\",\n    \"Finish with the verification level that matches risk: validate for touched yume files, npm run refs-check for graph changes, npm test for runtime or repository invariant changes.\",\n  ],\n  responseContract: [\n    \"Be concise and operational.\",\n    \"Do not dump the whole spec back to the user unless asked.\",\n    \"Report changed files, commands run, and whether validation passed.\",\n    \"Call out unresolved assumptions or residual risk.\",\n  ],\n};\n\nexport const OperatingModel = {\n  format: \"filename.domain.yume.js\",\n  domainMeaning: \"The domain segment tells an AI how to treat the file: fn, module, aiDoc, spec, workflow, template, world, style, character, and similar roles.\",\n  currentContent: \"The HEAD region is the live JavaScript/module content.\",\n  history: \"__block.versions is append-only history for the HEAD content.\",\n  mutableCommentary: \"__block.notes stores intent and review notes outside the version hash.\",\n  crossFileWork: \"applyId ties multiple file changes from one AI operation together.\",\n  graph: \"refs and tags extracted from HEAD make related-context and impact scans possible.\",\n};\n\nexport const YumeFileEditing = [\n  \"Do not hand-edit __block.versions unless repairing a broken file format deliberately.\",\n  \"Normal edits happen in HEAD; runtime commit appends the new version with hash, refs, tags, timestamp, and optional applyId.\",\n  \"Use note-add or commit --note for intent that should remain mutable.\",\n  \"Use rollback to append a restored version instead of deleting history.\",\n  \"Keep BOOT small and let it call the pinned runtime version declared in __block.runtime.version.\",\n];\n\nexport const ContextEconomy = [\n  \"Start from README.md and AGENTS.aiDoc.yume.js instead of reading the entire repository.\",\n  \"Escalate to BLOCKFILE.aiDoc.yume.js only for exact schema/runtime semantics.\",\n  \"Use refs, tags, heavy, impact, notes-search, and apply-search as retrieval tools before broad scanning.\",\n  \"Prefer one well-scoped .yume.js file over scattered prompts when capturing workflows, templates, specs, worlds, characters, or writing styles.\",\n  \"A compact yume file can reduce prompt tokens and preserve more reasoning budget for the actual task.\",\n];\n\nexport const DesignBoundaries = [\n  \"Do not add AST parser or package dependencies to runtime v001 unless the project deliberately changes that constraint.\",\n  \"Use conservative source scanning because the runtime must stay portable and dependency-free.\",\n  \"Treat warnings from refs-check as useful navigation signals, not always hard failures.\",\n  \"The runtime handle file is infrastructure; domain files are the portable knowledge/work units.\",\n];\n\nexport const UsageCatalog = [\n  { use: \"AI onboarding and project runbooks\",\n    domains: [\"aiDoc\", \"runbook\", \"memory\", \"rules\"],\n    examples: [\"project.aiDoc.yume.js\", \"team.rules.yume.js\"],\n    hints: [\n      \"Use this when the user wants future AI sessions to understand a repository, project, or operating style.\",\n      \"Put reading order, done criteria, validation commands, and response contracts in HEAD.\",\n    ] },\n  { use: \"Specifications, contracts, and design decisions\",\n    domains: [\"spec\", \"contract\", \"decision\", \"rubric\"],\n    examples: [\"feature.spec.yume.js\", \"api.contract.yume.js\", \"decision.log.yume.js\"],\n    hints: [\n      \"Use this for requirements, constraints, evaluation criteria, and architecture decisions.\",\n      \"Add refs from implementation, tests, templates, or docs back to the spec.\",\n      \"Run impact before changing shared semantics.\",\n    ] },\n  { use: \"Repeatable workflows and checklists\",\n    domains: [\"workflow\", \"checklist\", \"process\"],\n    examples: [\"review.workflow.yume.js\", \"release.workflow.yume.js\", \"qa.checklist.yume.js\"],\n    hints: [\n      \"Use this for procedures an AI should execute repeatedly.\",\n      \"Include prerequisites, steps, exit criteria, and failure handling.\",\n    ] },\n  { use: \"Templates and reusable output formats\",\n    domains: [\"template\", \"prompt\", \"format\"],\n    examples: [\"doc.template.yume.js\", \"pr.template.yume.js\", \"prompt.template.yume.js\"],\n    hints: [\n      \"Use this when the same shape of document, prompt, or output will be generated repeatedly.\",\n      \"Keep private content out of public templates; use placeholders for names, dates, amounts, client details.\",\n    ] },\n  { use: \"Invoices, estimates, and business documents\",\n    domains: [\"invoice\", \"estimate\", \"billing\", \"statement\", \"receipt\"],\n    examples: [\"invoice.template.yume.js\", \"billing.rules.yume.js\"],\n    hints: [\n      \"Use this for document structure, calculation rules, payment terms, rendering workflow, and review checks.\",\n      \"Never publish real client names, addresses, invoice numbers, amounts, or account details as sample data.\",\n    ] },\n  { use: \"Pitch decks, proposals, and slide narratives\",\n    domains: [\"pitch\", \"deck\", \"slide\", \"story\", \"proposal\"],\n    examples: [\"pitch.story.yume.js\", \"deck.template.yume.js\", \"business-model.spec.yume.js\"],\n    hints: [\n      \"Use this for deck storyline, slide structure, design rules, business model logic, and revision history.\",\n      \"Keep confidential company, customer, finance, or strategy data in private files.\",\n    ] },\n  { use: \"Fiction writing and creative worlds\",\n    domains: [\"world\", \"character\", \"plot\", \"style\", \"draft\"],\n    examples: [\"novel.world.yume.js\", \"character.profile.yume.js\", \"voice.style.yume.js\"],\n    hints: [\n      \"Use this for world rules, character state, voice constraints, plot logic, and chapter drafts.\",\n      \"Refs should connect draft files to the world, characters, and style they depend on.\",\n    ] },\n  { use: \"Research, source tracking, and summaries\",\n    domains: [\"research\", \"source\", \"note\", \"summary\"],\n    examples: [\"research.note.yume.js\", \"source.index.yume.js\", \"meeting.note.yume.js\"],\n    hints: [\n      \"Use this to preserve source lists, assumptions, summaries, and evolving conclusions.\",\n      \"Put uncertain claims in notes or explicit fields so future AI runs can revisit them.\",\n    ] },\n  { use: \"Executable JavaScript with built-in local history\",\n    domains: [\"fn\", \"module\", \"adapter\", \"handle\"],\n    examples: [\"parser.fn.yume.js\", \"renderer.module.yume.js\", \"adapter.module.yume.js\"],\n    hints: [\n      \"Use this when the current content is executable JavaScript.\",\n      \"Keep runtime handles infrastructure-focused and avoid confusing them with portable domain files.\",\n    ] },\n];\n\nexport const PrivacyBoundaries = [\n  \"When deriving public examples from private projects, include only generalized file roles and workflows.\",\n  \"Do not publish personal data, client data, invoice amounts, account details, private company strategy, or real generated documents.\",\n  \"Use placeholders in templates and keep private generated artifacts outside public examples.\",\n  \"If the user references local private projects, learn the pattern but write docs in generic terms.\",\n];\n\nexport const DecisionRules = [\n  \"For a quick edit to one .yume.js file, inspect show head, edit only the HEAD region, then run commit.\",\n  \"For related context, prefer heavy over opening every file manually.\",\n  \"For change blast radius, run impact before editing a shared block.\",\n  \"For graph health, run npm run refs-check after changing @ref, import/export, dynamic import, tags, or block ids.\",\n  \"For pure documentation outside .yume.js, update normal Markdown/HTML directly and keep .yume.js refs clean.\",\n  \"For a new domain file, choose filename.domain.yume.js so future AIs can infer its role from the path.\",\n];\n\nexport const Glossary = {\n  Block:    \"{ id, type, versions[], meta }。すべての構成要素の単位\",\n  Version:  \"{ content, refs, children, tags, timestamp, prevHash, hash }。append-only、これが REAL\",\n  head:     \"最新 Version。block.content 等の getter は head() から派生(SHADOW)\",\n  Graph:    \"Block の集合 + 双方向走査(forward / backward / impact)\",\n  ref:      \"{ kind, target }。kind は import / calls / contains / link / observes 等\",\n  VirtualHeavy: \"root + forward 推移閉包を 1 content に展開して LLM に渡し、戻りを各 Block に逆配分する機構\",\n  REALVariable: \"`REAL_*`。実行 JS 内で AI / Kantoku が監視すべき正の状態を示す変数名接頭語\",\n};\n\nexport const LegacyAiDeskQuickStart = [\n  // legacy ai-desk v2 操作系。yume-develop の現行 quick start は README.md / CommonCommands を参照。\n  { cmd: \"npm test\", desc: \"全テスト (e2e + 3d-prefab + 3dplus + eyes)\" },\n  { cmd: \"node runYume.js <file>.yume.js show head --raw\", desc: \"HEAD だけ読む\" },\n  { cmd: \"node runYume.js <file>.yume.js validate\", desc: \".yume.js 形式検証\" },\n  { cmd: \"npm run refs-check\", desc: \"repository graph check\" },\n];\n\nexport const LegacyAiDeskWorkflow = [\n  // legacy ai-desk v2 ワークフロー。値そのものに Legacy タグが埋め込まれているため、\n  // import する agent は誤って現行 workflow と誤認しない。現行は README.md / CommonCommands を参照。\n  { step: 1, name: \"既存 JS を Graph 化して保存\",\n    cmds: [\"node runYume.js save graph.json src/foo.js src/bar.js\", \"node runYume.js resolve graph.json\"],\n    note: \"graph.json が永続のソース。以降の apply / virtual-apply はこれを書き換える(append のみ)\" },\n  { step: 2, name: \"構造を把握\",\n    cmds: [\"skeleton\", \"stats\", \"tags\", \"mermaid\"] },\n  { step: 3, name: \"1 Block にズーム\",\n    cmds: [\"focus <module> <id>\", \"context <module> <id> <depth>\"],\n    note: \"context は target + 1 段の forward/backward を markdown で出す(LLM プロンプト用)\" },\n  { step: 4, name: \"影響範囲を見る(変更前のリスク評価)\",\n    cmds: [\"impact <module> <id>\"],\n    note: \"id を変えると壊れうる Block 全部(backward の推移閉包)\" },\n  { step: 5, name: \"編集して反映 — 3 つの粒度\",\n    sub: [\n      { granularity: \"ファイル全体 patch\",          cmd: \"apply graph.json patch.js <moduleId>\",      what: \"patch を parseJS → Block 単位で diff → 変更分だけ commit\" },\n      { granularity: \"1 関数だけ patch\",            cmd: \"apply-block graph.json <blockId> patch.js\", what: \"mini-parse して refs/tags 自動再計算 → 1 Block に commit\" },\n      { granularity: \"重厚関数(root + 依存) patch\", cmd: \"virtual-apply graph.json <rootId> patch.txt\", what: \"BLOCK ヘッダで分割 → 各 Block に逆配分 commit\" },\n    ] },\n  { step: 6, name: \"履歴を見る\",\n    cmds: [\"diff <module> <id>\", \"blame <module> <id> <ref>\"] },\n  { step: 7, name: \"Graph をコードに戻す\",\n    cmds: [\"export graph.json <moduleId> out.js\"],\n    note: \"module Block の contains 順に Block の content を結合して再生成。import の named/default/namespace 区別は完全 round-trip しない(MVP の限界)\" },\n];\n\nexport const LegacyAiDeskCliCommands = {\n  // legacy ai-desk v2 CLI 24 種。yume-develop の現行 CLI は runYume.js を参照\n  // (show / commit / validate / history / heavy / refs-check 等)。\n  observe: [\n    { cmd: \"skeleton <file>\",              use: \"Block 一覧 + refs\" },\n    { cmd: \"focus <file> <id>\",            use: \"指定 Block の content\" },\n    { cmd: \"context <file> <id> [depth]\",  use: \"target + 近傍を LLM 用 markdown に整形\" },\n    { cmd: \"stats <file>\",                 use: \"集計(block / version / byType / byTag)\" },\n    { cmd: \"tags <file>\",                  use: \"全タグと件数\" },\n    { cmd: \"tag <file> <tag>\",             use: \"あるタグを持つ Block 一覧\" },\n    { cmd: \"search <file> <query>\",        use: \"content の部分一致検索\" },\n    { cmd: \"impact <file> <id>\",           use: \"backward 推移閉包(変更時の影響範囲)\" },\n    { cmd: \"diff <file> <id> [i] [j]\",     use: \"version 間差分\" },\n    { cmd: \"blame <file> <id> <ref>\",      use: \"ref が初めて追加された version\" },\n    { cmd: \"mermaid <file>\",               use: \"flowchart LR を stdout\" },\n    { cmd: \"infer-tags <file> <id>\",       use: \"content からタグ推論(test/io/pure 等)\" },\n    { cmd: \"lint <file> [--summary] [--only=K1,K2]\", use: \"8 種の整合性チェック\" },\n    { cmd: \"self\",                          use: \"自分自身を解析\" },\n  ],\n  persist: [\n    { cmd: \"save <out.json> <files...>\",   use: \"ファイル群 → Graph → JSON\" },\n    { cmd: \"load <in.json>\",                use: \"JSON 読み込み + verify\" },\n    { cmd: \"graph <files...>\",              use: \"parseJS 結果を JSON で stdout\" },\n    { cmd: \"resolve <graph.json>\",          use: \"import の相対パスを Block ID に解決\" },\n    { cmd: \"export <graph.json> <moduleId> [out.js]\", use: \"Graph から JS 再生成\" },\n  ],\n  edit_append_only: [\n    { cmd: \"apply <graph.json> <patch.js> <moduleId>\",   use: \"ファイル単位 patch\" },\n    { cmd: \"apply-block <graph.json> <blockId> <patch>\", use: \"1 Block 単位 patch(- で stdin)\" },\n    { cmd: \"virtual-apply <graph.json> <rootId> <patch>\", use: \"仮想重厚関数の逆配分(- で stdin)\" },\n    { cmd: \"heavy-apply <graph.json> <rootId> <patch|-> [--depth=N] [--out=after.txt]\", use: \"virtual-apply 後に同じ scope を再展開\" },\n  ],\n  virtualHeavy: [\n    { cmd: \"heavy <file|graph.json> <root-id> [--depth=N]\", use: \"root + 依存を 1 content に展開して stdout\" },\n  ],\n  verify: [\n    { cmd: \"e2e\", use: \"テスト実行(npm test と同じ)\" },\n  ],\n};\n\nexport const VirtualHeavy = {\n  problem: {\n    description: \"LLM は全文脈集約された方が間違えない(重厚関数原則)。ただし Block 分割は履歴・検索・refs に必要。普通は二者択一。\",\n    layers: {\n      物理層: \"graph.json 上の状態。細粒度 Block + versions + refs。最適化対象: 管理 / 履歴 / 影響分析\",\n      論理層: \"LLM に渡す content。root + forward 推移閉包を 1 つの巨大 content に展開。最適化対象: LLM の認知(全文脈集約)\",\n    },\n    insight: \"両者を往復させる機構が Virtual Heavy Function。展開だけでは半分。逆配分があって初めて閉じる。\",\n  },\n  workflow: [\n    \"1. save graph.json src/foo.js\",\n    \"2. resolve graph.json\",\n    \"3. heavy src/foo.js <rootId> --depth=3 > heavy.txt\",\n    \"4. heavy.txt を LLM に投げる(BLOCK ヘッダを残したまま content だけ編集して返してもらう)\",\n    \"5. virtual-apply graph.json <rootId> heavy.txt\",\n    \"6. 連続編集するときは heavy-apply graph.json <rootId> heavy.txt --depth=3 --out=heavy.after.txt\",\n    \"7. diff src/foo.js <rootId>\",\n    \"8. lint src/foo.js --summary\",\n  ],\n  expandedFormatRules: [\n    { line: \"// === Virtual Heavy Function ... ===\", role: \"全体ヘッダ\",                     editable: \"残す\" },\n    { line: \"// --- BLOCK: <id> (<type>) ---\",       role: \"境界ヘッダ。Apply の分割キー\",   editable: \"絶対に変えない・消さない・追加しない\" },\n    { line: \"// tags: ... / // refs: ...\",            role: \"参考表示(commit 時に除去)\",     editable: \"触っても無視される\" },\n    { line: \"<content>\",                              role: \"Block の本体\",                   editable: \"ここを編集する\" },\n    { line: \"// === end of virtual heavy ===\",        role: \"終端マーカー\",                   editable: \"残す\" },\n  ],\n  applyBehaviors: [\n    \"スコープ内 + content 変化あり → 新 version を append(refs/tags は head 継承)\",\n    \"スコープ内 + content 同じ → 何もしない(version 履歴を汚さない)\",\n    \"スコープ外 id → 静かに skip(エラー出さず、log だけ)\",\n  ],\n  updateActions: [\n    { action: \"updated\",              meaning: \"既存 Block に新 version が append された\",      verdict: \"期待通り\" },\n    { action: \"created\",              meaning: \"Block が無かったので新規作成された\",            verdict: \"本来あり得ない(virtualHeavy は既存 Block を集めるため)。発生したら設計バグ\" },\n    { action: \"unchanged\",            meaning: \"content が head と同一だったので何もしなかった\", verdict: \"履歴を汚さない正しい挙動\" },\n    { action: \"skipped-out-of-scope\", meaning: \"入力に virtualHeavy 集合に無い id のヘッダがあった\", verdict: \"要確認。LLM がヘッダを勝手に追加 / 改変した可能性\" },\n  ],\n  failureModes: [\n    { id: 1, mistake: \"LLM が BLOCK ヘッダを書き換え/翻訳した\",                       result: \"その segment が skipped-out-of-scope で消える\",   fix: \"プロンプトに「ヘッダ行は絶対変更しない」を明記\" },\n    { id: 2, mistake: \"LLM が新規 BLOCK ヘッダを追加して関数を生やした\",              result: \"skipped-out-of-scope で消える(既存セットに無い)\",  fix: \"別途 apply-block で新規追加、または apply で patch.js として渡す\" },\n    { id: 3, mistake: \"expand と apply で --depth が違う\",                              result: \"スコープ集合がズレる、一部 segment が skip\",       fix: \"同じ depth・同じ kind を必ず使う(opts を変数に切り出して両方に渡す)\" },\n    { id: 4, mistake: \"apply 後に元の root を消した / id を改名した\",                  result: \"次回 expand で全く違う集合が出る\",                   fix: \"rename は rollback + 新 id 作成 → 旧 id 非推奨化、で段階的に\" },\n    { id: 5, mistake: \"content の { } が崩れた\",                                         result: \"commit 自体は通るが lint の brace-mismatch が出る\", fix: \"lint --only=brace で即検出、再 expand → 修正 → re-apply\" },\n    { id: 6, mistake: \"refs/tags 行を本気で書き換えた\",                                  result: \"無視される(commit 時に head から継承)\",            fix: \"refs/tags を変えたいなら apply-block で smart 再計算 / 手動 commit\" },\n  ],\n  safetyNet: \"Apply は append-only なので何度やり直しても履歴は壊れない。失敗を恐れずに往復を回す。万一の時は b.rollback(prevIndex) で過去 version を新 version として復元。\",\n};\n\nexport const ProgrammaticApi = {\n  imports: [\n    \"Block, Graph\",\n    \"parseJS, parseMD, loadProject, checkBraces\",\n    \"saveGraph, loadGraph, buildAndSave\",\n    \"applyPatch, applyToBlock, applyBlockSmart, resolveImports\",\n    \"virtualHeavy, expandVirtualHeavy, virtualApply\",\n    \"exportModule, exportToFile, exportMermaid\",\n    \"inferTags, graphStats, blockContext, formatContextForLLM\",\n    \"constraintBlock, evalConstraint\",\n    \"observationBlock\",\n  ],\n  blockOps: [\n    \"b.versions.length / b.content / b.head() / b.at(timestamp)\",\n    \"b.diff(0, 1) / b.blameRef('x')\",\n    \"b.rollback(0)  // 過去状態を新しい past として commit、履歴は保持\",\n    \"b.verify()      // hash チェーン検証\",\n  ],\n  graphOps: [\n    \"g.forward(id, kind?) / g.backward(id, kind?) / g.impact(id, kind?)\",\n    \"g.byType('function') / g.byTag('export')\",\n    \"g.search('TODO', { type, tag, includeOldVersions })\",\n    \"g.at(timestamp) / g.lint({orphan:false}) / g.verify()\",\n  ],\n};\n\nexport const LintKinds = [\n  { kind: 'broken-ref',     detects: \"target が存在しない ref(import の外部モジュールは除外)\",  offFlag: \"{ broken: false }\" },\n  { kind: 'orphan',         detects: \"誰からも参照されない非 module Block\",                         offFlag: \"{ orphan: false }\" },\n  { kind: 'circular',       detects: \"forward の循環\",                                                offFlag: \"{ circular: false }\" },\n  { kind: 'brace-mismatch', detects: \"content の { } が不揃い(文字列・regex は skip)\",           offFlag: \"{ brace: false }\" },\n  { kind: 'calls-leak',     detects: \"他関数呼び出しの形跡があるが calls ref が無い\",                offFlag: \"{ calls: false }\" },\n  { kind: 'tag-mismatch',   detects: \"type と tags が不整合\",                                         offFlag: \"{ tags: false }\" },\n  { kind: 'empty-block',    detects: \"content / refs / children がすべて空\",                          offFlag: \"{ empty: false }\" },\n  { kind: 'hash-broken',    detects: \"version の prevHash チェーン破損\",                              offFlag: \"{ hash: false }\" },\n];\n\nexport const ParseJSRules = [\n  { syntax: \"ファイル全体\",                                              produces: \"module Block。refs に import と contains\" },\n  { syntax: \"function foo(){} / export function / async function\",      produces: \"function Block(tags: function, async?, export?, generator?)\" },\n  { syntax: \"const foo = () => {}\",                                       produces: \"function Block(tags: function, arrow)\" },\n  { syntax: \"class Foo {} / export class\",                                produces: \"class Block(tags: class, export?, default?)\" },\n  { syntax: \"import ... from 'x'\",                                         produces: \"module の refs に { kind: 'import', target: 'x' }\" },\n  { syntax: \"同モジュール内の関数呼び出し\",                              produces: \"calls ref(名前ベース、後段で再 commit)\" },\n  { syntax: \"// [ai_s_emblem:#a#b Name] / // @tags: a, b\",                 produces: \"tags に取込(v1 互換、20 行遡及)\" },\n];\n\n// SHADOW stub generator for AGENTS.md / GEMINI.md (CLI auto-load convention surface).\n// Universal first-read は README.md。詳細は AGENTS.aiDoc.yume.js HEAD / import を参照。\nconst SHADOW_STUB = [\n  \"AGENTS.md / GEMINI.md are SHADOW stubs.\",\n  \"\",\n  \"First read: README.md (universal entry for humans and AI).\",\n  \"\",\n  \"AI structured data:\",\n  \"  show head: node runYume.js AGENTS.aiDoc.yume.js show head --raw\",\n  \"  import:    import { Forbidden, BlindSpots, BlockOps, GraphOps, RealVariable,\",\n  \"                      AutoUseProtocol, OperatingModel, VirtualHeavy, ... }\",\n  \"                      from './AGENTS.aiDoc.yume.js'\",\n  \"\",\n  \"Axioms: BIBLE.md or bible.aiDoc.yume.js.\",\n  \"\",\n].join(\"\\n\");\n\nexport const exportMarkdown = () => SHADOW_STUB;\nexport const exportGeminiMarkdown = () => SHADOW_STUB;\n",
+      "ts": 1780013265028,
+      "refs": [],
+      "tags": [],
+      "applyId": "apply-2026-05-29-3b13cb32",
+      "hash": "8a60081b7ca71469446f87e7b832bc75841a5116c180180ef2e7511a11960be4",
+      "prevHash": "68ff0bf5de92cd805e23660ef72599b319abc12984a2332a8e0fa088fcd4603f"
+    },
+    {
+      "content": "// AGENTS.aiDoc.yume.js — yume-develop の AI structured-data import 面。\n// universal first-read は README.md。AGENTS.md / GEMINI.md は CLI auto-load 慣習用の stub。\n\nexport const FileMap = {\n  files: [\n    'README.md — universal first-read (humans + AI bootstrap)',\n    'AGENTS.aiDoc.yume.js (this) — AI structured data import surface',\n    'bible.aiDoc.yume.js / BIBLE.md — axioms A0–A14',\n    'core.module.yume.js — Block / Graph / parseJS implementation',\n    'cli.module.yume.js — CLI implementation',\n    'BLOCKFILE.aiDoc.yume.js — format spec (use only when exact semantics needed)',\n    'runtime.spec.yume.js — runtime spec',\n    'e2e.js — E2E tests',\n    'coverage.verify.yume.js — coverage harness',\n    '/Users/AoyamaRito/PJs/sample/ — external experiments (do not read during core work)',\n  ],\n  routing: [\n    { trigger: '3D / WebGL / Matrix', file: '3dplus/, 3d-prefab/' },\n    { trigger: 'UI / canvas 検証',     file: 'eyes/ (ai-eyes 観測ハーネス)' },\n    { trigger: 'CLI 拡張',              file: 'cli.module.yume.js + e2e.js' },\n  ],\n};\n\nexport const StderrHintPolicy =\n  \"runYume.js は CLI 実行時、コードの状態を観察して stderr に 1 度だけ hint を流す\" +\n  \" (例: WebGL/Matrix4 検出 → 3dplus/ への routing)。状態は cwd の `.yume-state.json` に記録、\" +\n  \"二度目以降は静か。hint が出たら指示先のドキュメントを実際に読む。\";\n\nexport const RepositoryBoundary = {\n  role: \"yume-develop は yume-files の product/runtime workspace (self-contained)。\",\n  externalSampleRoot: \"/Users/AoyamaRito/PJs/sample/\",\n  rules: [\n    \"サンプルアプリ / 実験を yume-develop 内に作らない。/Users/AoyamaRito/PJs/sample/<project>/ などへ。\",\n    \"yume-develop の test は core runtime / CLI / docs generation / 3D prefab / eyes に限定。\",\n    \"Markdown は SHADOW、対応する .aiDoc.yume.js (REAL) を編集して generate する。\",\n  ],\n};\n\nexport const RealShadowSummary =\n  \"REAL = .aiDoc.yume.js (編集する場所)、SHADOW = .md (自動生成、直接編集禁止)。\" +\n  \"実行 JS 内では主要状態を `REAL_*` 接頭語で明示、derived / cache / loop / DOM / 一時値には付けない\" +\n  \" (詳細: RealVariable export in this file / BIBLE.md A3)。\";\n\nexport const CommonCommands = [\n  { name: 'HEAD だけ読む', cmd: 'node runYume.js <file>.yume.js show head --raw' },\n  { name: 'touched yume file を検証', cmd: 'node runYume.js <file>.yume.js validate' },\n  { name: 'HEAD 変更を履歴化', cmd: 'node runYume.js <file>.yume.js commit --note \"why\"' },\n  { name: 'repository graph check', cmd: 'npm run refs-check' },\n  { name: 'SHADOW md 再生成', cmd: 'npm run docs:generate' },\n  { name: 'SHADOW md 整合確認', cmd: 'npm run docs:check' },\n  { name: 'full local suite', cmd: 'npm test' },\n  { name: 'full verification', cmd: 'npm run verify' },\n];\n\nexport const DoneCriteria = [\n  \"Changed .yume.js files validate.\",\n  \"npm run docs:check passes when generated docs are touched.\",\n  \"npm run refs-check has no new unresolved path or duplicate-id errors.\",\n  \"npm test passes when runtime behavior or repository structure changes.\",\n];\n\nexport const ReportFormat = \"変更内容、検証結果、残リスクを短く報告する。\";\n\nexport const Forbidden = [\n  { id: 1, rule: \"TypeScript を導入しない\",                              why: \"型情報による隠匿排除\",                     axiom_ref: 'A0' },\n  { id: 2, rule: \"npm install で外部依存を入れない\",                      why: \"Eternal Compatibility\",                     axiom_ref: 'Bible§3' },\n  { id: 3, rule: \"build / transpile step を作らない\",                     why: \"ソース = 実行ファイル\",                     axiom_ref: 'Bible§3' },\n  { id: 4, rule: \"フレームワーク(React 等)を入れない\",                    why: \"暗黙の規約は隠匿の温床\",                   axiom_ref: 'A0' },\n  { id: 5, rule: \"コメントマーカー(// [ai_s_emblem:...])を新規に書かない\", why: \"マーカー廃止、tags は // @tags: で書く\",  axiom_ref: 'Bible§4' },\n  { id: 6, rule: \"Block.versions を直接書き換えない、commit() 経由のみ\",   why: \"REAL の append-only 性\",                    axiom_ref: 'A4, A6' },\n  { id: 7, rule: \"Block.content / refs / tags を変数化しない\",            why: \"SHADOW 規約\",                               axiom_ref: 'A3, A6' },\n  { id: 8, rule: \"「人間の見やすさ」で判断しない\",                         why: \"LLM 視点の情報密度で判断\",                 axiom_ref: 'A0, A7' },\n];\n\nexport const BlindSpots = [\n  { id: 1, pitfall: \"「とりあえず全体を読む」誘惑 (Sniper Reading 違反)\",\n    symptom: \"依存関係やコード把握のために .yume.js ファイルを丸ごと read_file してしまい、巨大な履歴 JSON データ (__block.versions) でコンテキストを使い切る、あるいは最新の実装を見失う。\",\n    cure: \"「初手でファイル全体を絶対に読むな」。必ず `node runYume.js <file> show head --raw` を使うか、grep で 'HEAD ===' の開始行を特定して HEAD 部のみを限定して読む。\",\n    axiom_ref: \"A1, Physics.Spotlight\" },\n  { id: 2, pitfall: \"REAL_* プレフィックスの乱用・誤用 (A3 REAL/SHADOW 違反)\",\n    symptom: \"すべての状態変数に REAL_ を付けたり、ループ変数、DOM 要素、一時変数、ただの定数にまで REAL_ を付けてしまい、AST bootstrap 監視や状態バグ追跡の対象を絞り込めなくなる。\",\n    cure: \"REAL_* は「主要な状態」「Reducer等で更新され、描画・テスト・観測(eyes)の入力となる中核的な状態」にのみ限定して付与する。\",\n    axiom_ref: \"A3\" },\n  { id: 3, pitfall: \"型情報の暗黙の依存 (LLMTyping / A11 違反)\",\n    symptom: \"変数名（worldX, screenY）やコメント、型定義（TypeScriptなど）だけで型を表現し、REAL値そのものは裸の数値やオブジェクトで持つ。LLM が context window の外側へ移動した瞬間、その変数名の意味を忘れハルシネーションを起こす。\",\n    cure: \"値そのものにドメインタグを埋め込んだ文字列として持つ（例：\\\"world:10,0,-5\\\" / \\\"usd:19.99\\\"）。値が self-describing であれば、AIが context を失っても絶対に推論を間違えない。\",\n    axiom_ref: \"Physics.LLMTyping, A11\" },\n  { id: 4, pitfall: \"仕様（SPEC）を挟まない「いきなり実装」 (A8 Spec-First Versioning 違反)\",\n    symptom: \"仕様変更や新機能実装の際、仕様（SPEC）のみを定義したバージョン（コメント ＋ #SPEC# タグのみのバージョン）を挟むことなく、最初から実装コード（impl）を commit し、仕様の変遷履歴を失う。\",\n    cure: \"コードを書き換える前に、必ず「新仕様の定義（仕様コメントのみの spec version）」を Block.commit してから、その次のバージョンで実装コードをコミットする。\",\n    axiom_ref: \"A8\" },\n  { id: 5, pitfall: \"純粋論理(Pure logic)と Adapter の混同 (A9 Crystallize 違反)\",\n    symptom: \"Block の中に、動的な dispatch、eval、Proxy、prototype 拡張、またはプラットフォーム特有の I/O や DOM 操作、タイマーなどの副作用を書いてしまう。Go にコンパイル（crystallize）できず、AIにとっても推論しにくい。\",\n    cure: \"Block 内には「Crystallize可能な Pure logic」のみを書く。I/O や DOM操作、動的ディスパッチは Block の外にある Adapter へ完全に分離し、Block 内部を極限までピュアに保つ。\",\n    axiom_ref: \"A9\" },\n  { id: 6, pitfall: \"3D 座標を screen に射影して DOM 要素を追従させる (A10 Single Coord 違反)\",\n    symptom: \"3Dオブジェクトの上に浮かぶツールチップやラベルのために、world 座標を screen 座標に射影し、DOM の位置（CSS transformなど）をリアルタイムに同期しようとして座標統一性を崩す。\",\n    cure: \"world 座標を読んで DOM の位置をリアルタイムに同期させることは禁止。DOM は画面端のサイドバーやパネルなどの、3D空間と構造的に完全に分離されたものに限り、a11y/IME 目的でのみ許可する。\",\n    axiom_ref: \"A10\" },\n  { id: 7, pitfall: \"ボトムアップでのテスト作成 (A14 Top-Down Verification 違反)\",\n    symptom: \"実装後に、場上がり的に個別のユニットテストをたくさん書き、全体の E2E シナリオや意図の表明が後回しになる。\",\n    cure: \"テストは必ず「Top-Down E2E-First」で開始する。まずシステム全体の意図を示す E2E シナリオ（e2e.js への追加）を書き、その実行から得られたカバレッジの「隙間」を埋めるように自律的にユニットテストを生成する。\",\n    axiom_ref: \"A14\" },\n];\n\nexport const SniperReading = {\n  rule: \".yume.js ファイルを探索する際、初手でファイル全体を read_file してはならない。\",\n  why: \"履歴ブロック(__block.versions)の巨大なノイズにより、AI の Spotlight(300行)が枯渇し、現在の実装(HEAD)を見失うため。\",\n  methods: [\n    { name: \"CLI show head --raw\", command: \"node runYume.js <file>.yume.js show head --raw\", benefit: \"メタデータを含まないピュアな HEAD ソースのみ。最も推奨。\" },\n    { name: \"Grep HEAD line\",       command: \"grep -n 'HEAD ===' <file>.yume.js\",              benefit: \"HEAD 領域の開始行を特定し、read_file(offset) で履歴をスキップして読む。\" },\n  ],\n};\n\nexport const EyesOverServer = {\n  rule: \"UI や 3D ロジックの修正時、人間による目視確認(サーバー起動)を待たず、ai-eyes で自律検証せよ。\",\n  why: \"人間がブラウザを開くコストは AI にとってのボトルネック。描画命令(draw_ops)を構造的に比較することで、ハルシネーションを物理的に排除できる。\",\n  workflow: [\n    \"1. 修正後に `node eyes.observation.yume.js <target>` を実行。\",\n    \"2. 出力された draw_ops を前回の正常値(snapshot Block)と diff。\",\n    \"3. 座標や色が意図通りであれば、目視なしでパスと判断。\",\n    \"4. 複雑な挙動(アニメ等)は `node eyes.debugger.yume.js <demo> <scenario>` で HTML 動画ログを生成し、コマ送りで最終確認。\",\n  ],\n};\n\nexport const RealVariable = {\n  rule: \"`REAL_*` は、AI / Kantoku が監視すべき実行 JS の「正の状態」にだけ付ける。\",\n  purpose: \"実行 JS 内で AI / Kantoku が変化を追跡すべき「正の状態」を示す命名規約。型や単位の表現ではなく、観測・検証・prompt 生成の起点。\",\n  why: \"REAL_* があると、初期化時 AST bootstrap / 実行 trace / eyes_check / prompt 生成の対象を狭められる。全変数を監視せず、状態バグの根だけを追うための接頭語。AST が返す性質名は `isWatched`。`check` は検査実行の名前に限定する。\",\n  useFor: [\n    \"アプリの主要 state\",\n    \"dispatch / reducer 後に更新される state\",\n    \"render / eyes / test の入力になる state\",\n    \"失われると挙動判断が壊れる state\",\n  ],\n  avoidFor: [\n    \"一時値\",\n    \"DOM 要素\",\n    \"derived view / cache\",\n    \"単なる定数\",\n    \"loop counter\",\n  ],\n  rules: [\n    \"AST で `REAL_*` を検出した結果は `isWatched: true` と表現する\",\n    \"`check` は検査実行の動詞なので、監視対象かどうかの boolean 名には使わない\",\n    \"`REAL_*` は初期化時に記録可能である\",\n    \"`REAL_*` の再代入は trace 対象にできる\",\n    \"`REAL_*` は JSON serializable を推奨する\",\n    \"event / dispatch 後に `REAL_*` が変化しない場合、Kantoku は state_frozen 系の警告を出せる\",\n    \"`REAL_*` が変わった後、古い eyes / test / verification は stale とみなす\",\n  ],\n  example: \"let REAL_state = initialState();\\nfor (const evt of events) {\\n  REAL_state = dispatch(REAL_state, evt);\\n  render(ctx, REAL_state);\\n}\",\n};\n\nexport const BlockOps = {\n  create: {\n    rule: \"新規 Block は `new Block({id, type, meta})` してから `commit()` で初回 version を append。\",\n    naming: \"id は `<moduleId>:<prefix>:<name>` 規約。prefix は 'fn' か 'class'。\",\n    types: ['function', 'class', 'module', 'constraint', 'observation', 'twin'],\n  },\n  update: {\n    rule: \"必ず `commit()` で新 version を append。古い version は消さない・触らない。\",\n    pattern: \"head() の値をベースに、変更したい部分だけ差し替えて新 version を作る。\",\n  },\n  rollback: {\n    rule: \"過去に戻すときは `b.rollback(versionIndex)` を使う。履歴を消さず、新 version として commit。\",\n    禁忌: \"b.versions = b.versions.slice(0, n) のような直接削除は禁忌。\",\n  },\n};\n\nexport const ParseRules = {\n  function:    \"function 宣言 → Block(type:'function')\",\n  arrow:       \"const x = () => {} → Block(type:'function', tags:['arrow'])\",\n  klass:       \"class 宣言 → Block(type:'class')\",\n  imports:     \"import 文 → module Block の refs に { kind:'import', target } で追加\",\n  calls:       \"同モジュール内の関数呼び出し → refs に { kind:'calls', target } で追加\",\n  tagComments: \"直前コメントの // @tags: a, b → tags に取り込み(20 行遡及)\",\n  v1emblems:   \"// [ai_s_emblem:#a#b Name] は互換読み専用、新規記述禁止\",\n  limitations: [\n    \"文字列リテラル中の function キーワードを誤検出する可能性\",\n    \"ネスト関数の捕捉が浅い場合がある\",\n    \"対応が必要なら parseJS 内の正規表現を拡張(将来的に AST 置換)\",\n  ],\n};\n\nexport const GraphOps = [\n  { intent: \"この関数を変えたら何に影響する?\",   method: \"g.impact(id)\" },\n  { intent: \"この関数を呼んでるのは?\",          method: \"g.backward(id)\" },\n  { intent: \"この関数が呼ぶのは?\",              method: \"g.forward(id)\" },\n  { intent: \"特定の文字列を含む Block は?\",      method: \"g.search('TODO')\" },\n  { intent: \"export されてる Block は?\",        method: \"g.byTag('export')\" },\n  { intent: \"class だけ取りたい\",               method: \"g.byType('class')\" },\n  { intent: \"過去の状態のグラフが見たい\",        method: \"g.at(timestamp)\" },\n  { intent: \"全 Block の整合性チェック\",         method: \"g.verify()\" },\n];\n\nexport const Persistence = {\n  default_filename: \"graph.json\",\n  derived_filename: \"*.local.json\",\n  rule: [\n    \"saveGraph(graph, path) で JSON 1 ファイルに保存\",\n    \"graph.json と *.local.json は .gitignore 済み\",\n    \"共有が必要な永続データは別名 + レビュー後 commit\",\n  ],\n};\n\nexport const TestingRules = {\n  rule: \"テストは必ず『Top-Down E2E-First』で書くこと。ボトムアップのTDDは禁止。\",\n  workflow: [\n    \"1. 全体のシナリオを定義するE2Eテストを先に書く（意図の宣言）。\",\n    \"2. E2Eを通すための実装を行う。\",\n    \"3. E2E実行時のコードカバレッジを計測し、未通過のBlockや分岐（隙間）を特定する。\",\n    \"4. その隙間を埋めるための単体テストを自律的に追加し、網羅率を上げる。\",\n  ],\n};\n\nexport const CliExtension = {\n  rule: \"CLI の新コマンドは cli.module.yume.js の runCommand() に case を追加。\",\n  steps: [\n    \"1. case 'mycommand': を実装\",\n    \"2. デフォルトケース(commands list)に追加\",\n    \"3. e2e の CLI group にテスト追加\",\n    \"4. BIBLE.md Rituals に追加\",\n  ],\n};\n\nexport const HeavyApplyRules = {\n  rule: \"`heavy-apply` は `virtual-apply` 後に同じ root / depth で再展開する。AI が編集後の heavy view を即再読するための編集ループ。\",\n  command: \"node runYume.js <file>.yume.js heavy-apply <root-id> <patch> [--depth=N] [--out=after.txt]\",\n  stdout: \"--out 無しなら再展開 heavy content を stdout。ログは stderr。\",\n  warning: \"expand 時と heavy-apply 時の --depth を必ず揃える。\",\n};\n\nexport const V1Relation = {\n  rules: [\n    \"v1 の Bible(AI_NATIVE_MASTER_BIBLE.md)は v1 のまま、触らない\",\n    \"v1 emblem マーカーは v2 でも読める(parseJS が tags に取り込む)が、新規記述禁止\",\n    \"v1 と v2 は併存可能。v1 = 固定された過去、v2 = canonical\",\n    \"v1 機能で v2 未移植のもの(focus/apply/check/coverage 等)は段階的に Block 化\",\n  ],\n};\n\nexport const ConstraintRules = {\n  api: \"constraintBlock({id, axes, values, derive}) → evalConstraint(cb, filter?)\",\n  derive_must_be: \"純粋関数(I/O・乱数・時刻に触れない、Bible §7 Twin 規約と同じ)\",\n  filter: \"浅い等価(merged[k] === v)。範囲条件は derive で派生フラグを作る\",\n  contradiction: \"filter 結果が空集合のとき _contradiction: true で返る\",\n};\n\nexport const ObservationRules = {\n  api: \"observationBlock({id, observedId, snapshot, tags})\",\n  id_convention: \"タイムスタンプ + 連番(時系列の自然な並び)\",\n  snapshot: \"構造化データ(画像バイナリは別途保存して URL で参照)\",\n  refs: \"{ kind: 'observes', target: observedId } が自動付与\",\n};\n\nexport const CommitConventions = {\n  format: \"<type>: <summary>\",\n  types: {\n    init:     \"初回コミット\",\n    feat:     \"新機能\",\n    fix:      \"バグ修正\",\n    docs:     \"ドキュメント\",\n    test:     \"テスト追加・修正\",\n    clearify: \"振る舞いを変えない構造調整(AI 向け最適化)\",\n    chore:    \"ビルド・ツール周り\",\n  },\n  example: \"feat(parse): support generator function syntax\",\n};\n\nexport const Compass = [\n  { 迷い: \"Block の type を増やすべきか\",   判断軸: \"既存 type で表現できないか先に検討。新 type は最後の手段。\" },\n  { 迷い: \"関数を分割すべきか\",             判断軸: \"「LLM が一目で全文脈を把握できるか」で決める。基本はインライン化(A1)。\" },\n  { 迷い: \"命名で迷ったとき\",               判断軸: \"動詞 + 目的語で書く。略語は使わない(LLM の学習に負ける)。\" },\n  { 迷い: \"ドキュメントを書くべきか\",        判断軸: \"LLM が読む前提。冗長を恐れない。具体例を必ず添える。\" },\n  { 迷い: \"新 .md を作りたくなった\",         判断軸: \"AI 用なら .md 禁止、.aiDoc.yume.js (REAL) を作る。人間用は README のみ。\" },\n];\n\n// 旧 runAndReadMe.aiDoc.yume.js から統合した protocol 系 export。\n\nexport const AutoUseProtocol = {\n  understandingChecklist: [\n    \"A .yume.js file is a JavaScript module carrying current content, append-only history, refs, tags, notes, apply groups, and a pinned runtime.\",\n    \"filename.domain.yume.js is semantic; the domain tells an AI how to treat the file.\",\n    \"Normal yume edits happen in HEAD, then runtime commit appends a new version.\",\n    \"__block.versions is not hand-edited during ordinary work.\",\n    \"notes are mutable commentary outside the version hash.\",\n    \"applyId ties multi-file AI operations together.\",\n    \"refs and tags form the retrieval and impact graph.\",\n    \"v001 runtime stays zero-dependency and avoids AST package dependencies.\",\n  ],\n  futureTaskLoop: [\n    \"Classify the user request: read, explain, create yume file, edit yume file, edit docs/site, inspect graph, or verify release readiness.\",\n    \"Gather the narrowest useful context first; prefer refs, tags, heavy, impact, notes-search, and apply-search over broad scanning.\",\n    \"If creating a yume file, choose a clear filename.domain.yume.js name and include refs/tags that future AI runs can use.\",\n    \"If editing a yume file, edit HEAD only and commit through the runtime.\",\n    \"If changing shared semantics, run impact before editing and refs-check after editing.\",\n    \"Finish with the verification level that matches risk: validate for touched yume files, npm run refs-check for graph changes, npm test for runtime or repository invariant changes.\",\n  ],\n  responseContract: [\n    \"Be concise and operational.\",\n    \"Do not dump the whole spec back to the user unless asked.\",\n    \"Report changed files, commands run, and whether validation passed.\",\n    \"Call out unresolved assumptions or residual risk.\",\n  ],\n};\n\nexport const OperatingModel = {\n  format: \"filename.domain.yume.js\",\n  domainMeaning: \"The domain segment tells an AI how to treat the file: fn, module, aiDoc, spec, workflow, template, world, style, character, and similar roles.\",\n  currentContent: \"The HEAD region is the live JavaScript/module content.\",\n  history: \"__block.versions is append-only history for the HEAD content.\",\n  mutableCommentary: \"__block.notes stores intent and review notes outside the version hash.\",\n  crossFileWork: \"applyId ties multiple file changes from one AI operation together.\",\n  graph: \"refs and tags extracted from HEAD make related-context and impact scans possible.\",\n};\n\nexport const YumeFileEditing = [\n  \"Do not hand-edit __block.versions unless repairing a broken file format deliberately.\",\n  \"Normal edits happen in HEAD; runtime commit appends the new version with hash, refs, tags, timestamp, and optional applyId.\",\n  \"Use note-add or commit --note for intent that should remain mutable.\",\n  \"Use rollback to append a restored version instead of deleting history.\",\n  \"Keep BOOT small and let it call the pinned runtime version declared in __block.runtime.version.\",\n];\n\nexport const ContextEconomy = [\n  \"Start from README.md and AGENTS.aiDoc.yume.js instead of reading the entire repository.\",\n  \"Escalate to BLOCKFILE.aiDoc.yume.js only for exact schema/runtime semantics.\",\n  \"Use refs, tags, heavy, impact, notes-search, and apply-search as retrieval tools before broad scanning.\",\n  \"Prefer one well-scoped .yume.js file over scattered prompts when capturing workflows, templates, specs, worlds, characters, or writing styles.\",\n  \"A compact yume file can reduce prompt tokens and preserve more reasoning budget for the actual task.\",\n];\n\nexport const DesignBoundaries = [\n  \"Do not add AST parser or package dependencies to runtime v001 unless the project deliberately changes that constraint.\",\n  \"Use conservative source scanning because the runtime must stay portable and dependency-free.\",\n  \"Treat warnings from refs-check as useful navigation signals, not always hard failures.\",\n  \"The runtime handle file is infrastructure; domain files are the portable knowledge/work units.\",\n];\n\nexport const UsageCatalog = [\n  { use: \"AI onboarding and project runbooks\",\n    domains: [\"aiDoc\", \"runbook\", \"memory\", \"rules\"],\n    examples: [\"project.aiDoc.yume.js\", \"team.rules.yume.js\"],\n    hints: [\n      \"Use this when the user wants future AI sessions to understand a repository, project, or operating style.\",\n      \"Put reading order, done criteria, validation commands, and response contracts in HEAD.\",\n    ] },\n  { use: \"Specifications, contracts, and design decisions\",\n    domains: [\"spec\", \"contract\", \"decision\", \"rubric\"],\n    examples: [\"feature.spec.yume.js\", \"api.contract.yume.js\", \"decision.log.yume.js\"],\n    hints: [\n      \"Use this for requirements, constraints, evaluation criteria, and architecture decisions.\",\n      \"Add refs from implementation, tests, templates, or docs back to the spec.\",\n      \"Run impact before changing shared semantics.\",\n    ] },\n  { use: \"Repeatable workflows and checklists\",\n    domains: [\"workflow\", \"checklist\", \"process\"],\n    examples: [\"review.workflow.yume.js\", \"release.workflow.yume.js\", \"qa.checklist.yume.js\"],\n    hints: [\n      \"Use this for procedures an AI should execute repeatedly.\",\n      \"Include prerequisites, steps, exit criteria, and failure handling.\",\n    ] },\n  { use: \"Templates and reusable output formats\",\n    domains: [\"template\", \"prompt\", \"format\"],\n    examples: [\"doc.template.yume.js\", \"pr.template.yume.js\", \"prompt.template.yume.js\"],\n    hints: [\n      \"Use this when the same shape of document, prompt, or output will be generated repeatedly.\",\n      \"Keep private content out of public templates; use placeholders for names, dates, amounts, client details.\",\n    ] },\n  { use: \"Invoices, estimates, and business documents\",\n    domains: [\"invoice\", \"estimate\", \"billing\", \"statement\", \"receipt\"],\n    examples: [\"invoice.template.yume.js\", \"billing.rules.yume.js\"],\n    hints: [\n      \"Use this for document structure, calculation rules, payment terms, rendering workflow, and review checks.\",\n      \"Never publish real client names, addresses, invoice numbers, amounts, or account details as sample data.\",\n    ] },\n  { use: \"Pitch decks, proposals, and slide narratives\",\n    domains: [\"pitch\", \"deck\", \"slide\", \"story\", \"proposal\"],\n    examples: [\"pitch.story.yume.js\", \"deck.template.yume.js\", \"business-model.spec.yume.js\"],\n    hints: [\n      \"Use this for deck storyline, slide structure, design rules, business model logic, and revision history.\",\n      \"Keep confidential company, customer, finance, or strategy data in private files.\",\n    ] },\n  { use: \"Fiction writing and creative worlds\",\n    domains: [\"world\", \"character\", \"plot\", \"style\", \"draft\"],\n    examples: [\"novel.world.yume.js\", \"character.profile.yume.js\", \"voice.style.yume.js\"],\n    hints: [\n      \"Use this for world rules, character state, voice constraints, plot logic, and chapter drafts.\",\n      \"Refs should connect draft files to the world, characters, and style they depend on.\",\n    ] },\n  { use: \"Research, source tracking, and summaries\",\n    domains: [\"research\", \"source\", \"note\", \"summary\"],\n    examples: [\"research.note.yume.js\", \"source.index.yume.js\", \"meeting.note.yume.js\"],\n    hints: [\n      \"Use this to preserve source lists, assumptions, summaries, and evolving conclusions.\",\n      \"Put uncertain claims in notes or explicit fields so future AI runs can revisit them.\",\n    ] },\n  { use: \"Executable JavaScript with built-in local history\",\n    domains: [\"fn\", \"module\", \"adapter\", \"handle\"],\n    examples: [\"parser.fn.yume.js\", \"renderer.module.yume.js\", \"adapter.module.yume.js\"],\n    hints: [\n      \"Use this when the current content is executable JavaScript.\",\n      \"Keep runtime handles infrastructure-focused and avoid confusing them with portable domain files.\",\n    ] },\n];\n\nexport const PrivacyBoundaries = [\n  \"When deriving public examples from private projects, include only generalized file roles and workflows.\",\n  \"Do not publish personal data, client data, invoice amounts, account details, private company strategy, or real generated documents.\",\n  \"Use placeholders in templates and keep private generated artifacts outside public examples.\",\n  \"If the user references local private projects, learn the pattern but write docs in generic terms.\",\n];\n\nexport const DecisionRules = [\n  \"For a quick edit to one .yume.js file, inspect show head, edit only the HEAD region, then run commit.\",\n  \"For related context, prefer heavy over opening every file manually.\",\n  \"For change blast radius, run impact before editing a shared block.\",\n  \"For graph health, run npm run refs-check after changing @ref, import/export, dynamic import, tags, or block ids.\",\n  \"For pure documentation outside .yume.js, update normal Markdown/HTML directly and keep .yume.js refs clean.\",\n  \"For a new domain file, choose filename.domain.yume.js so future AIs can infer its role from the path.\",\n];\n\nexport const Glossary = {\n  Block:    \"{ id, type, versions[], meta }。すべての構成要素の単位\",\n  Version:  \"{ content, refs, children, tags, timestamp, prevHash, hash }。append-only、これが REAL\",\n  head:     \"最新 Version。block.content 等の getter は head() から派生(SHADOW)\",\n  Graph:    \"Block の集合 + 双方向走査(forward / backward / impact)\",\n  ref:      \"{ kind, target }。kind は import / calls / contains / link / observes 等\",\n  VirtualHeavy: \"root + forward 推移閉包を 1 content に展開して LLM に渡し、戻りを各 Block に逆配分する機構\",\n  REALVariable: \"`REAL_*`。実行 JS 内で AI / Kantoku が監視すべき正の状態を示す変数名接頭語\",\n};\n\n// QuickStart は CommonCommands と重複していたので削除。現行 CLI は CommonCommands を参照。\n\nexport const LegacyAiDeskWorkflow = [\n  // legacy ai-desk v2 ワークフロー。値そのものに Legacy タグが埋め込まれているため、\n  // import する agent は誤って現行 workflow と誤認しない。現行は README.md / CommonCommands を参照。\n  { step: 1, name: \"既存 JS を Graph 化して保存\",\n    cmds: [\"node runYume.js save graph.json src/foo.js src/bar.js\", \"node runYume.js resolve graph.json\"],\n    note: \"graph.json が永続のソース。以降の apply / virtual-apply はこれを書き換える(append のみ)\" },\n  { step: 2, name: \"構造を把握\",\n    cmds: [\"skeleton\", \"stats\", \"tags\", \"mermaid\"] },\n  { step: 3, name: \"1 Block にズーム\",\n    cmds: [\"focus <module> <id>\", \"context <module> <id> <depth>\"],\n    note: \"context は target + 1 段の forward/backward を markdown で出す(LLM プロンプト用)\" },\n  { step: 4, name: \"影響範囲を見る(変更前のリスク評価)\",\n    cmds: [\"impact <module> <id>\"],\n    note: \"id を変えると壊れうる Block 全部(backward の推移閉包)\" },\n  { step: 5, name: \"編集して反映 — 3 つの粒度\",\n    sub: [\n      { granularity: \"ファイル全体 patch\",          cmd: \"apply graph.json patch.js <moduleId>\",      what: \"patch を parseJS → Block 単位で diff → 変更分だけ commit\" },\n      { granularity: \"1 関数だけ patch\",            cmd: \"apply-block graph.json <blockId> patch.js\", what: \"mini-parse して refs/tags 自動再計算 → 1 Block に commit\" },\n      { granularity: \"重厚関数(root + 依存) patch\", cmd: \"virtual-apply graph.json <rootId> patch.txt\", what: \"BLOCK ヘッダで分割 → 各 Block に逆配分 commit\" },\n    ] },\n  { step: 6, name: \"履歴を見る\",\n    cmds: [\"diff <module> <id>\", \"blame <module> <id> <ref>\"] },\n  { step: 7, name: \"Graph をコードに戻す\",\n    cmds: [\"export graph.json <moduleId> out.js\"],\n    note: \"module Block の contains 順に Block の content を結合して再生成。import の named/default/namespace 区別は完全 round-trip しない(MVP の限界)\" },\n];\n\nexport const LegacyAiDeskCliCommands = {\n  // legacy ai-desk v2 CLI 24 種。yume-develop の現行 CLI は runYume.js を参照\n  // (show / commit / validate / history / heavy / refs-check 等)。\n  observe: [\n    { cmd: \"skeleton <file>\",              use: \"Block 一覧 + refs\" },\n    { cmd: \"focus <file> <id>\",            use: \"指定 Block の content\" },\n    { cmd: \"context <file> <id> [depth]\",  use: \"target + 近傍を LLM 用 markdown に整形\" },\n    { cmd: \"stats <file>\",                 use: \"集計(block / version / byType / byTag)\" },\n    { cmd: \"tags <file>\",                  use: \"全タグと件数\" },\n    { cmd: \"tag <file> <tag>\",             use: \"あるタグを持つ Block 一覧\" },\n    { cmd: \"search <file> <query>\",        use: \"content の部分一致検索\" },\n    { cmd: \"impact <file> <id>\",           use: \"backward 推移閉包(変更時の影響範囲)\" },\n    { cmd: \"diff <file> <id> [i] [j]\",     use: \"version 間差分\" },\n    { cmd: \"blame <file> <id> <ref>\",      use: \"ref が初めて追加された version\" },\n    { cmd: \"mermaid <file>\",               use: \"flowchart LR を stdout\" },\n    { cmd: \"infer-tags <file> <id>\",       use: \"content からタグ推論(test/io/pure 等)\" },\n    { cmd: \"lint <file> [--summary] [--only=K1,K2]\", use: \"8 種の整合性チェック\" },\n    { cmd: \"self\",                          use: \"自分自身を解析\" },\n  ],\n  persist: [\n    { cmd: \"save <out.json> <files...>\",   use: \"ファイル群 → Graph → JSON\" },\n    { cmd: \"load <in.json>\",                use: \"JSON 読み込み + verify\" },\n    { cmd: \"graph <files...>\",              use: \"parseJS 結果を JSON で stdout\" },\n    { cmd: \"resolve <graph.json>\",          use: \"import の相対パスを Block ID に解決\" },\n    { cmd: \"export <graph.json> <moduleId> [out.js]\", use: \"Graph から JS 再生成\" },\n  ],\n  edit_append_only: [\n    { cmd: \"apply <graph.json> <patch.js> <moduleId>\",   use: \"ファイル単位 patch\" },\n    { cmd: \"apply-block <graph.json> <blockId> <patch>\", use: \"1 Block 単位 patch(- で stdin)\" },\n    { cmd: \"virtual-apply <graph.json> <rootId> <patch>\", use: \"仮想重厚関数の逆配分(- で stdin)\" },\n    { cmd: \"heavy-apply <graph.json> <rootId> <patch|-> [--depth=N] [--out=after.txt]\", use: \"virtual-apply 後に同じ scope を再展開\" },\n  ],\n  virtualHeavy: [\n    { cmd: \"heavy <file|graph.json> <root-id> [--depth=N]\", use: \"root + 依存を 1 content に展開して stdout\" },\n  ],\n  verify: [\n    { cmd: \"e2e\", use: \"テスト実行(npm test と同じ)\" },\n  ],\n};\n\nexport const VirtualHeavy = {\n  problem: {\n    description: \"LLM は全文脈集約された方が間違えない(重厚関数原則)。ただし Block 分割は履歴・検索・refs に必要。普通は二者択一。\",\n    layers: {\n      物理層: \"graph.json 上の状態。細粒度 Block + versions + refs。最適化対象: 管理 / 履歴 / 影響分析\",\n      論理層: \"LLM に渡す content。root + forward 推移閉包を 1 つの巨大 content に展開。最適化対象: LLM の認知(全文脈集約)\",\n    },\n    insight: \"両者を往復させる機構が Virtual Heavy Function。展開だけでは半分。逆配分があって初めて閉じる。\",\n  },\n  workflow: [\n    \"1. save graph.json src/foo.js\",\n    \"2. resolve graph.json\",\n    \"3. heavy src/foo.js <rootId> --depth=3 > heavy.txt\",\n    \"4. heavy.txt を LLM に投げる(BLOCK ヘッダを残したまま content だけ編集して返してもらう)\",\n    \"5. virtual-apply graph.json <rootId> heavy.txt\",\n    \"6. 連続編集するときは heavy-apply graph.json <rootId> heavy.txt --depth=3 --out=heavy.after.txt\",\n    \"7. diff src/foo.js <rootId>\",\n    \"8. lint src/foo.js --summary\",\n  ],\n  expandedFormatRules: [\n    { line: \"// === Virtual Heavy Function ... ===\", role: \"全体ヘッダ\",                     editable: \"残す\" },\n    { line: \"// --- BLOCK: <id> (<type>) ---\",       role: \"境界ヘッダ。Apply の分割キー\",   editable: \"絶対に変えない・消さない・追加しない\" },\n    { line: \"// tags: ... / // refs: ...\",            role: \"参考表示(commit 時に除去)\",     editable: \"触っても無視される\" },\n    { line: \"<content>\",                              role: \"Block の本体\",                   editable: \"ここを編集する\" },\n    { line: \"// === end of virtual heavy ===\",        role: \"終端マーカー\",                   editable: \"残す\" },\n  ],\n  applyBehaviors: [\n    \"スコープ内 + content 変化あり → 新 version を append(refs/tags は head 継承)\",\n    \"スコープ内 + content 同じ → 何もしない(version 履歴を汚さない)\",\n    \"スコープ外 id → 静かに skip(エラー出さず、log だけ)\",\n  ],\n  updateActions: [\n    { action: \"updated\",              meaning: \"既存 Block に新 version が append された\",      verdict: \"期待通り\" },\n    { action: \"created\",              meaning: \"Block が無かったので新規作成された\",            verdict: \"本来あり得ない(virtualHeavy は既存 Block を集めるため)。発生したら設計バグ\" },\n    { action: \"unchanged\",            meaning: \"content が head と同一だったので何もしなかった\", verdict: \"履歴を汚さない正しい挙動\" },\n    { action: \"skipped-out-of-scope\", meaning: \"入力に virtualHeavy 集合に無い id のヘッダがあった\", verdict: \"要確認。LLM がヘッダを勝手に追加 / 改変した可能性\" },\n  ],\n  failureModes: [\n    { id: 1, mistake: \"LLM が BLOCK ヘッダを書き換え/翻訳した\",                       result: \"その segment が skipped-out-of-scope で消える\",   fix: \"プロンプトに「ヘッダ行は絶対変更しない」を明記\" },\n    { id: 2, mistake: \"LLM が新規 BLOCK ヘッダを追加して関数を生やした\",              result: \"skipped-out-of-scope で消える(既存セットに無い)\",  fix: \"別途 apply-block で新規追加、または apply で patch.js として渡す\" },\n    { id: 3, mistake: \"expand と apply で --depth が違う\",                              result: \"スコープ集合がズレる、一部 segment が skip\",       fix: \"同じ depth・同じ kind を必ず使う(opts を変数に切り出して両方に渡す)\" },\n    { id: 4, mistake: \"apply 後に元の root を消した / id を改名した\",                  result: \"次回 expand で全く違う集合が出る\",                   fix: \"rename は rollback + 新 id 作成 → 旧 id 非推奨化、で段階的に\" },\n    { id: 5, mistake: \"content の { } が崩れた\",                                         result: \"commit 自体は通るが lint の brace-mismatch が出る\", fix: \"lint --only=brace で即検出、再 expand → 修正 → re-apply\" },\n    { id: 6, mistake: \"refs/tags 行を本気で書き換えた\",                                  result: \"無視される(commit 時に head から継承)\",            fix: \"refs/tags を変えたいなら apply-block で smart 再計算 / 手動 commit\" },\n  ],\n  safetyNet: \"Apply は append-only なので何度やり直しても履歴は壊れない。失敗を恐れずに往復を回す。万一の時は b.rollback(prevIndex) で過去 version を新 version として復元。\",\n};\n\nexport const ProgrammaticApi = {\n  imports: [\n    \"Block, Graph\",\n    \"parseJS, parseMD, loadProject, checkBraces\",\n    \"saveGraph, loadGraph, buildAndSave\",\n    \"applyPatch, applyToBlock, applyBlockSmart, resolveImports\",\n    \"virtualHeavy, expandVirtualHeavy, virtualApply\",\n    \"exportModule, exportToFile, exportMermaid\",\n    \"inferTags, graphStats, blockContext, formatContextForLLM\",\n    \"constraintBlock, evalConstraint\",\n    \"observationBlock\",\n  ],\n  blockOps: [\n    \"b.versions.length / b.content / b.head() / b.at(timestamp)\",\n    \"b.diff(0, 1) / b.blameRef('x')\",\n    \"b.rollback(0)  // 過去状態を新しい past として commit、履歴は保持\",\n    \"b.verify()      // hash チェーン検証\",\n  ],\n  graphOps: [\n    \"g.forward(id, kind?) / g.backward(id, kind?) / g.impact(id, kind?)\",\n    \"g.byType('function') / g.byTag('export')\",\n    \"g.search('TODO', { type, tag, includeOldVersions })\",\n    \"g.at(timestamp) / g.lint({orphan:false}) / g.verify()\",\n  ],\n};\n\nexport const LintKinds = [\n  { kind: 'broken-ref',     detects: \"target が存在しない ref(import の外部モジュールは除外)\",  offFlag: \"{ broken: false }\" },\n  { kind: 'orphan',         detects: \"誰からも参照されない非 module Block\",                         offFlag: \"{ orphan: false }\" },\n  { kind: 'circular',       detects: \"forward の循環\",                                                offFlag: \"{ circular: false }\" },\n  { kind: 'brace-mismatch', detects: \"content の { } が不揃い(文字列・regex は skip)\",           offFlag: \"{ brace: false }\" },\n  { kind: 'calls-leak',     detects: \"他関数呼び出しの形跡があるが calls ref が無い\",                offFlag: \"{ calls: false }\" },\n  { kind: 'tag-mismatch',   detects: \"type と tags が不整合\",                                         offFlag: \"{ tags: false }\" },\n  { kind: 'empty-block',    detects: \"content / refs / children がすべて空\",                          offFlag: \"{ empty: false }\" },\n  { kind: 'hash-broken',    detects: \"version の prevHash チェーン破損\",                              offFlag: \"{ hash: false }\" },\n];\n\nexport const ParseJSRules = [\n  { syntax: \"ファイル全体\",                                              produces: \"module Block。refs に import と contains\" },\n  { syntax: \"function foo(){} / export function / async function\",      produces: \"function Block(tags: function, async?, export?, generator?)\" },\n  { syntax: \"const foo = () => {}\",                                       produces: \"function Block(tags: function, arrow)\" },\n  { syntax: \"class Foo {} / export class\",                                produces: \"class Block(tags: class, export?, default?)\" },\n  { syntax: \"import ... from 'x'\",                                         produces: \"module の refs に { kind: 'import', target: 'x' }\" },\n  { syntax: \"同モジュール内の関数呼び出し\",                              produces: \"calls ref(名前ベース、後段で再 commit)\" },\n  { syntax: \"// [ai_s_emblem:#a#b Name] / // @tags: a, b\",                 produces: \"tags に取込(v1 互換、20 行遡及)\" },\n];\n\n// SHADOW stub for AGENTS.md / GEMINI.md (CLI auto-load convention — Claude Code / Gemini CLI / Codex\n// 各 agent が起動時に決まったファイル名を読みに行く慣習に応じるため、内容は同一のままファイル名だけ違える)。\nconst SHADOW_STUB = [\n  \"First read: README.md (universal entry for humans and AI).\",\n  \"\",\n  \"AI structured data — import or show-head from this repo's REAL:\",\n  \"  node runYume.js AGENTS.aiDoc.yume.js show head --raw\",\n  \"  import { Forbidden, BlindSpots, BlockOps, GraphOps, RealVariable,\",\n  \"           AutoUseProtocol, OperatingModel, VirtualHeavy, ... }\",\n  \"         from './AGENTS.aiDoc.yume.js'\",\n  \"\",\n  \"Axioms: BIBLE.md or bible.aiDoc.yume.js.\",\n  \"\",\n].join(\"\\n\");\n\nexport const exportMarkdown = () => SHADOW_STUB;\nexport const exportGeminiMarkdown = () => SHADOW_STUB;\n",
+      "ts": 1780013726678,
+      "refs": [],
+      "tags": [],
+      "applyId": "apply-2026-05-29-f0bfef88",
+      "hash": "bbd5b783b71040aaed91d7e43eced12faa682dd0bb114f4a0bc10c4ded6ea601",
+      "prevHash": "8a60081b7ca71469446f87e7b832bc75841a5116c180180ef2e7511a11960be4"
     }
   ],
   "notes": {
@@ -69,52 +114,656 @@ export const __block = {
         "ts": 1779866926157,
         "text": "Keep samples outside yume-develop"
       }
+    ],
+    "apply:apply-2026-05-28-fdf04348": [
+      {
+        "id": "n-e941e869-f013-42e9-8b59-b0bd9dd86784",
+        "author": "human",
+        "ts": 1780011942878,
+        "text": "consolidate single canonical AI entrypoint; import Forbidden/Pitfalls/SniperReading/Eyes/REAL_* from onboarding REAL"
+      }
+    ],
+    "apply:apply-2026-05-28-ab45a89d": [
+      {
+        "id": "n-242e1837-205d-49ac-a95f-a5131a65741c",
+        "author": "human",
+        "ts": 1780012632358,
+        "text": "merge onboarding.aiDoc + manual.aiDoc into AGENTS (single REAL surface); drop onboarding/manual REALs and 4 SHADOW md (start/CONTEXT_FILES/AI_ONBOARDING/MANUAL) to /PJs/trash/; AGENTS.md and GEMINI.md become plain-text SHADOW stubs pointing to this file"
+      }
+    ],
+    "apply:apply-2026-05-29-3b13cb32": [
+      {
+        "id": "n-3a32c069-51a4-4b46-9532-1db7197f28ca",
+        "author": "human",
+        "ts": 1780013265041,
+        "text": "shift canonical AI entry to README.md (universal first-read); AGENTS becomes pure structured-data import surface; merge runAndReadMe (AutoUseProtocol/OperatingModel/UsageCatalog/etc.); rename Workflow/CliCommands/QuickStart → LegacyAiDesk* (value-embedded tag); drop VERSION/DATE/section banners/FileMap-priority-split; SHADOW_STUB redirects to README; runAndReadMe REAL → /PJs/trash/"
+      }
+    ],
+    "apply:apply-2026-05-29-f0bfef88": [
+      {
+        "id": "n-cbe8c57d-ba28-40df-b483-484bdc97e69d",
+        "author": "human",
+        "ts": 1780013726695,
+        "text": "slim header TOC comment (drop 22-line export catalog); fix StderrHintPolicy (drop obsolete ai-desk reference); fix RealShadowSummary self-reference; delete LegacyAiDeskQuickStart (was dup of CommonCommands disguised); SHADOW_STUB adds CLI convention note"
+      }
     ]
   }
 };
 
 // === HEAD ===
-// AGENTS.aiDoc.yume.js - REAL source for AGENTS.md
-// This file is the REAL (Axiom A3). AGENTS.md is a SHADOW.
+// AGENTS.aiDoc.yume.js — yume-develop の AI structured-data import 面。
+// universal first-read は README.md。AGENTS.md / GEMINI.md は CLI auto-load 慣習用の stub。
 
-export const Instructions = {
-  title: "AI Agent Instructions for yume-develop",
-  intro: "This repository is the product-track workspace for the portable `.yume.js` file format and its co-located runtimes. It is intentionally self-contained: do not assume a sibling `yume-files` checkout is available at runtime.",
-  startHere: [
-    "Read `runAndReadMe.aiDoc.yume.js` first. It is the operational runbook for AI agents.",
-    "Use `README.md` for the human-facing overview and examples.",
-    "Use `BLOCKFILE.aiDoc.yume.js` only when exact format or runtime semantics are needed.",
-    "Use `examples/hello.fn.yume.js` as the smallest valid `.yume.js` sample."
+export const FileMap = {
+  files: [
+    'README.md — universal first-read (humans + AI bootstrap)',
+    'AGENTS.aiDoc.yume.js (this) — AI structured data import surface',
+    'bible.aiDoc.yume.js / BIBLE.md — axioms A0–A14',
+    'core.module.yume.js — Block / Graph / parseJS implementation',
+    'cli.module.yume.js — CLI implementation',
+    'BLOCKFILE.aiDoc.yume.js — format spec (use only when exact semantics needed)',
+    'runtime.spec.yume.js — runtime spec',
+    'e2e.js — E2E tests',
+    'coverage.verify.yume.js — coverage harness',
+    '/Users/AoyamaRito/PJs/sample/ — external experiments (do not read during core work)',
+  ],
+  routing: [
+    { trigger: '3D / WebGL / Matrix', file: '3dplus/, 3d-prefab/' },
+    { trigger: 'UI / canvas 検証',     file: 'eyes/ (ai-eyes 観測ハーネス)' },
+    { trigger: 'CLI 拡張',              file: 'cli.module.yume.js + e2e.js' },
+  ],
+};
+
+export const StderrHintPolicy =
+  "runYume.js は CLI 実行時、コードの状態を観察して stderr に 1 度だけ hint を流す" +
+  " (例: WebGL/Matrix4 検出 → 3dplus/ への routing)。状態は cwd の `.yume-state.json` に記録、" +
+  "二度目以降は静か。hint が出たら指示先のドキュメントを実際に読む。";
+
+export const RepositoryBoundary = {
+  role: "yume-develop は yume-files の product/runtime workspace (self-contained)。",
+  externalSampleRoot: "/Users/AoyamaRito/PJs/sample/",
+  rules: [
+    "サンプルアプリ / 実験を yume-develop 内に作らない。/Users/AoyamaRito/PJs/sample/<project>/ などへ。",
+    "yume-develop の test は core runtime / CLI / docs generation / 3D prefab / eyes に限定。",
+    "Markdown は SHADOW、対応する .aiDoc.yume.js (REAL) を編集して generate する。",
+  ],
+};
+
+export const RealShadowSummary =
+  "REAL = .aiDoc.yume.js (編集する場所)、SHADOW = .md (自動生成、直接編集禁止)。" +
+  "実行 JS 内では主要状態を `REAL_*` 接頭語で明示、derived / cache / loop / DOM / 一時値には付けない" +
+  " (詳細: RealVariable export in this file / BIBLE.md A3)。";
+
+export const CommonCommands = [
+  { name: 'HEAD だけ読む', cmd: 'node runYume.js <file>.yume.js show head --raw' },
+  { name: 'touched yume file を検証', cmd: 'node runYume.js <file>.yume.js validate' },
+  { name: 'HEAD 変更を履歴化', cmd: 'node runYume.js <file>.yume.js commit --note "why"' },
+  { name: 'repository graph check', cmd: 'npm run refs-check' },
+  { name: 'SHADOW md 再生成', cmd: 'npm run docs:generate' },
+  { name: 'SHADOW md 整合確認', cmd: 'npm run docs:check' },
+  { name: 'full local suite', cmd: 'npm test' },
+  { name: 'full verification', cmd: 'npm run verify' },
+];
+
+export const DoneCriteria = [
+  "Changed .yume.js files validate.",
+  "npm run docs:check passes when generated docs are touched.",
+  "npm run refs-check has no new unresolved path or duplicate-id errors.",
+  "npm test passes when runtime behavior or repository structure changes.",
+];
+
+export const ReportFormat = "変更内容、検証結果、残リスクを短く報告する。";
+
+export const Forbidden = [
+  { id: 1, rule: "TypeScript を導入しない",                              why: "型情報による隠匿排除",                     axiom_ref: 'A0' },
+  { id: 2, rule: "npm install で外部依存を入れない",                      why: "Eternal Compatibility",                     axiom_ref: 'Bible§3' },
+  { id: 3, rule: "build / transpile step を作らない",                     why: "ソース = 実行ファイル",                     axiom_ref: 'Bible§3' },
+  { id: 4, rule: "フレームワーク(React 等)を入れない",                    why: "暗黙の規約は隠匿の温床",                   axiom_ref: 'A0' },
+  { id: 5, rule: "コメントマーカー(// [ai_s_emblem:...])を新規に書かない", why: "マーカー廃止、tags は // @tags: で書く",  axiom_ref: 'Bible§4' },
+  { id: 6, rule: "Block.versions を直接書き換えない、commit() 経由のみ",   why: "REAL の append-only 性",                    axiom_ref: 'A4, A6' },
+  { id: 7, rule: "Block.content / refs / tags を変数化しない",            why: "SHADOW 規約",                               axiom_ref: 'A3, A6' },
+  { id: 8, rule: "「人間の見やすさ」で判断しない",                         why: "LLM 視点の情報密度で判断",                 axiom_ref: 'A0, A7' },
+];
+
+export const BlindSpots = [
+  { id: 1, pitfall: "「とりあえず全体を読む」誘惑 (Sniper Reading 違反)",
+    symptom: "依存関係やコード把握のために .yume.js ファイルを丸ごと read_file してしまい、巨大な履歴 JSON データ (__block.versions) でコンテキストを使い切る、あるいは最新の実装を見失う。",
+    cure: "「初手でファイル全体を絶対に読むな」。必ず `node runYume.js <file> show head --raw` を使うか、grep で 'HEAD ===' の開始行を特定して HEAD 部のみを限定して読む。",
+    axiom_ref: "A1, Physics.Spotlight" },
+  { id: 2, pitfall: "REAL_* プレフィックスの乱用・誤用 (A3 REAL/SHADOW 違反)",
+    symptom: "すべての状態変数に REAL_ を付けたり、ループ変数、DOM 要素、一時変数、ただの定数にまで REAL_ を付けてしまい、AST bootstrap 監視や状態バグ追跡の対象を絞り込めなくなる。",
+    cure: "REAL_* は「主要な状態」「Reducer等で更新され、描画・テスト・観測(eyes)の入力となる中核的な状態」にのみ限定して付与する。",
+    axiom_ref: "A3" },
+  { id: 3, pitfall: "型情報の暗黙の依存 (LLMTyping / A11 違反)",
+    symptom: "変数名（worldX, screenY）やコメント、型定義（TypeScriptなど）だけで型を表現し、REAL値そのものは裸の数値やオブジェクトで持つ。LLM が context window の外側へ移動した瞬間、その変数名の意味を忘れハルシネーションを起こす。",
+    cure: "値そのものにドメインタグを埋め込んだ文字列として持つ（例：\"world:10,0,-5\" / \"usd:19.99\"）。値が self-describing であれば、AIが context を失っても絶対に推論を間違えない。",
+    axiom_ref: "Physics.LLMTyping, A11" },
+  { id: 4, pitfall: "仕様（SPEC）を挟まない「いきなり実装」 (A8 Spec-First Versioning 違反)",
+    symptom: "仕様変更や新機能実装の際、仕様（SPEC）のみを定義したバージョン（コメント ＋ #SPEC# タグのみのバージョン）を挟むことなく、最初から実装コード（impl）を commit し、仕様の変遷履歴を失う。",
+    cure: "コードを書き換える前に、必ず「新仕様の定義（仕様コメントのみの spec version）」を Block.commit してから、その次のバージョンで実装コードをコミットする。",
+    axiom_ref: "A8" },
+  { id: 5, pitfall: "純粋論理(Pure logic)と Adapter の混同 (A9 Crystallize 違反)",
+    symptom: "Block の中に、動的な dispatch、eval、Proxy、prototype 拡張、またはプラットフォーム特有の I/O や DOM 操作、タイマーなどの副作用を書いてしまう。Go にコンパイル（crystallize）できず、AIにとっても推論しにくい。",
+    cure: "Block 内には「Crystallize可能な Pure logic」のみを書く。I/O や DOM操作、動的ディスパッチは Block の外にある Adapter へ完全に分離し、Block 内部を極限までピュアに保つ。",
+    axiom_ref: "A9" },
+  { id: 6, pitfall: "3D 座標を screen に射影して DOM 要素を追従させる (A10 Single Coord 違反)",
+    symptom: "3Dオブジェクトの上に浮かぶツールチップやラベルのために、world 座標を screen 座標に射影し、DOM の位置（CSS transformなど）をリアルタイムに同期しようとして座標統一性を崩す。",
+    cure: "world 座標を読んで DOM の位置をリアルタイムに同期させることは禁止。DOM は画面端のサイドバーやパネルなどの、3D空間と構造的に完全に分離されたものに限り、a11y/IME 目的でのみ許可する。",
+    axiom_ref: "A10" },
+  { id: 7, pitfall: "ボトムアップでのテスト作成 (A14 Top-Down Verification 違反)",
+    symptom: "実装後に、場上がり的に個別のユニットテストをたくさん書き、全体の E2E シナリオや意図の表明が後回しになる。",
+    cure: "テストは必ず「Top-Down E2E-First」で開始する。まずシステム全体の意図を示す E2E シナリオ（e2e.js への追加）を書き、その実行から得られたカバレッジの「隙間」を埋めるように自律的にユニットテストを生成する。",
+    axiom_ref: "A14" },
+];
+
+export const SniperReading = {
+  rule: ".yume.js ファイルを探索する際、初手でファイル全体を read_file してはならない。",
+  why: "履歴ブロック(__block.versions)の巨大なノイズにより、AI の Spotlight(300行)が枯渇し、現在の実装(HEAD)を見失うため。",
+  methods: [
+    { name: "CLI show head --raw", command: "node runYume.js <file>.yume.js show head --raw", benefit: "メタデータを含まないピュアな HEAD ソースのみ。最も推奨。" },
+    { name: "Grep HEAD line",       command: "grep -n 'HEAD ===' <file>.yume.js",              benefit: "HEAD 領域の開始行を特定し、read_file(offset) で履歴をスキップして読む。" },
+  ],
+};
+
+export const EyesOverServer = {
+  rule: "UI や 3D ロジックの修正時、人間による目視確認(サーバー起動)を待たず、ai-eyes で自律検証せよ。",
+  why: "人間がブラウザを開くコストは AI にとってのボトルネック。描画命令(draw_ops)を構造的に比較することで、ハルシネーションを物理的に排除できる。",
+  workflow: [
+    "1. 修正後に `node eyes.observation.yume.js <target>` を実行。",
+    "2. 出力された draw_ops を前回の正常値(snapshot Block)と diff。",
+    "3. 座標や色が意図通りであれば、目視なしでパスと判断。",
+    "4. 複雑な挙動(アニメ等)は `node eyes.debugger.yume.js <demo> <scenario>` で HTML 動画ログを生成し、コマ送りで最終確認。",
+  ],
+};
+
+export const RealVariable = {
+  rule: "`REAL_*` は、AI / Kantoku が監視すべき実行 JS の「正の状態」にだけ付ける。",
+  purpose: "実行 JS 内で AI / Kantoku が変化を追跡すべき「正の状態」を示す命名規約。型や単位の表現ではなく、観測・検証・prompt 生成の起点。",
+  why: "REAL_* があると、初期化時 AST bootstrap / 実行 trace / eyes_check / prompt 生成の対象を狭められる。全変数を監視せず、状態バグの根だけを追うための接頭語。AST が返す性質名は `isWatched`。`check` は検査実行の名前に限定する。",
+  useFor: [
+    "アプリの主要 state",
+    "dispatch / reducer 後に更新される state",
+    "render / eyes / test の入力になる state",
+    "失われると挙動判断が壊れる state",
+  ],
+  avoidFor: [
+    "一時値",
+    "DOM 要素",
+    "derived view / cache",
+    "単なる定数",
+    "loop counter",
   ],
   rules: [
-    { name: "Dependency-Free", detail: "Keep the runtime dependency-free. Do not add npm dependencies unless the project deliberately changes that constraint." },
-    { name: "Sniper Reading", detail: "`.yume.js` files are huge due to history. Do not `read_file` blindly. Use `node runYume.js <file>.yume.js show head --raw` to get clean HEAD source." },
-    { name: "Eyes over Server", detail: "Use `ai-eyes` for structural verification of UI/3D logic instead of waiting for human visual confirmation." },
-    { name: "REAL / SHADOW (A3)", detail: "Markdown files (*.md) are SHADOWs. Never edit them directly. Edit the corresponding *.aiDoc.yume.js (REAL) and export." },
-    { name: "No In-Repo Samples", detail: "Do not create app demos, sample projects, or throwaway experiments inside this repository. Put them outside `yume-develop`, for example under `/Users/AoyamaRito/PJs/sample/`." },
-    { name: "Strict Validation", detail: "Run `validate` for touched `.yume.js` files and `npm run refs-check` after any structural change." }
+    "AST で `REAL_*` を検出した結果は `isWatched: true` と表現する",
+    "`check` は検査実行の動詞なので、監視対象かどうかの boolean 名には使わない",
+    "`REAL_*` は初期化時に記録可能である",
+    "`REAL_*` の再代入は trace 対象にできる",
+    "`REAL_*` は JSON serializable を推奨する",
+    "event / dispatch 後に `REAL_*` が変化しない場合、Kantoku は state_frozen 系の警告を出せる",
+    "`REAL_*` が変わった後、古い eyes / test / verification は stale とみなす",
   ],
-  commonCommands: [
-    "npm test",
-    "node runYume.js runAndReadMe.aiDoc.yume.js show head --raw",
-    "npm run refs-check",
-    "node runYume.js <file>.yume.js commit --note \"why this change exists\""
-  ]
+  example: "let REAL_state = initialState();\nfor (const evt of events) {\n  REAL_state = dispatch(REAL_state, evt);\n  render(ctx, REAL_state);\n}",
 };
 
-export const exportMarkdown = () => {
-  let md = `# ${Instructions.title}\n\n${Instructions.intro}\n\n`;
-  
-  md += `## Start Here\n\n`;
-  md += Instructions.startHere.map(s => `1. ${s}`).join('\n') + '\n\n';
-  
-  md += `## Project Rules\n\n`;
-  md += Instructions.rules.map(r => `- **${r.name}**: ${r.detail}`).join('\n') + '\n\n';
-  
-  md += `## Common Commands\n\n\`\`\`sh\n`;
-  md += Instructions.commonCommands.join('\n') + '\n\`\`\`\n';
-  
-  return md;
+export const BlockOps = {
+  create: {
+    rule: "新規 Block は `new Block({id, type, meta})` してから `commit()` で初回 version を append。",
+    naming: "id は `<moduleId>:<prefix>:<name>` 規約。prefix は 'fn' か 'class'。",
+    types: ['function', 'class', 'module', 'constraint', 'observation', 'twin'],
+  },
+  update: {
+    rule: "必ず `commit()` で新 version を append。古い version は消さない・触らない。",
+    pattern: "head() の値をベースに、変更したい部分だけ差し替えて新 version を作る。",
+  },
+  rollback: {
+    rule: "過去に戻すときは `b.rollback(versionIndex)` を使う。履歴を消さず、新 version として commit。",
+    禁忌: "b.versions = b.versions.slice(0, n) のような直接削除は禁忌。",
+  },
 };
+
+export const ParseRules = {
+  function:    "function 宣言 → Block(type:'function')",
+  arrow:       "const x = () => {} → Block(type:'function', tags:['arrow'])",
+  klass:       "class 宣言 → Block(type:'class')",
+  imports:     "import 文 → module Block の refs に { kind:'import', target } で追加",
+  calls:       "同モジュール内の関数呼び出し → refs に { kind:'calls', target } で追加",
+  tagComments: "直前コメントの // @tags: a, b → tags に取り込み(20 行遡及)",
+  v1emblems:   "// [ai_s_emblem:#a#b Name] は互換読み専用、新規記述禁止",
+  limitations: [
+    "文字列リテラル中の function キーワードを誤検出する可能性",
+    "ネスト関数の捕捉が浅い場合がある",
+    "対応が必要なら parseJS 内の正規表現を拡張(将来的に AST 置換)",
+  ],
+};
+
+export const GraphOps = [
+  { intent: "この関数を変えたら何に影響する?",   method: "g.impact(id)" },
+  { intent: "この関数を呼んでるのは?",          method: "g.backward(id)" },
+  { intent: "この関数が呼ぶのは?",              method: "g.forward(id)" },
+  { intent: "特定の文字列を含む Block は?",      method: "g.search('TODO')" },
+  { intent: "export されてる Block は?",        method: "g.byTag('export')" },
+  { intent: "class だけ取りたい",               method: "g.byType('class')" },
+  { intent: "過去の状態のグラフが見たい",        method: "g.at(timestamp)" },
+  { intent: "全 Block の整合性チェック",         method: "g.verify()" },
+];
+
+export const Persistence = {
+  default_filename: "graph.json",
+  derived_filename: "*.local.json",
+  rule: [
+    "saveGraph(graph, path) で JSON 1 ファイルに保存",
+    "graph.json と *.local.json は .gitignore 済み",
+    "共有が必要な永続データは別名 + レビュー後 commit",
+  ],
+};
+
+export const TestingRules = {
+  rule: "テストは必ず『Top-Down E2E-First』で書くこと。ボトムアップのTDDは禁止。",
+  workflow: [
+    "1. 全体のシナリオを定義するE2Eテストを先に書く（意図の宣言）。",
+    "2. E2Eを通すための実装を行う。",
+    "3. E2E実行時のコードカバレッジを計測し、未通過のBlockや分岐（隙間）を特定する。",
+    "4. その隙間を埋めるための単体テストを自律的に追加し、網羅率を上げる。",
+  ],
+};
+
+export const CliExtension = {
+  rule: "CLI の新コマンドは cli.module.yume.js の runCommand() に case を追加。",
+  steps: [
+    "1. case 'mycommand': を実装",
+    "2. デフォルトケース(commands list)に追加",
+    "3. e2e の CLI group にテスト追加",
+    "4. BIBLE.md Rituals に追加",
+  ],
+};
+
+export const HeavyApplyRules = {
+  rule: "`heavy-apply` は `virtual-apply` 後に同じ root / depth で再展開する。AI が編集後の heavy view を即再読するための編集ループ。",
+  command: "node runYume.js <file>.yume.js heavy-apply <root-id> <patch> [--depth=N] [--out=after.txt]",
+  stdout: "--out 無しなら再展開 heavy content を stdout。ログは stderr。",
+  warning: "expand 時と heavy-apply 時の --depth を必ず揃える。",
+};
+
+export const V1Relation = {
+  rules: [
+    "v1 の Bible(AI_NATIVE_MASTER_BIBLE.md)は v1 のまま、触らない",
+    "v1 emblem マーカーは v2 でも読める(parseJS が tags に取り込む)が、新規記述禁止",
+    "v1 と v2 は併存可能。v1 = 固定された過去、v2 = canonical",
+    "v1 機能で v2 未移植のもの(focus/apply/check/coverage 等)は段階的に Block 化",
+  ],
+};
+
+export const ConstraintRules = {
+  api: "constraintBlock({id, axes, values, derive}) → evalConstraint(cb, filter?)",
+  derive_must_be: "純粋関数(I/O・乱数・時刻に触れない、Bible §7 Twin 規約と同じ)",
+  filter: "浅い等価(merged[k] === v)。範囲条件は derive で派生フラグを作る",
+  contradiction: "filter 結果が空集合のとき _contradiction: true で返る",
+};
+
+export const ObservationRules = {
+  api: "observationBlock({id, observedId, snapshot, tags})",
+  id_convention: "タイムスタンプ + 連番(時系列の自然な並び)",
+  snapshot: "構造化データ(画像バイナリは別途保存して URL で参照)",
+  refs: "{ kind: 'observes', target: observedId } が自動付与",
+};
+
+export const CommitConventions = {
+  format: "<type>: <summary>",
+  types: {
+    init:     "初回コミット",
+    feat:     "新機能",
+    fix:      "バグ修正",
+    docs:     "ドキュメント",
+    test:     "テスト追加・修正",
+    clearify: "振る舞いを変えない構造調整(AI 向け最適化)",
+    chore:    "ビルド・ツール周り",
+  },
+  example: "feat(parse): support generator function syntax",
+};
+
+export const Compass = [
+  { 迷い: "Block の type を増やすべきか",   判断軸: "既存 type で表現できないか先に検討。新 type は最後の手段。" },
+  { 迷い: "関数を分割すべきか",             判断軸: "「LLM が一目で全文脈を把握できるか」で決める。基本はインライン化(A1)。" },
+  { 迷い: "命名で迷ったとき",               判断軸: "動詞 + 目的語で書く。略語は使わない(LLM の学習に負ける)。" },
+  { 迷い: "ドキュメントを書くべきか",        判断軸: "LLM が読む前提。冗長を恐れない。具体例を必ず添える。" },
+  { 迷い: "新 .md を作りたくなった",         判断軸: "AI 用なら .md 禁止、.aiDoc.yume.js (REAL) を作る。人間用は README のみ。" },
+];
+
+// 旧 runAndReadMe.aiDoc.yume.js から統合した protocol 系 export。
+
+export const AutoUseProtocol = {
+  understandingChecklist: [
+    "A .yume.js file is a JavaScript module carrying current content, append-only history, refs, tags, notes, apply groups, and a pinned runtime.",
+    "filename.domain.yume.js is semantic; the domain tells an AI how to treat the file.",
+    "Normal yume edits happen in HEAD, then runtime commit appends a new version.",
+    "__block.versions is not hand-edited during ordinary work.",
+    "notes are mutable commentary outside the version hash.",
+    "applyId ties multi-file AI operations together.",
+    "refs and tags form the retrieval and impact graph.",
+    "v001 runtime stays zero-dependency and avoids AST package dependencies.",
+  ],
+  futureTaskLoop: [
+    "Classify the user request: read, explain, create yume file, edit yume file, edit docs/site, inspect graph, or verify release readiness.",
+    "Gather the narrowest useful context first; prefer refs, tags, heavy, impact, notes-search, and apply-search over broad scanning.",
+    "If creating a yume file, choose a clear filename.domain.yume.js name and include refs/tags that future AI runs can use.",
+    "If editing a yume file, edit HEAD only and commit through the runtime.",
+    "If changing shared semantics, run impact before editing and refs-check after editing.",
+    "Finish with the verification level that matches risk: validate for touched yume files, npm run refs-check for graph changes, npm test for runtime or repository invariant changes.",
+  ],
+  responseContract: [
+    "Be concise and operational.",
+    "Do not dump the whole spec back to the user unless asked.",
+    "Report changed files, commands run, and whether validation passed.",
+    "Call out unresolved assumptions or residual risk.",
+  ],
+};
+
+export const OperatingModel = {
+  format: "filename.domain.yume.js",
+  domainMeaning: "The domain segment tells an AI how to treat the file: fn, module, aiDoc, spec, workflow, template, world, style, character, and similar roles.",
+  currentContent: "The HEAD region is the live JavaScript/module content.",
+  history: "__block.versions is append-only history for the HEAD content.",
+  mutableCommentary: "__block.notes stores intent and review notes outside the version hash.",
+  crossFileWork: "applyId ties multiple file changes from one AI operation together.",
+  graph: "refs and tags extracted from HEAD make related-context and impact scans possible.",
+};
+
+export const YumeFileEditing = [
+  "Do not hand-edit __block.versions unless repairing a broken file format deliberately.",
+  "Normal edits happen in HEAD; runtime commit appends the new version with hash, refs, tags, timestamp, and optional applyId.",
+  "Use note-add or commit --note for intent that should remain mutable.",
+  "Use rollback to append a restored version instead of deleting history.",
+  "Keep BOOT small and let it call the pinned runtime version declared in __block.runtime.version.",
+];
+
+export const ContextEconomy = [
+  "Start from README.md and AGENTS.aiDoc.yume.js instead of reading the entire repository.",
+  "Escalate to BLOCKFILE.aiDoc.yume.js only for exact schema/runtime semantics.",
+  "Use refs, tags, heavy, impact, notes-search, and apply-search as retrieval tools before broad scanning.",
+  "Prefer one well-scoped .yume.js file over scattered prompts when capturing workflows, templates, specs, worlds, characters, or writing styles.",
+  "A compact yume file can reduce prompt tokens and preserve more reasoning budget for the actual task.",
+];
+
+export const DesignBoundaries = [
+  "Do not add AST parser or package dependencies to runtime v001 unless the project deliberately changes that constraint.",
+  "Use conservative source scanning because the runtime must stay portable and dependency-free.",
+  "Treat warnings from refs-check as useful navigation signals, not always hard failures.",
+  "The runtime handle file is infrastructure; domain files are the portable knowledge/work units.",
+];
+
+export const UsageCatalog = [
+  { use: "AI onboarding and project runbooks",
+    domains: ["aiDoc", "runbook", "memory", "rules"],
+    examples: ["project.aiDoc.yume.js", "team.rules.yume.js"],
+    hints: [
+      "Use this when the user wants future AI sessions to understand a repository, project, or operating style.",
+      "Put reading order, done criteria, validation commands, and response contracts in HEAD.",
+    ] },
+  { use: "Specifications, contracts, and design decisions",
+    domains: ["spec", "contract", "decision", "rubric"],
+    examples: ["feature.spec.yume.js", "api.contract.yume.js", "decision.log.yume.js"],
+    hints: [
+      "Use this for requirements, constraints, evaluation criteria, and architecture decisions.",
+      "Add refs from implementation, tests, templates, or docs back to the spec.",
+      "Run impact before changing shared semantics.",
+    ] },
+  { use: "Repeatable workflows and checklists",
+    domains: ["workflow", "checklist", "process"],
+    examples: ["review.workflow.yume.js", "release.workflow.yume.js", "qa.checklist.yume.js"],
+    hints: [
+      "Use this for procedures an AI should execute repeatedly.",
+      "Include prerequisites, steps, exit criteria, and failure handling.",
+    ] },
+  { use: "Templates and reusable output formats",
+    domains: ["template", "prompt", "format"],
+    examples: ["doc.template.yume.js", "pr.template.yume.js", "prompt.template.yume.js"],
+    hints: [
+      "Use this when the same shape of document, prompt, or output will be generated repeatedly.",
+      "Keep private content out of public templates; use placeholders for names, dates, amounts, client details.",
+    ] },
+  { use: "Invoices, estimates, and business documents",
+    domains: ["invoice", "estimate", "billing", "statement", "receipt"],
+    examples: ["invoice.template.yume.js", "billing.rules.yume.js"],
+    hints: [
+      "Use this for document structure, calculation rules, payment terms, rendering workflow, and review checks.",
+      "Never publish real client names, addresses, invoice numbers, amounts, or account details as sample data.",
+    ] },
+  { use: "Pitch decks, proposals, and slide narratives",
+    domains: ["pitch", "deck", "slide", "story", "proposal"],
+    examples: ["pitch.story.yume.js", "deck.template.yume.js", "business-model.spec.yume.js"],
+    hints: [
+      "Use this for deck storyline, slide structure, design rules, business model logic, and revision history.",
+      "Keep confidential company, customer, finance, or strategy data in private files.",
+    ] },
+  { use: "Fiction writing and creative worlds",
+    domains: ["world", "character", "plot", "style", "draft"],
+    examples: ["novel.world.yume.js", "character.profile.yume.js", "voice.style.yume.js"],
+    hints: [
+      "Use this for world rules, character state, voice constraints, plot logic, and chapter drafts.",
+      "Refs should connect draft files to the world, characters, and style they depend on.",
+    ] },
+  { use: "Research, source tracking, and summaries",
+    domains: ["research", "source", "note", "summary"],
+    examples: ["research.note.yume.js", "source.index.yume.js", "meeting.note.yume.js"],
+    hints: [
+      "Use this to preserve source lists, assumptions, summaries, and evolving conclusions.",
+      "Put uncertain claims in notes or explicit fields so future AI runs can revisit them.",
+    ] },
+  { use: "Executable JavaScript with built-in local history",
+    domains: ["fn", "module", "adapter", "handle"],
+    examples: ["parser.fn.yume.js", "renderer.module.yume.js", "adapter.module.yume.js"],
+    hints: [
+      "Use this when the current content is executable JavaScript.",
+      "Keep runtime handles infrastructure-focused and avoid confusing them with portable domain files.",
+    ] },
+];
+
+export const PrivacyBoundaries = [
+  "When deriving public examples from private projects, include only generalized file roles and workflows.",
+  "Do not publish personal data, client data, invoice amounts, account details, private company strategy, or real generated documents.",
+  "Use placeholders in templates and keep private generated artifacts outside public examples.",
+  "If the user references local private projects, learn the pattern but write docs in generic terms.",
+];
+
+export const DecisionRules = [
+  "For a quick edit to one .yume.js file, inspect show head, edit only the HEAD region, then run commit.",
+  "For related context, prefer heavy over opening every file manually.",
+  "For change blast radius, run impact before editing a shared block.",
+  "For graph health, run npm run refs-check after changing @ref, import/export, dynamic import, tags, or block ids.",
+  "For pure documentation outside .yume.js, update normal Markdown/HTML directly and keep .yume.js refs clean.",
+  "For a new domain file, choose filename.domain.yume.js so future AIs can infer its role from the path.",
+];
+
+export const Glossary = {
+  Block:    "{ id, type, versions[], meta }。すべての構成要素の単位",
+  Version:  "{ content, refs, children, tags, timestamp, prevHash, hash }。append-only、これが REAL",
+  head:     "最新 Version。block.content 等の getter は head() から派生(SHADOW)",
+  Graph:    "Block の集合 + 双方向走査(forward / backward / impact)",
+  ref:      "{ kind, target }。kind は import / calls / contains / link / observes 等",
+  VirtualHeavy: "root + forward 推移閉包を 1 content に展開して LLM に渡し、戻りを各 Block に逆配分する機構",
+  REALVariable: "`REAL_*`。実行 JS 内で AI / Kantoku が監視すべき正の状態を示す変数名接頭語",
+};
+
+// QuickStart は CommonCommands と重複していたので削除。現行 CLI は CommonCommands を参照。
+
+export const LegacyAiDeskWorkflow = [
+  // legacy ai-desk v2 ワークフロー。値そのものに Legacy タグが埋め込まれているため、
+  // import する agent は誤って現行 workflow と誤認しない。現行は README.md / CommonCommands を参照。
+  { step: 1, name: "既存 JS を Graph 化して保存",
+    cmds: ["node runYume.js save graph.json src/foo.js src/bar.js", "node runYume.js resolve graph.json"],
+    note: "graph.json が永続のソース。以降の apply / virtual-apply はこれを書き換える(append のみ)" },
+  { step: 2, name: "構造を把握",
+    cmds: ["skeleton", "stats", "tags", "mermaid"] },
+  { step: 3, name: "1 Block にズーム",
+    cmds: ["focus <module> <id>", "context <module> <id> <depth>"],
+    note: "context は target + 1 段の forward/backward を markdown で出す(LLM プロンプト用)" },
+  { step: 4, name: "影響範囲を見る(変更前のリスク評価)",
+    cmds: ["impact <module> <id>"],
+    note: "id を変えると壊れうる Block 全部(backward の推移閉包)" },
+  { step: 5, name: "編集して反映 — 3 つの粒度",
+    sub: [
+      { granularity: "ファイル全体 patch",          cmd: "apply graph.json patch.js <moduleId>",      what: "patch を parseJS → Block 単位で diff → 変更分だけ commit" },
+      { granularity: "1 関数だけ patch",            cmd: "apply-block graph.json <blockId> patch.js", what: "mini-parse して refs/tags 自動再計算 → 1 Block に commit" },
+      { granularity: "重厚関数(root + 依存) patch", cmd: "virtual-apply graph.json <rootId> patch.txt", what: "BLOCK ヘッダで分割 → 各 Block に逆配分 commit" },
+    ] },
+  { step: 6, name: "履歴を見る",
+    cmds: ["diff <module> <id>", "blame <module> <id> <ref>"] },
+  { step: 7, name: "Graph をコードに戻す",
+    cmds: ["export graph.json <moduleId> out.js"],
+    note: "module Block の contains 順に Block の content を結合して再生成。import の named/default/namespace 区別は完全 round-trip しない(MVP の限界)" },
+];
+
+export const LegacyAiDeskCliCommands = {
+  // legacy ai-desk v2 CLI 24 種。yume-develop の現行 CLI は runYume.js を参照
+  // (show / commit / validate / history / heavy / refs-check 等)。
+  observe: [
+    { cmd: "skeleton <file>",              use: "Block 一覧 + refs" },
+    { cmd: "focus <file> <id>",            use: "指定 Block の content" },
+    { cmd: "context <file> <id> [depth]",  use: "target + 近傍を LLM 用 markdown に整形" },
+    { cmd: "stats <file>",                 use: "集計(block / version / byType / byTag)" },
+    { cmd: "tags <file>",                  use: "全タグと件数" },
+    { cmd: "tag <file> <tag>",             use: "あるタグを持つ Block 一覧" },
+    { cmd: "search <file> <query>",        use: "content の部分一致検索" },
+    { cmd: "impact <file> <id>",           use: "backward 推移閉包(変更時の影響範囲)" },
+    { cmd: "diff <file> <id> [i] [j]",     use: "version 間差分" },
+    { cmd: "blame <file> <id> <ref>",      use: "ref が初めて追加された version" },
+    { cmd: "mermaid <file>",               use: "flowchart LR を stdout" },
+    { cmd: "infer-tags <file> <id>",       use: "content からタグ推論(test/io/pure 等)" },
+    { cmd: "lint <file> [--summary] [--only=K1,K2]", use: "8 種の整合性チェック" },
+    { cmd: "self",                          use: "自分自身を解析" },
+  ],
+  persist: [
+    { cmd: "save <out.json> <files...>",   use: "ファイル群 → Graph → JSON" },
+    { cmd: "load <in.json>",                use: "JSON 読み込み + verify" },
+    { cmd: "graph <files...>",              use: "parseJS 結果を JSON で stdout" },
+    { cmd: "resolve <graph.json>",          use: "import の相対パスを Block ID に解決" },
+    { cmd: "export <graph.json> <moduleId> [out.js]", use: "Graph から JS 再生成" },
+  ],
+  edit_append_only: [
+    { cmd: "apply <graph.json> <patch.js> <moduleId>",   use: "ファイル単位 patch" },
+    { cmd: "apply-block <graph.json> <blockId> <patch>", use: "1 Block 単位 patch(- で stdin)" },
+    { cmd: "virtual-apply <graph.json> <rootId> <patch>", use: "仮想重厚関数の逆配分(- で stdin)" },
+    { cmd: "heavy-apply <graph.json> <rootId> <patch|-> [--depth=N] [--out=after.txt]", use: "virtual-apply 後に同じ scope を再展開" },
+  ],
+  virtualHeavy: [
+    { cmd: "heavy <file|graph.json> <root-id> [--depth=N]", use: "root + 依存を 1 content に展開して stdout" },
+  ],
+  verify: [
+    { cmd: "e2e", use: "テスト実行(npm test と同じ)" },
+  ],
+};
+
+export const VirtualHeavy = {
+  problem: {
+    description: "LLM は全文脈集約された方が間違えない(重厚関数原則)。ただし Block 分割は履歴・検索・refs に必要。普通は二者択一。",
+    layers: {
+      物理層: "graph.json 上の状態。細粒度 Block + versions + refs。最適化対象: 管理 / 履歴 / 影響分析",
+      論理層: "LLM に渡す content。root + forward 推移閉包を 1 つの巨大 content に展開。最適化対象: LLM の認知(全文脈集約)",
+    },
+    insight: "両者を往復させる機構が Virtual Heavy Function。展開だけでは半分。逆配分があって初めて閉じる。",
+  },
+  workflow: [
+    "1. save graph.json src/foo.js",
+    "2. resolve graph.json",
+    "3. heavy src/foo.js <rootId> --depth=3 > heavy.txt",
+    "4. heavy.txt を LLM に投げる(BLOCK ヘッダを残したまま content だけ編集して返してもらう)",
+    "5. virtual-apply graph.json <rootId> heavy.txt",
+    "6. 連続編集するときは heavy-apply graph.json <rootId> heavy.txt --depth=3 --out=heavy.after.txt",
+    "7. diff src/foo.js <rootId>",
+    "8. lint src/foo.js --summary",
+  ],
+  expandedFormatRules: [
+    { line: "// === Virtual Heavy Function ... ===", role: "全体ヘッダ",                     editable: "残す" },
+    { line: "// --- BLOCK: <id> (<type>) ---",       role: "境界ヘッダ。Apply の分割キー",   editable: "絶対に変えない・消さない・追加しない" },
+    { line: "// tags: ... / // refs: ...",            role: "参考表示(commit 時に除去)",     editable: "触っても無視される" },
+    { line: "<content>",                              role: "Block の本体",                   editable: "ここを編集する" },
+    { line: "// === end of virtual heavy ===",        role: "終端マーカー",                   editable: "残す" },
+  ],
+  applyBehaviors: [
+    "スコープ内 + content 変化あり → 新 version を append(refs/tags は head 継承)",
+    "スコープ内 + content 同じ → 何もしない(version 履歴を汚さない)",
+    "スコープ外 id → 静かに skip(エラー出さず、log だけ)",
+  ],
+  updateActions: [
+    { action: "updated",              meaning: "既存 Block に新 version が append された",      verdict: "期待通り" },
+    { action: "created",              meaning: "Block が無かったので新規作成された",            verdict: "本来あり得ない(virtualHeavy は既存 Block を集めるため)。発生したら設計バグ" },
+    { action: "unchanged",            meaning: "content が head と同一だったので何もしなかった", verdict: "履歴を汚さない正しい挙動" },
+    { action: "skipped-out-of-scope", meaning: "入力に virtualHeavy 集合に無い id のヘッダがあった", verdict: "要確認。LLM がヘッダを勝手に追加 / 改変した可能性" },
+  ],
+  failureModes: [
+    { id: 1, mistake: "LLM が BLOCK ヘッダを書き換え/翻訳した",                       result: "その segment が skipped-out-of-scope で消える",   fix: "プロンプトに「ヘッダ行は絶対変更しない」を明記" },
+    { id: 2, mistake: "LLM が新規 BLOCK ヘッダを追加して関数を生やした",              result: "skipped-out-of-scope で消える(既存セットに無い)",  fix: "別途 apply-block で新規追加、または apply で patch.js として渡す" },
+    { id: 3, mistake: "expand と apply で --depth が違う",                              result: "スコープ集合がズレる、一部 segment が skip",       fix: "同じ depth・同じ kind を必ず使う(opts を変数に切り出して両方に渡す)" },
+    { id: 4, mistake: "apply 後に元の root を消した / id を改名した",                  result: "次回 expand で全く違う集合が出る",                   fix: "rename は rollback + 新 id 作成 → 旧 id 非推奨化、で段階的に" },
+    { id: 5, mistake: "content の { } が崩れた",                                         result: "commit 自体は通るが lint の brace-mismatch が出る", fix: "lint --only=brace で即検出、再 expand → 修正 → re-apply" },
+    { id: 6, mistake: "refs/tags 行を本気で書き換えた",                                  result: "無視される(commit 時に head から継承)",            fix: "refs/tags を変えたいなら apply-block で smart 再計算 / 手動 commit" },
+  ],
+  safetyNet: "Apply は append-only なので何度やり直しても履歴は壊れない。失敗を恐れずに往復を回す。万一の時は b.rollback(prevIndex) で過去 version を新 version として復元。",
+};
+
+export const ProgrammaticApi = {
+  imports: [
+    "Block, Graph",
+    "parseJS, parseMD, loadProject, checkBraces",
+    "saveGraph, loadGraph, buildAndSave",
+    "applyPatch, applyToBlock, applyBlockSmart, resolveImports",
+    "virtualHeavy, expandVirtualHeavy, virtualApply",
+    "exportModule, exportToFile, exportMermaid",
+    "inferTags, graphStats, blockContext, formatContextForLLM",
+    "constraintBlock, evalConstraint",
+    "observationBlock",
+  ],
+  blockOps: [
+    "b.versions.length / b.content / b.head() / b.at(timestamp)",
+    "b.diff(0, 1) / b.blameRef('x')",
+    "b.rollback(0)  // 過去状態を新しい past として commit、履歴は保持",
+    "b.verify()      // hash チェーン検証",
+  ],
+  graphOps: [
+    "g.forward(id, kind?) / g.backward(id, kind?) / g.impact(id, kind?)",
+    "g.byType('function') / g.byTag('export')",
+    "g.search('TODO', { type, tag, includeOldVersions })",
+    "g.at(timestamp) / g.lint({orphan:false}) / g.verify()",
+  ],
+};
+
+export const LintKinds = [
+  { kind: 'broken-ref',     detects: "target が存在しない ref(import の外部モジュールは除外)",  offFlag: "{ broken: false }" },
+  { kind: 'orphan',         detects: "誰からも参照されない非 module Block",                         offFlag: "{ orphan: false }" },
+  { kind: 'circular',       detects: "forward の循環",                                                offFlag: "{ circular: false }" },
+  { kind: 'brace-mismatch', detects: "content の { } が不揃い(文字列・regex は skip)",           offFlag: "{ brace: false }" },
+  { kind: 'calls-leak',     detects: "他関数呼び出しの形跡があるが calls ref が無い",                offFlag: "{ calls: false }" },
+  { kind: 'tag-mismatch',   detects: "type と tags が不整合",                                         offFlag: "{ tags: false }" },
+  { kind: 'empty-block',    detects: "content / refs / children がすべて空",                          offFlag: "{ empty: false }" },
+  { kind: 'hash-broken',    detects: "version の prevHash チェーン破損",                              offFlag: "{ hash: false }" },
+];
+
+export const ParseJSRules = [
+  { syntax: "ファイル全体",                                              produces: "module Block。refs に import と contains" },
+  { syntax: "function foo(){} / export function / async function",      produces: "function Block(tags: function, async?, export?, generator?)" },
+  { syntax: "const foo = () => {}",                                       produces: "function Block(tags: function, arrow)" },
+  { syntax: "class Foo {} / export class",                                produces: "class Block(tags: class, export?, default?)" },
+  { syntax: "import ... from 'x'",                                         produces: "module の refs に { kind: 'import', target: 'x' }" },
+  { syntax: "同モジュール内の関数呼び出し",                              produces: "calls ref(名前ベース、後段で再 commit)" },
+  { syntax: "// [ai_s_emblem:#a#b Name] / // @tags: a, b",                 produces: "tags に取込(v1 互換、20 行遡及)" },
+];
+
+// SHADOW stub for AGENTS.md / GEMINI.md (CLI auto-load convention — Claude Code / Gemini CLI / Codex
+// 各 agent が起動時に決まったファイル名を読みに行く慣習に応じるため、内容は同一のままファイル名だけ違える)。
+const SHADOW_STUB = [
+  "First read: README.md (universal entry for humans and AI).",
+  "",
+  "AI structured data — import or show-head from this repo's REAL:",
+  "  node runYume.js AGENTS.aiDoc.yume.js show head --raw",
+  "  import { Forbidden, BlindSpots, BlockOps, GraphOps, RealVariable,",
+  "           AutoUseProtocol, OperatingModel, VirtualHeavy, ... }",
+  "         from './AGENTS.aiDoc.yume.js'",
+  "",
+  "Axioms: BIBLE.md or bible.aiDoc.yume.js.",
+  "",
+].join("\n");
+
+export const exportMarkdown = () => SHADOW_STUB;
+export const exportGeminiMarkdown = () => SHADOW_STUB;
 
 // === /HEAD ===

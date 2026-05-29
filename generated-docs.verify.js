@@ -6,20 +6,19 @@ const [
   agents,
   readme,
   bible,
-  runbook,
 ] = await Promise.all([
   import('./AGENTS.aiDoc.yume.js'),
   import('./README.aiDoc.yume.js'),
   import('./bible.aiDoc.yume.js'),
-  import('./runAndReadMe.aiDoc.yume.js'),
 ]);
 
+// AGENTS.md / GEMINI.md は SHADOW stub (本文は AGENTS.aiDoc.yume.js)。
+// README.md は人間向け overview。BIBLE.md は公理 archive。それ以外の onboarding/manual 系 SHADOW は廃止。
 const generatedDocs = [
   ['AGENTS.md', agents.exportMarkdown()],
+  ['GEMINI.md', agents.exportGeminiMarkdown()],
   ['README.md', readme.exportMarkdown()],
   ['BIBLE.md', bible.Kernel.exportMarkdown()],
-  ['start.md', runbook.exportStartMarkdown()],
-  ['CONTEXT_FILES.md', runbook.exportContextFilesMarkdown()],
 ];
 
 const mismatches = [];
